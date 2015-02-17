@@ -9,7 +9,7 @@ public class Crossover {
         
         ArrayList<Integer> path;
         
-        int random = TSP.rand.nextInt(100);
+        int random = TSP.rand.nextInt(99);
         if (random % 3 == 1) {
             path = crossover1(path1, path2);
         } else if (random % 3 == 2) {
