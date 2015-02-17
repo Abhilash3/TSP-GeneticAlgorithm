@@ -16,9 +16,9 @@ import javax.swing.WindowConstants;
 
 public class TSP {
 
-    public final static int CityNumber = 200;
+    public final static int CityNumber = 50;
     public final static int Generations = 5000;
-    public final static int PopulationSize = 250;
+    public final static int PopulationSize = 100;
     public final static boolean Elitism = true;
     
     public static Random rand = new Random();
@@ -118,7 +118,7 @@ public class TSP {
                 ArrayList<Integer> parent2 = selection.select(generation);
                 ArrayList<Integer> child = crossover.cross(parent1, parent2);
                 
-                if (rand.nextInt(100) % 20 == 0) {
+                if (rand.nextInt(99) % 100 == 0) {
                     child = mutation.mutate(child);
                 }
                 
