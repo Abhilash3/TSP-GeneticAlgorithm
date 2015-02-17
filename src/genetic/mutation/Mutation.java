@@ -9,7 +9,7 @@ public class Mutation {
         
         ArrayList<Integer> mutatedPath;
         
-        int random = TSP.rand.nextInt(100);
+        int random = TSP.rand.nextInt(99);
         if (random % 4 == 0) {
             mutatedPath = mutation1(path);
         } else if (random % 4 == 1) {
