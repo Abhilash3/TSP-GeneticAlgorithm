@@ -12,7 +12,7 @@ public class Selection {
 	public ArrayList<Integer> select(ArrayList<ArrayList<Integer>> generation) {
 		ArrayList<Integer> selectedPath = null;
 		
-		int random = TSP.rand.nextInt(100);
+		int random = TSP.rand.nextInt(99);
 	        if (random % 2 == 0) {
 	        	selectedPath = selection1(generation);
 	        } else {
