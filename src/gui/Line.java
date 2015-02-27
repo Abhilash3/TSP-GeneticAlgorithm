@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JComponent;
 
 @SuppressWarnings("serial")
-public class LineComponent extends JComponent {
+public class Line extends JComponent {
     
     private class Path {
         

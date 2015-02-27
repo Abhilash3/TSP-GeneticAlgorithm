@@ -24,7 +24,7 @@ public class Crossover {
     private ArrayList<Integer> crossover1(ArrayList<Integer> path1, ArrayList<Integer> path2) {
 
         ArrayList<Integer> path3 = new ArrayList<Integer>();
-        path3.add(0);
+        path3.add(path1.get(0));
 
         for (Integer i = 1; i < TSP.CityNumber; i++) {
 
@@ -59,7 +59,7 @@ public class Crossover {
     private ArrayList<Integer> crossover2(ArrayList<Integer> path1, ArrayList<Integer> path2) {
         
         ArrayList<Integer> path3 = new ArrayList<Integer>();
-        path3.add(0);
+        path3.add(path1.get(0));
 
         int random = TSP.rand.nextInt(TSP.CityNumber - 2) + 1;
         
@@ -85,7 +85,7 @@ public class Crossover {
     private ArrayList<Integer> crossover3(ArrayList<Integer> path1, ArrayList<Integer> path2) {
         
         ArrayList<Integer> path3 = new ArrayList<Integer>();
-        path3.add(0);
+        path3.add(path1.get(0));
         
         for(int i = 1; path3.size() != TSP.CityNumber; i++) {
         	if (!path3.contains(path1.get(i))) {

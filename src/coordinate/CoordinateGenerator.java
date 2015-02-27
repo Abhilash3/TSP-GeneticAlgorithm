@@ -12,7 +12,7 @@ public class CoordinateGenerator {
 		try {
 			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("coordinates.txt", false)));
         	for (int i = 0; i < 5000; i++) {
-        		out.print((new Random().nextInt(115) + 5) * 10 + " ");
+        		out.print((new Random().nextInt(55) + 5) * 10 + " ");
         		out.print((new Random().nextInt(55) + 5) * 10 + "\n");
             }
 		    out.close();

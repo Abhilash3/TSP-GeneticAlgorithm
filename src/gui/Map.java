@@ -5,10 +5,10 @@ import java.awt.Graphics;
 import javax.swing.JComponent;
 
 @SuppressWarnings("serial")
-public class MapComponent extends JComponent {
+public class Map extends JComponent {
     
-    private LineComponent line = new LineComponent();
-    private PointComponent point = new PointComponent();
+    private Line line = new Line();
+    private Point point = new Point();
     
     public void draw(int x, int y) {
         draw(x, y, Color.BLACK);

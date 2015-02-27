@@ -1,40 +1,46 @@
 package genetic;
 
-import gui.MapComponent;
+import gui.Graph;
+import gui.Map;
 import genetic.crossover.Crossover;
 import genetic.fitness.Fitness;
 import genetic.mutation.Mutation;
 import genetic.selection.Selection;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 public class TSP {
 
-    public final static int CityNumber = 50;
+    public final static int CityNumber = 100;
     public final static int Generations = 5000;
     public final static int PopulationSize = 100;
-    public final static boolean Elitism = true;
+    public final static boolean Elitism = false;
     
     public static Random rand = new Random();
     
-    private static Selection selection = new Selection();
-    private static Crossover crossover = new Crossover();
-    private static Mutation mutation = new Mutation();
-    private static Fitness fitness = new Fitness();
+    private Selection selection = new Selection();
+    private Crossover crossover = new Crossover();
+    private Mutation mutation = new Mutation();
+    private Fitness fitness = new Fitness();
     
-    private static ArrayList<ArrayList<Integer>> coordinates;
+    private ArrayList<ArrayList<Integer>> coordinates;
     public static ArrayList<ArrayList<Double>> distanceMatrix;
     
-    private static MapComponent gui;
+    private Map map;
+    private Graph graph;
+    private JTextField textField;
 
     public TSP(ArrayList<ArrayList<Integer>> coordinates) {
-        TSP.coordinates = coordinates;
+        this.coordinates = coordinates;
         generateDistanceMatrix();
         createGUI();
     }
@@ -42,12 +48,28 @@ public class TSP {
     private void createGUI() {
         
         JFrame frame = new JFrame("Simulation");
-        gui = new MapComponent();
-        frame.getContentPane().add("Center", gui);
-        frame.setPreferredSize(new Dimension(1250, 650));
-        gui.setBackground(Color.WHITE);
-        gui.setForeground(Color.BLACK);
+        
+        map = new Map();
+        map.setPreferredSize(new Dimension(700, 650));
+        
+        graph = new Graph();
+        graph.setPreferredSize(new Dimension(650, 650));
+        
+        textField = new JTextField();
+        textField.setFont(new Font(textField.getFont().getName(), Font.BOLD, textField.getFont().getSize()));
+        textField.setHorizontalAlignment(JTextField.CENTER);
+        textField.setEditable(false);
+        textField.setPreferredSize(new Dimension(650, 50));
+        
+        frame.getContentPane().add(map, BorderLayout.CENTER);
+        frame.getContentPane().add(graph, BorderLayout.LINE_END);
+        frame.getContentPane().add(textField, BorderLayout.PAGE_END);
+        frame.setPreferredSize(new Dimension(1350, 700));
+        
+        map.setBackground(Color.WHITE);
+        map.setForeground(Color.BLACK);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        
         frame.pack();
         frame.setVisible(true);
     }
@@ -74,11 +96,9 @@ public class TSP {
     }
 
     public ArrayList<Integer> simulate() {
-
-        System.out.println("Starting Simulation: ");
         
         for (ArrayList<Integer> city : coordinates) {
-            gui.draw(city.get(0), city.get(1));
+        	map.draw(city.get(0), city.get(1));
         }
 
         ArrayList<ArrayList<Integer>> generation = new ArrayList<ArrayList<Integer>>();
@@ -91,8 +111,10 @@ public class TSP {
         generation = fitness.sortGeneration(generation);
         bestPath = generation.get(0);
         
+        graph.add(fitness.generateFitness(generation.get(0)));        
+        
         for (int i = 1; i < CityNumber; i++) {
-            gui.draw(coordinates.get(bestPath.get(i - 1)).get(0),
+        	map.draw(coordinates.get(bestPath.get(i - 1)).get(0),
                     coordinates.get(bestPath.get(i - 1)).get(1),
                     coordinates.get(bestPath.get(i)).get(0),
                     coordinates.get(bestPath.get(i)).get(1));
@@ -100,9 +122,8 @@ public class TSP {
         
         ArrayList<ArrayList<Integer>> newGeneration = new ArrayList<ArrayList<Integer>>();
 
-        System.out.format("\n%s: %6s %s", "Generation", 1, "         ");
-        System.out.format("%s: %20s", "Best Result", fitness.generateFitness(generation.get(0)));
-        System.out.format("%10s: %s", "      Best Path", generation.get(0));
+        textField.setText(String.format("%s: %6s %s", "Generation", 1, "         ") + 
+        		String.format("%s: %20s", "Best Result", fitness.generateFitness(generation.get(0))));
 
         for (int i = 1; i < Generations; i++) {
         	
@@ -118,7 +139,7 @@ public class TSP {
                 ArrayList<Integer> parent2 = selection.select(generation);
                 ArrayList<Integer> child = crossover.cross(parent1, parent2);
                 
-                if (rand.nextInt(99) % 100 == 0) {
+                if (rand.nextInt(99) % 10 == 0) {
                     child = mutation.mutate(child);
                 }
                 
@@ -129,21 +150,22 @@ public class TSP {
             generation = fitness.sortGeneration(newGeneration);
             newGeneration = new ArrayList<ArrayList<Integer>>();
             
+            graph.add(fitness.generateFitness(generation.get(0)));
+            
             if (fitness.generateFitness(bestPath) > fitness.generateFitness(generation.get(0))) {
             	bestPath = generation.get(0);
-            }
-            
-            gui.clearLines();
-            for (int j = 1; j < CityNumber; j++) {
-                gui.draw(coordinates.get(generation.get(0).get(j - 1)).get(0),
-                        coordinates.get(generation.get(0).get(j - 1)).get(1),
-                        coordinates.get(generation.get(0).get(j)).get(0),
-                        coordinates.get(generation.get(0).get(j)).get(1));
+            	
+            	map.clearLines();
+                for (int j = 1; j < CityNumber; j++) {
+                	map.draw(coordinates.get(bestPath.get(j - 1)).get(0),
+                            coordinates.get(bestPath.get(j - 1)).get(1),
+                            coordinates.get(bestPath.get(j)).get(0),
+                            coordinates.get(bestPath.get(j)).get(1));
+                }
             }
 
-            System.out.format("\n%s: %6s %s", "Generation", (i + 1), "         ");
-            System.out.format("%s: %20s", "Best Result", fitness.generateFitness(generation.get(0)));
-            System.out.format("%10s: %s", "      Best Path", generation.get(0));
+            textField.setText(String.format("%s: %6s %s", "Generation", (i + 1), "         ") + 
+            		String.format("%s: %20s", "Best Result", fitness.generateFitness(bestPath)));
             
         }
         

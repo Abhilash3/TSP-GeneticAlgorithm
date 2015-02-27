@@ -37,7 +37,7 @@ public class Main {
         	coordinates = new ArrayList<ArrayList<Integer>>();
         	for (int i = 0; i < TSP.CityNumber; i++) {
                 coordinates.add(new ArrayList<Integer>());
-                coordinates.get(i).add((TSP.rand.nextInt(115) + 5) * 10);
+                coordinates.get(i).add((TSP.rand.nextInt(55) + 5) * 10);
                 coordinates.get(i).add((TSP.rand.nextInt(55) + 5) * 10);
             }
         } finally {
@@ -48,8 +48,6 @@ public class Main {
 			}
         }
         
-        ArrayList<Integer> optimalSolution = new TSP(coordinates).simulate();
-        
-        System.out.println("\n\nOptimal Solution: " + optimalSolution);
+        new TSP(coordinates).simulate();
     }
 }
