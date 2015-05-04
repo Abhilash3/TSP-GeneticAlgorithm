@@ -1,5 +1,7 @@
 package gui;
 
+import gui.vo.City;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -8,7 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JComponent;
 
@@ -55,11 +57,11 @@ public class Graph extends JComponent {
         double xScale = ((double) width - (2 * padding) - labelPadding) / (scores.size() - 1);
         double yScale = ((double) height - 2 * padding - labelPadding) / (maxScore - minScore);
 
-        ArrayList<ArrayList<Integer>> graphPoints = new ArrayList<ArrayList<Integer>>();
+        List<City> graphPoints = new ArrayList<City>();
         for (int i = 0; i < scores.size(); i++) {
             int x1 = (int) (i * xScale + padding + labelPadding);
             int y1 = (int) ((maxScore - scores.get(i)) * yScale + padding);
-            graphPoints.add(new ArrayList<Integer>(Arrays.asList(x1, y1)));
+            graphPoints.add(new City(x1, y1, Color.BLACK));
         }
 
         // draw white background
@@ -72,15 +74,15 @@ public class Graph extends JComponent {
         g2.setColor(lineColor);
         g2.setStroke(GRAPH_STROKE);
         for (int i = 1; i < graphPoints.size(); i++) {
-            g2.drawLine(graphPoints.get(i - 1).get(0), graphPoints.get(i - 1).get(1), 
-            			graphPoints.get(i).get(0), graphPoints.get(i).get(1));
+            g2.drawLine(graphPoints.get(i - 1).getX(), graphPoints.get(i - 1).getY(), 
+            			graphPoints.get(i).getX(), graphPoints.get(i).getY());
         }
 
         g2.setStroke(oldStroke);
         g2.setColor(pointColor);
         for (int i = 0; i < graphPoints.size(); i++) {
-            int x = graphPoints.get(i).get(0) - pointWidth / 2;
-            int y = graphPoints.get(i).get(1) - pointWidth / 2;
+            int x = graphPoints.get(i).getX() - pointWidth / 2;
+            int y = graphPoints.get(i).getY() - pointWidth / 2;
             int rectW = pointWidth;
             int rectH = pointWidth;
             g2.fillRect(x, y, rectW, rectH);
@@ -97,6 +99,8 @@ public class Graph extends JComponent {
         g2.drawLine(padding + labelPadding - 5, height - padding - labelPadding, padding + labelPadding, height - padding - labelPadding);
         g2.drawLine(padding + labelPadding, height - padding - labelPadding - 10, padding + labelPadding, padding);
         g2.drawLine(padding + labelPadding, height - padding - labelPadding, width - padding, height - padding - labelPadding);
+        
+        FontMetrics metrics = g2.getFontMetrics();
 
         // create hatch marks and grid lines for y axis.
         for (int i = 0; i < numberYDivisions + 1; i++) {
@@ -111,8 +115,7 @@ public class Graph extends JComponent {
             g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, width - padding, y1);
             g2.setColor(Color.BLACK);
             
-            String yLabel = ((int) ((minScore + (maxScore - minScore) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + "";
-            FontMetrics metrics = g2.getFontMetrics();
+            String yLabel = String.valueOf(((int) ((minScore + (maxScore - minScore) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0);
             
             g2.drawString(yLabel, x0 - metrics.stringWidth(yLabel) - 5, y0 + (metrics.getHeight() / 2) - 3);
         }
@@ -131,8 +134,7 @@ public class Graph extends JComponent {
                     g2.drawLine(x0, height - padding - labelPadding - 1 - pointWidth, x1, padding);
                     g2.setColor(Color.BLACK);
                     
-                    String xLabel = i + "";
-                    FontMetrics metrics = g2.getFontMetrics();
+                    String xLabel = String.valueOf(i);
                     
                     g2.rotate(Math.PI / 2, x0 - metrics.stringWidth(xLabel) / 4, y0 + metrics.getHeight() + 3);
                     g2.drawString(xLabel, x0 - metrics.stringWidth(xLabel) / 2, y0 + metrics.getHeight() + 3);

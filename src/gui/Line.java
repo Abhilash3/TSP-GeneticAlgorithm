@@ -1,43 +1,25 @@
 package gui;
 
+import gui.vo.City;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JComponent;
 
 @SuppressWarnings("serial")
 public class Line extends JComponent {
     
-    private class Path {
-        
-        private int x1;
-        private int y1;
-        private int x2;
-        private int y2;
-        private Color color;
-        
-        public Path(int x1, int y1, int x2, int y2, Color color) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.color = color;
-        }
-        
-        public void drawLine(Graphics g) {
-        	g.setColor(color);
-            g.drawLine(x1, y1, x2, y2);
-        }
+    private static List<City> Lines = new ArrayList<City>();
+    
+    public void addLine(int x, int y) {
+        addLine(x, y, Color.BLACK);
     }
     
-    private static ArrayList<Path> Lines = new ArrayList<Path>();
-    
-    public void addLine(int x1, int y1, int x2, int y2) {
-        addLine(x1, y1, x2, y2, Color.BLACK);
-    }
-    
-    public void addLine(int x1, int y1, int x2, int y2, Color color) {
-        Lines.add(new Path(x1, y1, x2, y2, color));
+    public void addLine(int x, int y, Color color) {
+        Lines.add(new City(x, y, color));
         repaint();
     }
     
@@ -49,8 +31,8 @@ public class Line extends JComponent {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for(int i = 0; i < Lines.size(); i++) {
-            Lines.get(i).drawLine(g);
+        for(int i = 1; i < Lines.size(); i++) {
+            Lines.get(i).drawLine(g, Lines.get(i - 1));
         }
     }
     

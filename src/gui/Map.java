@@ -10,21 +10,21 @@ public class Map extends JComponent {
     private Line line = new Line();
     private Point point = new Point();
     
-    public void draw(int x, int y) {
-        draw(x, y, Color.BLACK);
+    public void drawPoint(int x, int y) {
+        drawPoint(x, y, Color.BLACK);
     }
     
-    public void draw(int x, int y, Color color) {
+    public void drawPoint(int x, int y, Color color) {
         point.addPoint(x, y, color);
         repaint();
     }
     
-    public void draw(int x1, int y1, int x2, int y2) {
-        draw(x1, y1, x2, y2, Color.BLACK);
+    public void drawLine(int x, int y) {
+        drawLine(x, y, Color.BLACK);
     }
     
-    public void draw(int x1, int y1, int x2, int y2, Color color) {
-        line.addLine(x1, y1, x2, y2, color);
+    public void drawLine(int x, int y, Color color) {
+        line.addLine(x, y, color);
         repaint();
     }
     

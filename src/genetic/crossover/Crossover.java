@@ -15,7 +15,7 @@ public class Crossover {
         } else if (random % 3 == 2) {
             path = crossover2(path1, path2);
         } else {
-        	path = crossover3(path1, path2);
+            path = crossover3(path1, path2);
         }
         
         return path;
@@ -64,22 +64,22 @@ public class Crossover {
         int random = TSP.rand.nextInt(TSP.CityNumber - 2) + 1;
         
         for (int i = 1; i < random; i++) {
-        	path3.add(path1.get(i));
+            path3.add(path1.get(i));
         }
         for (int i = random; path3.size() != TSP.CityNumber; i++) {
             if (!path3.contains(path2.get(i))) {
-        		path3.add(path2.get(i));
-        	} else {
-        	    for (Integer city : path2) {
+                path3.add(path2.get(i));
+            } else {
+                for (Integer city : path2) {
                     if (!path3.contains(city)) {
                         path3.add(city);
                         break;
                     }
                 }
-        	}
+            }
         }
-    	
-    	return path3;
+        
+        return path3;
     }
     
     private ArrayList<Integer> crossover3(ArrayList<Integer> path1, ArrayList<Integer> path2) {
@@ -88,15 +88,15 @@ public class Crossover {
         path3.add(path1.get(0));
         
         for(int i = 1; path3.size() != TSP.CityNumber; i++) {
-        	if (!path3.contains(path1.get(i))) {
-        		path3.add(path1.get(i));
-        	}
-        	if (!path3.contains(path2.get(i))) {
-        		path3.add(path2.get(i));
-        	}
+            if (!path3.contains(path1.get(i))) {
+                path3.add(path1.get(i));
+            }
+            if (!path3.contains(path2.get(i))) {
+            path3.add(path2.get(i));
+            }
         }
-    	
-    	return path3;
+        
+        return path3;
     }
     
 }

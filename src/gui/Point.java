@@ -1,5 +1,7 @@
 package gui;
 
+import gui.vo.City;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -7,31 +9,6 @@ import javax.swing.JComponent;
 
 @SuppressWarnings("serial")
 public class Point extends JComponent {
-	
-	private class City {
-	    
-	    private int x;
-	    private int y;
-	    private Color color;
-	    
-	    public City(int x, int y, Color color) {
-	        this.x = x;
-	        this.y = y;
-	        this.color = color;
-	    }
-
-		@Override
-	    public String toString() {
-	    	return "( " + this.x + ", " + this.y + " )";
-	    }
-	    
-	    public void drawPoint(Graphics g) {
-	    	g.setColor(color);
-	        g.fillRect(x - 2, y - 2, 4, 4);
-	        g.drawString(this.toString(), x, y);
-	    }
-	    
-	}
 
     private static ArrayList<City> Points = new ArrayList<City>();
     
