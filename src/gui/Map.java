@@ -1,6 +1,7 @@
 package gui;
 
-import java.awt.Color;
+import gui.vo.City;
+
 import java.awt.Graphics;
 import javax.swing.JComponent;
 
@@ -10,21 +11,13 @@ public class Map extends JComponent {
     private Line line = new Line();
     private Point point = new Point();
     
-    public void drawPoint(int x, int y) {
-        drawPoint(x, y, Color.BLACK);
-    }
-    
-    public void drawPoint(int x, int y, Color color) {
-        point.addPoint(x, y, color);
+    public void drawPoint(City city) {
+        point.addPoint(city);
         repaint();
     }
     
-    public void drawLine(int x, int y) {
-        drawLine(x, y, Color.BLACK);
-    }
-    
-    public void drawLine(int x, int y, Color color) {
-        line.addLine(x, y, color);
+    public void drawLine(City city) {
+        line.addLine(city);
         repaint();
     }
     

@@ -92,7 +92,7 @@ public class Crossover {
                 path3.add(path1.get(i));
             }
             if (!path3.contains(path2.get(i))) {
-            path3.add(path2.get(i));
+                path3.add(path2.get(i));
             }
         }
         

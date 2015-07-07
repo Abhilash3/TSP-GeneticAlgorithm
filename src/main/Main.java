@@ -12,17 +12,17 @@ import gui.vo.City;
 public class Main {
 
     private static String TSP_FILE = "coordinates.txt";
-
+    
     public static void main(String[] args) {
-
+        
         ArrayList<City> coordinates = new ArrayList<City>();
         BufferedReader br = null;
-
+        
         try {
             br = new BufferedReader(new FileReader(new File(TSP_FILE)));
             String line;
             for (int i = 0; (line = br.readLine()) != null
-                    & i < TSP.CityNumber; i++) {
+                    && i < TSP.CityNumber; i++) {
                 String[] split = line.split(" ");
                 if (split.length != 2) {
                     throw new Exception();
@@ -35,6 +35,7 @@ public class Main {
                 throw new Exception();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             coordinates = new ArrayList<City>();
             for (int i = 0; i < TSP.CityNumber; i++) {
                 coordinates.add(new City((TSP.rand.nextInt(55) + 5) * 10,
@@ -47,7 +48,7 @@ public class Main {
                 e.printStackTrace();
             }
         }
-
+    
         new TSP(coordinates).simulate();
     }
 }
