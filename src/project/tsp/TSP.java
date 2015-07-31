@@ -31,7 +31,6 @@ public class TSP {
 					City city = new City(Integer.parseInt(split[0].trim()),
 							Integer.parseInt(split[1].trim()));
 					coordinates.add(city);
-					System.out.println("City " + i + ": " + city);
 				}
 			}
 			if (coordinates.size() != CityNumber) {
