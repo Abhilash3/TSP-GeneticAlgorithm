@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import project.genetic.Genetic;
-import project.genetic.vo.City;
+import project.genetic.vo.coordinate.City;
+import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.list.MagicList;
+import project.ui.UI;
 
 public class TSP {
 
@@ -18,7 +21,7 @@ public class TSP {
 
 	public static void main(String[] args) {
 
-		ArrayList<City> coordinates = new ArrayList<City>();
+		List<ICoordinate> coordinates = new MagicList<ICoordinate>();
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(new File(TSP_FILE)));
@@ -28,9 +31,10 @@ public class TSP {
 				if (split.length != 2) {
 					throw new Exception();
 				} else {
-					City city = new City(Integer.parseInt(split[0].trim()),
-							Integer.parseInt(split[1].trim()));
-					coordinates.add(city);
+					ICoordinate city = new City(Integer.parseInt(split[0]
+							.trim()), Integer.parseInt(split[1].trim()));
+					if (!coordinates.contains(city))
+						coordinates.add(city);
 				}
 			}
 			if (coordinates.size() != CityNumber) {
@@ -38,7 +42,7 @@ public class TSP {
 						"Coordinates are not equal to required city number");
 			}
 		} catch (Exception e) {
-			coordinates = new ArrayList<City>();
+			coordinates = new MagicList<ICoordinate>();
 			for (int i = 0; i < CityNumber; i++) {
 				coordinates.add(new City((rand.nextInt(55) + 5) * 10, (rand
 						.nextInt(55) + 5) * 10));
@@ -53,7 +57,9 @@ public class TSP {
 			}
 		}
 
-		new Genetic(coordinates).simulate();
+		UI ui = new UI(coordinates);
+		Genetic genetic = new Genetic(coordinates, ui);
+		genetic.simulate();
 
 	}
 }

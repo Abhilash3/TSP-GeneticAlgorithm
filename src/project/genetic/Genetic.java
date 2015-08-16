@@ -1,15 +1,16 @@
 package project.genetic;
 
-import project.gui.UI;
-import project.genetic.crossover.Crossover;
+import project.genetic.process.Crossover;
 import project.genetic.fitness.Fitness;
-import project.genetic.mutation.Mutation;
-import project.genetic.selection.Selection;
-import project.genetic.vo.AArrayList;
-import project.genetic.vo.City;
-import project.genetic.vo.DistanceMatrix;
+import project.genetic.process.Mutation;
+import project.genetic.process.Selection;
+import project.genetic.vo.IGene;
+import project.genetic.vo.Path;
+import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.list.MagicList;
+import project.ui.UI;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -20,8 +21,7 @@ import java.util.Random;
  */
 public class Genetic {
 
-	private final static int Generations = Integer.MAX_VALUE;
-	private final static int PopulationSize = 100;
+	private final static int Generations = 3000;
 	private final static boolean Elitism = true;
 
 	protected static Random rand = new Random();
@@ -31,24 +31,28 @@ public class Genetic {
 	protected Mutation mutation;
 	protected Fitness fitness;
 
-	protected ArrayList<City> coordinates;
-	protected DistanceMatrix distanceMatrix;
-	protected ArrayList<Integer> bestPath;
 	private int cityNumber;
+	private int populationSize;
+
+	protected List<ICoordinate> coordinates;
+	protected IGene<ICoordinate> bestPath;
 
 	private UI ui;
 
-	public Genetic(ArrayList<City> coordinates) {
+	public Genetic(List<ICoordinate> coordinates) {
 		this.coordinates = coordinates;
 		this.cityNumber = coordinates.size();
-		ui = new UI(coordinates);
+		this.populationSize = cityNumber * 2;
 
-		distanceMatrix = new DistanceMatrix(coordinates);
+		fitness = new Fitness();
+		selection = new Selection(fitness);
+		crossover = new Crossover();
+		mutation = new Mutation();
+	}
 
-		fitness = new Fitness(cityNumber, distanceMatrix, false);
-		selection = new Selection(cityNumber, fitness);
-		crossover = new Crossover(cityNumber, distanceMatrix);
-		mutation = new Mutation(cityNumber);
+	public Genetic(List<ICoordinate> coordinates, UI ui) {
+		this(coordinates);
+		this.ui = ui;
 	}
 
 	/**
@@ -56,14 +60,13 @@ public class Genetic {
 	 * 
 	 * @return
 	 */
-	public ArrayList<Integer> simulate() {
+	public IGene<ICoordinate> simulate() {
 
-		AArrayList<Integer> generation = new AArrayList<Integer>();
-		AArrayList<Integer> newGeneration = new AArrayList<Integer>();
-		ArrayList<Integer> bestPath = new ArrayList<Integer>();
-		ArrayList<Double> scores = new ArrayList<Double>();
+		List<IGene<ICoordinate>> generation = new MagicList<IGene<ICoordinate>>();
+		List<IGene<ICoordinate>> newGeneration = new MagicList<IGene<ICoordinate>>();
+		bestPath = new Path();
 
-		for (int i = 0; i < PopulationSize; i++) {
+		for (int i = 0; i < populationSize; i++) {
 			generation.add(getRandomPath());
 		}
 		generation = fitness.sortGeneration(generation);
@@ -75,14 +78,18 @@ public class Genetic {
 				newGeneration.add(generation.get(0));
 				elitismOffset = 1;
 			}
+			for (int j = elitismOffset; j < populationSize; j++) {
 
-			for (int j = elitismOffset; j < PopulationSize; j++) {
+				IGene<ICoordinate> parent1 = selection.select(generation);
 
-				ArrayList<Integer> parent1 = selection.select(generation);
-				ArrayList<Integer> parent2 = selection.select(generation);
-				ArrayList<Integer> child = crossover.cross(parent1, parent2);
+				IGene<ICoordinate> parent2;
+				do {
+					parent2 = selection.select(generation);
+				} while (parent2 == parent1);
 
-				if (rand.nextInt(Generations - 1) > i) {
+				IGene<ICoordinate> child = crossover.cross(parent1, parent2);
+
+				if (rand.nextInt(Generations) > i) {
 					child = mutation.mutate(child);
 				}
 
@@ -91,28 +98,44 @@ public class Genetic {
 			}
 
 			generation = fitness.sortGeneration(newGeneration);
-			newGeneration = new AArrayList<Integer>();
+			newGeneration = new MagicList<IGene<ICoordinate>>();
 
 			bestPath = generation.get(0);
 
-			ui.clearLines();
-			ui.drawMap(coordinates, bestPath);
-
-			scores = new ArrayList<Double>();
-			scores.add(fitness.generateFitness(generation.get(0)));
-			for (int j = 1; j < ui.Graphs; j++) {
-				scores.add(fitness.generateFitness(generation.get(j
-						* PopulationSize / (ui.Graphs - 1) - 1)));
-			}
-			ui.updateGraph(scores);
-
-			ui.setText(String.format("%s: %6s %s: %20s",
-					"Generation", (i + 1), "Best Result",
-					fitness.generateFitness(bestPath)));
-
+			if (ui != null)
+				updateUI(generation, bestPath, i);
+			else
+				System.out.println(String.format("%s: %6s %s: %20s",
+						"Generation", (i + 1), "Best Result",
+						bestPath.getFitness()));
 		}
-		
+
 		return bestPath;
+	}
+
+	private void updateUI(List<IGene<ICoordinate>> generation,
+			IGene<ICoordinate> bestPath, int n) {
+
+		ui.clearLines();
+		ui.drawMap(bestPath);
+
+		generation = fitness.sortGeneration(generation);
+
+		List<Double> scores = new MagicList<Double>();
+		scores.add(bestPath.getFitness());
+		for (int j = 1; j < ui.Graphs; j++) {
+			scores.add(generation.get(j * populationSize / (ui.Graphs - 1) - 1)
+					.getFitness());
+		}
+		ui.updateGraph(scores);
+
+		ui.setText(String.format("%s: %6s      %s: %.6f", "Generation",
+				(n + 1), "Best Result", bestPath.getFitness()));
+		try {
+			Thread.sleep(1);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -120,12 +143,13 @@ public class Genetic {
 	 * 
 	 * @return path
 	 */
-	protected ArrayList<Integer> getRandomPath() {
-		ArrayList<Integer> path = new ArrayList<Integer>();
+	protected Path getRandomPath() {
+		Path path = new Path();
 		for (int i = rand.nextInt(cityNumber); path.size() != cityNumber; i = rand
 				.nextInt(cityNumber)) {
-			if (!path.contains(i)) {
-				path.add(i);
+			ICoordinate iCoordinate = coordinates.get(i);
+			if (!path.contains(iCoordinate)) {
+				path.add(iCoordinate);
 			}
 		}
 		return path;
