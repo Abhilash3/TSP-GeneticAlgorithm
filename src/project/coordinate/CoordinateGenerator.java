@@ -1,30 +1,27 @@
 package project.coordinate;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.util.Random;
+
+import static project.common.Constants.TSP_FILE;
+import project.genetic.vo.coordinate.Coordinate;
 
 public class CoordinateGenerator {
 
 	public static void main(String[] args) {
 		Random rand = new Random();
 		try {
-			PrintWriter out = new PrintWriter(new BufferedWriter(
-					new FileWriter("coordinates.txt", false)));
-			StringBuilder sb = new StringBuilder();
+			FileOutputStream fileOut = new FileOutputStream(TSP_FILE);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			for (int i = 0; i < 5000; i++) {
-				int x = (rand.nextInt(55) + 5) * 10;
-				int y = (rand.nextInt(55) + 5) * 10;
-				if (sb.indexOf(x + " " + y) > 0) {
-					i--;
-					continue;
-				}
-				sb.append(x + " " + y + "\n");
+				out.writeObject(Coordinate.getCoordinate(
+						(rand.nextInt(55) + 5) * 10,
+						(rand.nextInt(55) + 5) * 10));
 			}
-			out.print(sb);
 			out.close();
+			fileOut.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

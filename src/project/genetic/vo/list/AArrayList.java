@@ -10,8 +10,12 @@ import java.util.List;
  * 
  * @param <E>
  */
-@SuppressWarnings("serial")
-public class AArrayList<E> extends ArrayList<List<E>> implements ILList<E> {
+public class AArrayList<E> extends ArrayList<List<E>> implements LList<E> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6899383745320325588L;
 
 	@Override
 	public E get(int i, int j) {

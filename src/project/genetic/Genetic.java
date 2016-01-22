@@ -4,15 +4,19 @@ import project.genetic.process.Crossover;
 import project.genetic.fitness.Fitness;
 import project.genetic.process.Mutation;
 import project.genetic.process.Selection;
-import project.genetic.vo.individual.Individual;
+import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.list.individual.Path;
 import project.genetic.vo.coordinate.ICoordinate;
-import project.genetic.vo.list.Path;
 import project.ui.UI;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import static project.common.Constants.Generations;
+import static project.common.Constants.Elitism;
+import static project.common.Constants.Graphs;
 
 /**
  * java class definition providing genetic capabilities
@@ -22,41 +26,31 @@ import java.util.Random;
  */
 public class Genetic {
 
-	private final static int Generations = 5000;
-	private final static boolean Elitism = true;
-
 	protected static Random rand = new Random();
-
-	protected Selection selection;
-	protected Crossover crossover;
-	protected Mutation mutation;
-	protected Fitness fitness;
-	private UI ui;
+	protected static Fitness fitness = Fitness.getInstance();
+	protected static Selection selection = Selection.getInstance();
+	protected static Crossover crossover = Crossover.getInstance();
+	protected static Mutation mutation = Mutation.getInstance();
 
 	private int cityNumber;
 	private int populationSize;
 
+	protected List<Double> scores;
 	protected List<ICoordinate> coordinates;
 	protected Individual<ICoordinate> bestPath;
 
-	private Class<? extends Individual<ICoordinate>> cl;
+	private UI ui;
 
-	public Genetic(List<ICoordinate> coordinates,
-			Class<? extends Individual<ICoordinate>> cl) {
+	private static final String Format = "%s: %6s      %s: %.6f";
+
+	public Genetic(List<ICoordinate> coordinates) {
 		this.coordinates = coordinates;
 		this.cityNumber = coordinates.size();
-		this.populationSize = cityNumber * 3;
-		this.cl = cl;
-
-		fitness = Fitness.getInstance();
-		selection = Selection.getInstance();
-		crossover = Crossover.getInstance();
-		mutation = Mutation.getInstance();
+		this.populationSize = cityNumber * (cityNumber - 10);
 	}
 
-	public Genetic(List<ICoordinate> coordinates,
-			Class<? extends Individual<ICoordinate>> cl, UI ui) {
-		this(coordinates, cl);
+	public Genetic(List<ICoordinate> coordinates, UI ui) {
+		this(coordinates);
 		this.ui = ui;
 	}
 
@@ -67,54 +61,55 @@ public class Genetic {
 	 */
 	public Individual<ICoordinate> simulate() {
 
-		List<Individual<ICoordinate>> generation = new ArrayList<Individual<ICoordinate>>();
-		List<Individual<ICoordinate>> newGeneration = new ArrayList<Individual<ICoordinate>>();
-		bestPath = new Path();
+		List<Individual<ICoordinate>> generation = new ArrayList<Individual<ICoordinate>>(
+				populationSize);
+		List<Individual<ICoordinate>> newGeneration = new ArrayList<Individual<ICoordinate>>(
+				populationSize);
 
 		for (int i = 0; i < populationSize; i++) {
 			generation.add(getRandomPath());
 		}
-		generation = fitness.sortGeneration(generation);
+		generation = fitness.sort(generation);
 		bestPath = generation.get(0);
 
-		for (int i = 0; i < Generations; i++) {
+		Individual<ICoordinate> parent1, parent2, child;
+		for (int i = 1; i <= Generations; i++) {
 
 			if (Elitism)
 				newGeneration.add(bestPath);
 
 			for (; newGeneration.size() != populationSize;) {
 
-				Individual<ICoordinate> parent1 = selection.select(generation);
+				do {
+					parent1 = selection.select(generation);
+				} while (parent1 == null);
 
-				Individual<ICoordinate> parent2;
 				do {
 					parent2 = selection.select(generation);
-				} while (parent2 == parent1);
+				} while (parent2 == null || parent1.equals(parent2));
 
-				Individual<ICoordinate> child = crossover.cross(parent1,
-						parent2);
-
-				if (rand.nextInt(Generations) > i) {
-					child = mutation.mutate(child);
-				}
-
-				if (newGeneration.contains(child))
-					continue;
+				child = crossover.cross(parent1, parent2);
 				newGeneration.add(child);
+
+				if (newGeneration.size() != populationSize
+						&& rand.nextInt(100) % 10 == 0) {
+					child = mutation.mutate(child);
+					newGeneration.add(child);
+				}
 
 			}
 
-			generation = fitness.sortGeneration(newGeneration);
-			newGeneration = new ArrayList<Individual<ICoordinate>>();
+			generation = fitness.sort(newGeneration);
+			newGeneration = new ArrayList<Individual<ICoordinate>>(
+					populationSize);
 
 			bestPath = generation.get(0);
 
 			if (ui != null)
 				updateUI(generation, i);
 			else
-				System.out.println(String.format("%s: %6s %s: %20s",
-						"Generation", (i + 1), "Best Result",
-						bestPath.getFitness()));
+				System.out.println(String.format(Format, "Generation", i,
+						"Best Result", bestPath.getFitness()));
 		}
 
 		return bestPath;
@@ -123,40 +118,18 @@ public class Genetic {
 	private void updateUI(List<Individual<ICoordinate>> generation, int n) {
 
 		ui.clearMapLines();
-		ui.drawMap(copy(bestPath));
+		ui.drawMap(bestPath);
 
-		List<Double> scores = new ArrayList<Double>();
+		scores = new ArrayList<Double>(Graphs);
 		scores.add(bestPath.getFitness());
-		for (int j = 1; j < ui.Graphs; j++) {
-			scores.add(generation.get(j * populationSize / (ui.Graphs - 1) - 1)
+		for (int j = 1; j < Graphs; j++) {
+			scores.add(generation.get(j * populationSize / (Graphs - 1) - 1)
 					.getFitness());
 		}
 		ui.updateGraph(scores);
 
-		ui.setText(String.format("%s: %6s      %s: %.6f", "Generation",
-				(n + 1), "Best Result", bestPath.getFitness()));
-	}
-
-	private List<ICoordinate> copy(List<ICoordinate> list) {
-		List<ICoordinate> copyList = new ArrayList<ICoordinate>();
-		for (ICoordinate iCoordinate : list) {
-			copyList.add(copy(iCoordinate));
-		}
-		return copyList;
-	}
-
-	private ICoordinate copy(ICoordinate iCoordinate) {
-		ICoordinate copyICoordinate = null;
-		try {
-			copyICoordinate = iCoordinate.getClass()
-					.getConstructor(Integer.class, Integer.class)
-					.newInstance(iCoordinate.getX(), iCoordinate.getY());
-		} catch (InstantiationException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		}
-		return copyICoordinate;
+		ui.setText(String.format(Format, "Generation", n, "Best Result",
+				bestPath.getFitness()));
 	}
 
 	/**
@@ -165,17 +138,7 @@ public class Genetic {
 	 * @return path
 	 */
 	protected Individual<ICoordinate> getRandomPath() {
-		Individual<ICoordinate> path = null;
-		try {
-			path = cl.getConstructor().newInstance();
-		} catch (InstantiationException | IllegalAccessException
-				| IllegalArgumentException | SecurityException
-				| InvocationTargetException | NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		for (; path.size() != cityNumber;) {
-			path.add(coordinates.get(rand.nextInt(cityNumber)));
-		}
-		return path;
+		Collections.shuffle(coordinates);
+		return new Path(coordinates);
 	}
 }

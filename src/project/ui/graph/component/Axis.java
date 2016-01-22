@@ -6,15 +6,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import static project.common.Constants.padding;
+import static project.common.Constants.labelPadding;
+import static project.common.Constants.pointWidth;
+import static project.common.Constants.GraphDivisions;
 
-@SuppressWarnings("serial")
-public class Axis extends GraphObject {
+public class Axis {
 
 	private boolean isXAxis;
 
-	public Axis(int padding, int labelPadding, int pointWidth, int divisions,
-			boolean isXAxis) {
-		super(padding, labelPadding, pointWidth, divisions);
+	public Axis(boolean isXAxis) {
 		this.isXAxis = isXAxis;
 	}
 
@@ -27,11 +28,11 @@ public class Axis extends GraphObject {
 		FontMetrics metrics = g2.getFontMetrics();
 		g2.setColor(Color.BLACK);
 
-		// create hatch marks for x axis.
-		for (int i = 0; i <= divisions; i++) {
-			int x0, y0, x1, y1;
+		String label;
+		int x0, y0, x1, y1;
+		for (int i = 0; i <= GraphDivisions; i++) {
 			if (isXAxis) {
-				x0 = (width - padding * 2 - labelPadding) * i / divisions
+				x0 = (width - padding * 2 - labelPadding) * i / GraphDivisions
 						+ padding + labelPadding;
 				x1 = x0;
 				y0 = height - padding - labelPadding;
@@ -40,13 +41,13 @@ public class Axis extends GraphObject {
 				x0 = padding + labelPadding;
 				x1 = pointWidth + padding + labelPadding;
 				y0 = height - (height - padding * 2 - labelPadding) * i
-						/ divisions - padding - labelPadding;
+						/ GraphDivisions - padding - labelPadding;
 				y1 = y0;
 			}
 
 			g2.drawLine(x0, y0, x1, y1);
 
-			String label = String.valueOf(max * i / divisions);
+			label = String.valueOf(max * i / GraphDivisions);
 
 			if (isXAxis) {
 				g2.rotate(Math.PI / 2, x0 - metrics.stringWidth(label) / 4, y0

@@ -4,19 +4,28 @@ import project.genetic.vo.coordinate.ICoordinate;
 
 import java.awt.Graphics;
 
-@SuppressWarnings("serial")
-public class Point extends MapObject {
+public class Point {
 
-	@Override
+	private ICoordinate p;
+
+	public Point(ICoordinate p) {
+		this.p = p;
+	}
+
+	public ICoordinate getCoordinate() {
+		return p;
+	}
+
 	public void draw(Graphics g) {
-		for (ICoordinate iCoordinate : list) {
-			iCoordinate.drawPoint(g, 4);
-		}
+		int x = p.getX();
+		int y = p.getY();
+		g.fillRoundRect(x - 2, y - 2, 4, 4, 1, 1);
+		//g.drawString(p.toString(), x, y);
 	}
 
 	@Override
 	public String toString() {
-		return "Points: " + list;
+		return new StringBuilder().append("{").append(p).append("}").toString();
 	}
 
 }

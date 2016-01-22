@@ -7,15 +7,20 @@ import project.ui.map.component.Point;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComponent;
 
 @SuppressWarnings("serial")
 public class Map extends JComponent {
 
-	private Line line = new Line();
-	private Point point = new Point();
+	private Set<Line> lines = new HashSet<Line>();
+	private Set<Point> points = new HashSet<Point>();
+
+	private Set<Line> linesToBeRemoved;
+	private Set<Point> pointsToBeRemoved;
 
 	/**
 	 * connect coordinates using the path provided
@@ -23,8 +28,13 @@ public class Map extends JComponent {
 	 * @param coordinates
 	 * @param bestPath
 	 */
-	public void drawMap(List<ICoordinate> bestPath) {
-		line.addAll(bestPath);
+	public void drawMap(List<ICoordinate> path) {
+		synchronized (lines) {
+			if (path.size() > 1)
+				lines.add(new Line(path.get(path.size() - 1), path.get(0)));
+			for (int i = 1; i < path.size(); i++)
+				lines.add(new Line(path.get(i - 1), path.get(i)));
+		}
 		repaint();
 	}
 
@@ -34,17 +44,17 @@ public class Map extends JComponent {
 	 * @param coordinates
 	 */
 	public void drawCoordinates(List<ICoordinate> coordinates) {
-		point.addAll(coordinates);
+		synchronized (points) {
+			for (ICoordinate iCoordinate : coordinates)
+				points.add(new Point(iCoordinate));
+		}
 		repaint();
 	}
 
 	public void clearLines() {
-		line.clear();
-		repaint();
-	}
-
-	public void clearLine(ICoordinate iCoordinate) {
-		line.getList().remove(iCoordinate);
+		synchronized (lines) {
+			lines.clear();
+		}
 		repaint();
 	}
 
@@ -54,17 +64,21 @@ public class Map extends JComponent {
 	 * @param coordinates
 	 */
 	public void clearLines(List<ICoordinate> coordinates) {
-		line.getList().removeAll(coordinates);
+		linesToBeRemoved = new HashSet<Line>();
+		for (ICoordinate iCoordinate : coordinates)
+			for (Line line : lines)
+				if (line.isVisiting(iCoordinate))
+					linesToBeRemoved.add(line);
+		synchronized (lines) {
+			lines.removeAll(linesToBeRemoved);
+		}
 		repaint();
 	}
 
 	public void clearPoints() {
-		point.clear();
-		repaint();
-	}
-
-	public void clearPoint(ICoordinate iCoordinate) {
-		point.getList().remove(iCoordinate);
+		synchronized (points) {
+			points.clear();
+		}
 		repaint();
 	}
 
@@ -74,13 +88,23 @@ public class Map extends JComponent {
 	 * @param coordinates
 	 */
 	public void clearPoints(List<ICoordinate> coordinates) {
-		point.getList().removeAll(coordinates);
+		pointsToBeRemoved = new HashSet<Point>();
+		for (Point point : points)
+			if (coordinates.contains(point.getCoordinate()))
+				pointsToBeRemoved.add(point);
+		synchronized (points) {
+			points.removeAll(pointsToBeRemoved);
+		}
 		repaint();
 	}
 
 	public void clear() {
-		line.clear();
-		point.clear();
+		synchronized (lines) {
+			lines.clear();
+		}
+		synchronized (points) {
+			points.clear();
+		}
 		repaint();
 	}
 
@@ -102,13 +126,20 @@ public class Map extends JComponent {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 
-		point.draw(g);
-		line.draw(g);
+		synchronized (lines) {
+			for (Line line : lines)
+				line.draw(g2);
+		}
+		synchronized (points) {
+			for (Point point : points)
+				point.draw(g2);
+		}
 	}
 
 	@Override
 	public String toString() {
-		return "Map: [Line: " + line + "], [Point: " + point + "]";
+		return new StringBuilder().append("Map: ").append(lines).append(", ")
+				.append(points).toString();
 	}
 
 }

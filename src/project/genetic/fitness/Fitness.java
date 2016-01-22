@@ -5,10 +5,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import project.genetic.vo.coordinate.ICoordinate;
-import project.genetic.vo.individual.Individual;
+import project.genetic.vo.list.individual.Individual;
 
 /**
- * java class definition for generating fitness for a path
+ * java class definition for sorting path
  * 
  * @author ABHILASHKUMARV
  * 
@@ -16,8 +16,22 @@ import project.genetic.vo.individual.Individual;
 public class Fitness {
 
 	private static Fitness self;
+	private static Comparator<Individual<ICoordinate>> comparator;
 
 	private Fitness() {
+		comparator = new Comparator<Individual<ICoordinate>>() {
+			@Override
+			public int compare(Individual<ICoordinate> o1,
+					Individual<ICoordinate> o2) {
+				if (o1 == null && o2 == null)
+					return 0;
+				if (o1 == null)
+					return -1;
+				if (o2 == null)
+					return 1;
+				return (int) (o1.getFitness() - o2.getFitness());
+			}
+		};
 	}
 
 	public static Fitness getInstance() {
@@ -33,19 +47,14 @@ public class Fitness {
 	 * @param generation
 	 * @return sorted generation
 	 */
-	public List<Individual<ICoordinate>> sortGeneration(
+	public List<Individual<ICoordinate>> sort(
 			List<Individual<ICoordinate>> generation) {
-		Collections.sort(generation, getComparator());
-		return generation;
-	}
 
-	public Comparator<Individual<ICoordinate>> getComparator() {
-		return new Comparator<Individual<ICoordinate>>() {
-			@Override
-			public int compare(Individual<ICoordinate> o1,
-					Individual<ICoordinate> o2) {
-				return (int) (o1.getFitness() - o2.getFitness());
-			}
-		};
+		try {
+			Collections.sort(generation, comparator);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		return generation;
 	}
 }

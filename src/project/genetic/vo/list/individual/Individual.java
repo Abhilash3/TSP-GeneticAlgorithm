@@ -1,25 +1,23 @@
-package project.genetic.vo.individual;
+package project.genetic.vo.list.individual;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Individual<E> implements List<E> {
-	
+import project.genetic.vo.list.MagicList;
+
+public abstract class Individual<E> implements List<E> {
+
 	protected Chromosome<E> list;
-	protected double fitness;
-	protected boolean isDirty;
-	
-	public Individual() {
-		list = new MagicList<E>();
-		fitness = 0;
-		isDirty = false;
-	}
-	
+	protected double fitness = -1;
+
+	private Integer hashcode;
+	private String toString;
+
 	public Individual(List<E> list) {
 		super();
-		this.list.addAll(list);
+		this.list = new MagicList<E>(list);
 	}
 
 	@Override
@@ -54,18 +52,12 @@ public class Individual<E> implements List<E> {
 
 	@Override
 	public boolean add(E e) {
-		if (list.contains(e))
-			return false;
-		isDirty = true;
-		return list.add(e);
+		throw new UnsupportedOperationException("Add not supproted");
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		if (list.contains(o))
-			return false;
-		isDirty = true;
-		return list.remove(o);
+		throw new UnsupportedOperationException("Remove not supproted");
 	}
 
 	@Override
@@ -75,37 +67,27 @@ public class Individual<E> implements List<E> {
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
-		if (list.containsAll(c))
-			return false;
-		isDirty = true;
-		return list.addAll(c);
+		throw new UnsupportedOperationException("AddAll not supproted");
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
-		if (list.containsAll(c))
-			return false;
-		isDirty = true;
-		return list.addAll(index, c);
+		throw new UnsupportedOperationException("AddAll not supproted");
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		isDirty = true;
-		return list.removeAll(c);
+		throw new UnsupportedOperationException("RemoveAll not supproted");
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		isDirty = true;
-		return list.retainAll(c);
+		throw new UnsupportedOperationException("RetainAll not supproted");
 	}
 
 	@Override
 	public void clear() {
-		isDirty = false;
-		fitness = 0;
-		list.clear();
+		throw new UnsupportedOperationException("Clear not supproted");
 	}
 
 	@Override
@@ -115,20 +97,17 @@ public class Individual<E> implements List<E> {
 
 	@Override
 	public E set(int index, E element) {
-		isDirty = true;
-		return list.set(index, element);
+		throw new UnsupportedOperationException("Set not supproted");
 	}
 
 	@Override
 	public void add(int index, E element) {
-		isDirty = true;
-		list.add(index, element);
+		throw new UnsupportedOperationException("Add not supproted");
 	}
 
 	@Override
 	public E remove(int index) {
-		isDirty = true;
-		return list.remove(index);
+		throw new UnsupportedOperationException("Remove not supproted");
 	}
 
 	@Override
@@ -155,9 +134,51 @@ public class Individual<E> implements List<E> {
 	public List<E> subList(int fromIndex, int toIndex) {
 		return list.subList(fromIndex, toIndex);
 	}
-	
-	public double getFitness() {
-		throw new UnsupportedOperationException();
+
+	@Override
+	public boolean equals(Object object) {
+		if (object == null)
+			return false;
+		if (this == object)
+			return true;
+		if (!(object instanceof Individual))
+			return false;
+
+		/**
+		 * Object has to be of Individual; verified above
+		 */
+		@SuppressWarnings("unchecked")
+		Individual<E> o = (Individual<E>) object;
+		return Double.compare(getFitness(), o.getFitness()) == 0;
 	}
+
+	@Override
+	public int hashCode() {
+		if (hashcode == null) {
+			int result = 17;
+			result = 31 * result + list.hashCode();
+			result = (int) (31 * result + fitness);
+			hashcode = result;
+		}
+		return hashcode;
+	}
+
+	@Override
+	public String toString() {
+		if (toString == null) {
+			toString = new StringBuilder().append("[Individual: ")
+					.append(getFitness()).append("]").toString();
+		}
+		return toString;
+	}
+
+	public double getFitness() {
+		if (fitness < 0) {
+			fitness = fitness();
+		}
+		return fitness;
+	}
+
+	protected abstract double fitness();
 
 }

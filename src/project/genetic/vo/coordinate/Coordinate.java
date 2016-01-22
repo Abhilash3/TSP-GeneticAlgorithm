@@ -1,6 +1,6 @@
 package project.genetic.vo.coordinate;
 
-import java.awt.Graphics;
+import java.io.Serializable;
 
 /**
  * java class definition for a coordinate
@@ -8,14 +8,25 @@ import java.awt.Graphics;
  * @author ABHILASHKUMARV
  * 
  */
-public class Coordinate implements ICoordinate {
+public final class Coordinate implements ICoordinate, Serializable {
 
-	protected int x;
-	protected int y;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8524031709417015053L;
+	protected final int x;
+	protected final int y;
 
-	public Coordinate(int x, int y) {
+	private transient Integer hashcode;
+	private transient String toString;
+
+	private Coordinate(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public static Coordinate getCoordinate(int x, int y) {
+		return new Coordinate(x, y);
 	}
 
 	public int getX() {
@@ -26,40 +37,40 @@ public class Coordinate implements ICoordinate {
 		return y;
 	}
 
-	/**
-	 * this coordiante's distance from coordinate passed
-	 * 
-	 * @param coordinate
-	 * @return distance
-	 */
-	public double distanceFrom(ICoordinate coordinate) {
-		return Math.hypot(x - coordinate.getX(), y - coordinate.getY());
+	@Override
+	public int hashCode() {
+		if (hashcode == null) {
+			int result = 17;
+			result = 31 * result + x;
+			result = 31 * result + y;
+			hashcode = result;
+		}
+		return hashcode;
 	}
 
-	/**
-	 * drawing this coordinate on map
-	 * 
-	 * @param g
-	 * @param width
-	 */
-	public void drawPoint(Graphics g, int width) {
-		g.fillRoundRect(x - width / 2, y - width / 2, width, width, width / 4,
-				width / 4);
-	}
+	@Override
+	public boolean equals(Object object) {
+		if (object == null)
+			return false;
+		if (this == object)
+			return true;
+		if (!(object instanceof Coordinate))
+			return false;
 
-	/**
-	 * drawing line from this coordinate to coordinate passed
-	 * 
-	 * @param g
-	 * @param coordinate
-	 */
-	public void drawLine(Graphics g, ICoordinate coordinate) {
-		g.drawLine(x, y, coordinate.getX(), coordinate.getY());
+		/**
+		 * Object has to be of Coordinate; verified above
+		 */
+		Coordinate coordinate = (Coordinate) object;
+		return x == coordinate.x && y == coordinate.y;
 	}
 
 	@Override
 	public String toString() {
-		return "(" + this.x + ", " + this.y + ")";
+		if (toString == null) {
+			toString = new StringBuilder().append("(").append(x).append(", ")
+					.append(y).append(")").toString();
+		}
+		return toString;
 	}
 
 }

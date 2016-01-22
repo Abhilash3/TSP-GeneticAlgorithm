@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import project.genetic.vo.individual.Individual;
+import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.list.individual.Path;
+import project.genetic.vo.coordinate.Coordinates;
 import project.genetic.vo.coordinate.ICoordinate;
-import project.genetic.vo.list.Path;
 
 /**
  * java class definition providing crossover capabilities
@@ -17,13 +18,14 @@ import project.genetic.vo.list.Path;
 public class Crossover {
 
 	private static Crossover self;
-
 	private static Random rand;
-
-	private static List<Choice> choices;
+	private static List<Strategy> choices;
+	private static ICoordinate city1, city2;
+	private static List<ICoordinate> list;
+	
 	private static int size;
 
-	public interface Choice {
+	public interface Strategy {
 
 		/**
 		 * method generating crossover options and generating child path
@@ -39,6 +41,7 @@ public class Crossover {
 	private Crossover() {
 		Crossover.rand = new Random();
 		prepareChoices();
+		size = choices.size();
 	}
 
 	public static Crossover getInstance() {
@@ -49,9 +52,9 @@ public class Crossover {
 	}
 
 	private static void prepareChoices() {
-		choices = new ArrayList<Choice>();
+		choices = new ArrayList<Strategy>();
 
-		choices.add(new Choice() {
+		choices.add(new Strategy() {
 
 			/**
 			 * first city from path1, get nth city from both paths and select
@@ -64,45 +67,46 @@ public class Crossover {
 			@Override
 			public Individual<ICoordinate> cross(Individual<ICoordinate> path1,
 					Individual<ICoordinate> path2) {
+				
+				list = new ArrayList<ICoordinate>();
+				list.add(path1.get(0));
+				
+				for (int i = 1; i < path1.size(); i++) {
 
-				Individual<ICoordinate> path3 = new Path();
-				path3.add(path1.get(0));
+					city1 = path1.get(i);
+					city2 = path2.get(i);
 
-				for (Integer i = 1; i < path1.size(); i++) {
-
-					ICoordinate city1 = path1.get(i);
-					ICoordinate city2 = path2.get(i);
-
-					if (!path3.contains(city1) && !path3.contains(city2)) {
-						Double distance1 = path1.get(i - 1).distanceFrom(city1);
-						Double distance2 = path2.get(i - 1).distanceFrom(city2);
-						if (distance1 < distance2) {
-							path3.add(city1);
+					if (!list.contains(city1) && !list.contains(city2)) {
+						double distance1 = Coordinates.distance(path1.get(i - 1), city1);
+						double distance2 = Coordinates.distance(path2.get(i - 1), city2);
+						if (Double.compare(distance1, distance2) > 0) {
+							list.add(city2);
 						} else {
-							path3.add(city2);
+							list.add(city1);
 						}
-					} else if (!path3.contains(city1)) {
-						path3.add(city1);
-					} else if (!path3.contains(city2)) {
-						path3.add(city2);
+					} else if (!list.contains(city1)) {
+						list.add(city1);
+					} else if (!list.contains(city2)) {
+						list.add(city2);
 					} else {
-						for (ICoordinate city : path1) {
-							if (!path3.contains(city)) {
-								path3.add(city);
+						for (int j = 0; j < path1.size(); j++) {
+							city1 = path1.get(j);
+							if (!list.contains(city1)) {
+								list.add(city1);
 								break;
 							}
 						}
 					}
 				}
 
-				return path3;
+				return new Path(list);
 			}
 		});
 
-		choices.add(new Choice() {
+		choices.add(new Strategy() {
 
 			/**
-			 * selects first random no of cities from path1, rest from path 2
+			 * selects first random no of cities from path1, rest from path2
 			 * 
 			 * @param path1
 			 * @param path2
@@ -111,32 +115,34 @@ public class Crossover {
 			@Override
 			public Individual<ICoordinate> cross(Individual<ICoordinate> path1,
 					Individual<ICoordinate> path2) {
-				Individual<ICoordinate> path3 = new Path();
-				int size = path1.size();
 
-				int random = rand.nextInt(size - 1);
-
+				int random = rand.nextInt(path1.size() - 1) + 1;
+				list = new ArrayList<ICoordinate>();
+				
 				for (int i = 0; i < random; i++) {
-					path3.add(path1.get(i));
+					list.add(path1.get(i));
 				}
-				for (int i = random; path3.size() != size; i++) {
-					if (!path3.contains(path2.get(i))) {
-						path3.add(path2.get(i));
+				
+				for (int i = random; list.size() != path1.size(); i++) {
+					city1 = path2.get(i);
+					if (!list.contains(city1)) {
+						list.add(city1);
 					} else {
-						for (ICoordinate city : path2) {
-							if (!path3.contains(city)) {
-								path3.add(city);
+						for (int j = 0; j < random; j++) {
+							city2 = path2.get(j);
+							if (!list.contains(city2)) {
+								list.add(city2);
 								break;
 							}
 						}
 					}
 				}
 
-				return path3;
+				return new Path(list);
 			}
 		});
 
-		choices.add(new Choice() {
+		choices.add(new Strategy() {
 
 			/**
 			 * selects cities from both paths in whichever order they come with
@@ -146,35 +152,36 @@ public class Crossover {
 			 * @param path2
 			 * @return
 			 */
-			@SuppressWarnings("unchecked")
 			@Override
 			public Individual<ICoordinate> cross(Individual<ICoordinate> path1,
 					Individual<ICoordinate> path2) {
-				Individual<ICoordinate> path3 = null;
-				try {
-					path3 = path1.getClass().newInstance();
-				} catch (InstantiationException | IllegalAccessException e) {
-					e.printStackTrace();
+
+				list = new ArrayList<ICoordinate>();
+				
+				for (int i = 0; list.size() != path1.size(); i++) {
+					city1 = path1.get(i);
+					if (!list.contains(city1))
+						list.add(city1);
+					
+					if (list.size() == path1.size())
+						break;
+					
+					city2 = path2.get(i);
+					if (!list.contains(city2))
+						list.add(city2);
 				}
 
-				for (int i = 0; path3.size() != path1.size(); i++) {
-					path3.add(path1.get(i));
-					path3.add(path2.get(i));
-				}
-
-				return path3;
+				return new Path(list);
 			}
 		});
-
-		size = choices.size();
 	}
 
-	public static Choice getChoice() {
+	public static Strategy getStrategy() {
 		return choices.get(rand.nextInt(size));
 	}
 
 	public Individual<ICoordinate> cross(Individual<ICoordinate> parent1,
 			Individual<ICoordinate> parent2) {
-		return getChoice().cross(parent1, parent2);
+		return getStrategy().cross(parent1, parent2);
 	}
 }

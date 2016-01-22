@@ -2,48 +2,45 @@ package project.ui.graph;
 
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.coordinate.ICoordinate;
-import project.genetic.vo.list.ILList;
+import project.genetic.vo.list.LList;
 import project.genetic.vo.list.AArrayList;
 import project.ui.graph.component.Axis;
 import project.ui.graph.component.Grid;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
 
 import javax.swing.JComponent;
 
+import static project.common.Constants.Generations;
+
+import static project.common.Constants.padding;
+import static project.common.Constants.labelPadding;
+import static project.common.Constants.Graphs;
+
 @SuppressWarnings("serial")
 public class Graph extends JComponent {
 
-	private int padding;
-	private int labelPadding;
 	private int maxScore = Integer.MIN_VALUE;
 
-	private Color lineColor = Color.DARK_GRAY;
-	private Color pointColor = Color.BLACK;
-	private Color gridColor = Color.LIGHT_GRAY;
+	private LList<Double> scores;
+	private LList<ICoordinate> graphPoints;
 
-	private ILList<Double> scores;
-
-	private Axis x;
-	private Axis y;
+	private Axis xAxis, yAxis;
 	private Grid grid;
 
-	public Graph(int graphs, int divisions, int padding, int pointWidth,
-			int labelPadding) {
-		this.padding = padding;
-		this.labelPadding = labelPadding;
+	private int height, width;
+	private double xScale, yScale;
 
+	public Graph() {
 		this.scores = new AArrayList<Double>();
-		for (int i = 0; i < graphs; i++) {
+		for (int i = 0; i < Graphs; i++) {
 			scores.addEmpty();
 		}
 
-		this.x = new Axis(padding, labelPadding, pointWidth, divisions, true);
-		this.y = new Axis(padding, labelPadding, pointWidth, divisions, false);
-		this.grid = new Grid(padding, labelPadding, pointWidth, pointColor,
-				gridColor, lineColor, divisions);
+		this.xAxis = new Axis(true);
+		this.yAxis = new Axis(false);
+		this.grid = new Grid();
 	}
 
 	public void add(List<Double> results) {
@@ -51,7 +48,7 @@ public class Graph extends JComponent {
 			scores.getAdd(i, results.get(i));
 
 			if (maxScore < results.get(i)) {
-				maxScore = ceil(results.get(i));
+				maxScore = ceil(results.get(i), 0);
 			}
 		}
 		repaint();
@@ -61,26 +58,26 @@ public class Graph extends JComponent {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		int height = getHeight();
-		int width = getWidth();
+		height = getHeight();
+		width = getWidth();
 
-		double xScale = ((double) width - 2 * padding - labelPadding) / 5000;
-		double yScale = ((double) height - 2 * padding - labelPadding)
-				/ maxScore;
+		xScale = ((double) width - 2 * padding - labelPadding) / Generations;
+		yScale = ((double) height - 2 * padding - labelPadding) / maxScore;
 
-		ILList<ICoordinate> graphPoints = new AArrayList<ICoordinate>();
+		graphPoints = new AArrayList<ICoordinate>();
+		int x, y;
 		for (int i = 0; i < scores.size(); i++) {
 			graphPoints.addEmpty();
 			for (int j = 0; j < scores.getSize(i); j++) {
-				int x = (int) (j * xScale + padding + labelPadding);
-				int y = (int) ((maxScore - scores.get(i, j)) * yScale + padding);
-				graphPoints.getAdd(i, new Coordinate(x, y));
+				x = (int) (j * xScale + padding + labelPadding);
+				y = (int) ((maxScore - scores.get(i, j)) * yScale + padding);
+				graphPoints.getAdd(i, Coordinate.getCoordinate(x, y));
 			}
 		}
 
 		grid.drawGrid(g, height, width);
-		x.reDraw(g, height, width, 5000);
-		y.reDraw(g, height, width, maxScore);
+		xAxis.reDraw(g, height, width, Generations);
+		yAxis.reDraw(g, height, width, maxScore);
 		grid.drawChart(g, graphPoints);
 
 	}
@@ -90,11 +87,10 @@ public class Graph extends JComponent {
 		return scores.toString();
 	}
 
-	private int ceil(double max) {
-		int i = 0;
-		for (; i < max; i += 300)
+	private int ceil(double num, int ceil) {
+		for (; ceil < num; ceil += 250)
 			;
-		return i;
+		return ceil;
 	}
 
 }

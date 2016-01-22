@@ -1,54 +1,52 @@
 package project.tsp;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import project.genetic.Genetic;
-import project.genetic.vo.coordinate.City;
+import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.coordinate.ICoordinate;
-import project.genetic.vo.list.Path;
 import project.ui.UI;
+import static project.common.Constants.CityNumber;
+import static project.common.Constants.TSP_FILE;
 
 public class TSP {
 
-	public final static int CityNumber = 30;
-	private static String TSP_FILE = "coordinates.txt";
 	private static Random rand = new Random();
 
 	public static void main(String[] args) {
 
 		List<ICoordinate> coordinates = new ArrayList<ICoordinate>();
-		BufferedReader br = null;
+		FileInputStream fileIn = null;
+		ObjectInputStream in = null;
 		try {
-			br = new BufferedReader(new FileReader(new File(TSP_FILE)));
-			String line;
-			for (int i = 0; (line = br.readLine()) != null && i < CityNumber; i++) {
-				String[] split = line.split(" ");
-				ICoordinate city = new City(Integer.parseInt(split[0].trim()),
-						Integer.parseInt(split[1].trim()));
+			fileIn = new FileInputStream(TSP_FILE);
+			in = new ObjectInputStream(fileIn);
+			
+			ICoordinate city;
+			for (int i = 0; i < CityNumber; i++) {
+				city = (Coordinate) in.readObject();
 				if (!coordinates.contains(city))
 					coordinates.add(city);
 			}
-			br.close();
-			if (coordinates.size() > CityNumber) {
-				System.out
-						.println("Coordinates are not equal to required city number");
-				for (; coordinates.size() < CityNumber;) {
-					coordinates.add(new City((rand.nextInt(55) + 5) * 10, (rand
-							.nextInt(55) + 5) * 10));
-				}
-			}
+			
+			in.close();
+			fileIn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			coordinates = new ArrayList<ICoordinate>();
+			for (; coordinates.size() < CityNumber;) {
+				coordinates.add(Coordinate.getCoordinate(
+						(rand.nextInt(55) + 5) * 10,
+						(rand.nextInt(55) + 5) * 10));
+			}
 		}
 
-		UI ui = new UI(coordinates);
-		Genetic genetic = new Genetic(coordinates, Path.class, ui);
-		genetic.simulate();
+		new Genetic(coordinates, new UI(coordinates)).simulate();
 
 	}
 }

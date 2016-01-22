@@ -1,11 +1,12 @@
 package project.genetic.process;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import project.genetic.fitness.Fitness;
-import project.genetic.vo.individual.Individual;
+import project.genetic.vo.list.individual.Individual;
 import project.genetic.vo.coordinate.ICoordinate;
 
 /**
@@ -17,14 +18,14 @@ import project.genetic.vo.coordinate.ICoordinate;
 public class Selection {
 
 	private static Selection self;
-
 	private static Fitness fitness;
 	private static Random rand;
-
-	private static List<Choices> choices;
+	private static List<Strategy> choices;
 	private static int size;
+	private static List<Individual<ICoordinate>> pool;
+	private static Individual<ICoordinate> ind;
 
-	public interface Choices {
+	public interface Strategy {
 
 		/**
 		 * method generating selection options and selecting path
@@ -51,9 +52,9 @@ public class Selection {
 	}
 
 	private static void prepareChoices() {
-		choices = new ArrayList<Choices>();
+		choices = new ArrayList<Strategy>();
 
-		choices.add(new Choices() {
+		choices.add(new Strategy() {
 
 			/**
 			 * Roulette Wheel Selection
@@ -65,36 +66,27 @@ public class Selection {
 			public Individual<ICoordinate> select(
 					List<Individual<ICoordinate>> generation) {
 
-				double generationFitness = 0;
 				double max = 0;
-
-				for (Individual<ICoordinate> path : generation) {
-					if (max < path.getFitness()) {
-						max = path.getFitness();
-					}
+				for (int i = 0; i < generation.size(); i++) {
+					ind = generation.get(i);
+					if (max < ind.getFitness())
+						max = ind.getFitness();
 				}
 
-				for (Individual<ICoordinate> path : generation) {
-					generationFitness += max - path.getFitness() + 1;
+				pool = new ArrayList<Individual<ICoordinate>>();
+				for (int i = 0; i < generation.size(); i++) {
+					ind = generation.get(i);
+					int random = (int) ((max - ind.getFitness()) * 100 / max) + 1;
+					for (int j = 0; j < random; j++)
+						pool.add(ind);
 				}
+				Collections.shuffle(pool);
+				return pool.get(rand.nextInt(pool.size()));
 
-				int random = rand.nextInt((int) generationFitness);
-
-				generationFitness = 0;
-				Individual<ICoordinate> selectedPath = null;
-				for (Individual<ICoordinate> path : generation) {
-					generationFitness += max - path.getFitness() + 1;
-					if (generationFitness >= random) {
-						selectedPath = path;
-						break;
-					}
-				}
-
-				return selectedPath;
 			}
 		});
 
-		choices.add(new Choices() {
+		choices.add(new Strategy() {
 
 			/**
 			 * Tournament Selection
@@ -108,22 +100,15 @@ public class Selection {
 
 				int random = rand.nextInt(generation.size() - 2) + 2;
 
-				List<Individual<ICoordinate>> pool = new ArrayList<Individual<ICoordinate>>();
-				for (int i = 0; i < random; i++) {
-					int randomPosition = rand.nextInt(generation.size());
-					Individual<ICoordinate> ind = generation.get(randomPosition);
-					if (pool.contains(ind)) {
-						i--;
-						continue;
-					}
-					pool.add(ind);
-				}
+				pool = new ArrayList<Individual<ICoordinate>>();
+				for (; pool.size() != random;)
+					pool.add(generation.get(rand.nextInt(generation.size())));
 
-				return fitness.sortGeneration(pool).get(0);
+				return fitness.sort(pool).get(0);
 			}
 		});
 
-		choices.add(new Choices() {
+		choices.add(new Strategy() {
 
 			/**
 			 * Rank Selection
@@ -155,12 +140,12 @@ public class Selection {
 		size = choices.size();
 	}
 
-	public static Choices getChoice() {
+	public static Strategy getStrategy() {
 		return choices.get(rand.nextInt(size));
 	}
 
 	public Individual<ICoordinate> select(
 			List<Individual<ICoordinate>> generation) {
-		return getChoice().select(generation);
+		return getStrategy().select(generation);
 	}
 }
