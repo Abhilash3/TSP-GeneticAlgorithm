@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
 import project.genetic.vo.list.individual.Path;
-import project.genetic.vo.coordinate.ICoordinate;
 
 /**
  * java class definition providing mutation capabilities
@@ -19,7 +19,7 @@ public class Mutation {
 
 	private static Mutation self;
 	private static Random rand;
-	private static List<Strategy> choices;
+	private static List<Strategy> strategies;
 	private static int size;
 	private static List<ICoordinate> list;
 
@@ -37,6 +37,7 @@ public class Mutation {
 	private Mutation() {
 		Mutation.rand = new Random();
 		prepareChoices();
+		size = strategies.size();
 	}
 
 	public static Mutation getInstance() {
@@ -47,12 +48,12 @@ public class Mutation {
 	}
 
 	private static void prepareChoices() {
-		choices = new ArrayList<Strategy>();
+		strategies = new ArrayList<Strategy>();
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
-			 * [0,1,2,3,4,5,6,7,8,9] --> [9,8,7,6,5,4,3,2,1,0]
+			 * [0,1,2,3,4,5,6,7,8,9] --> 4, 6 --> [0,1,2,5,4,3,6,7,8,9]
 			 * 
 			 * @param path
 			 * @return path
@@ -61,14 +62,29 @@ public class Mutation {
 			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
 
 				list = new MagicList<ICoordinate>();
-				for (int i = 0; i < path.size(); i++) {
-					list.add(0, path.get(i));
+				int random1 = rand.nextInt(path.size() - 1);
+				int random2 = rand.nextInt(path.size() - 1);
+				
+				int min = Math.min(random1, random2);
+				int max = Math.max(random1, random2);
+				
+				for (int i = 0; i < min; i++) {
+					list.add(path.get(i));
 				}
+				list.add(path.get(max));
+				for (int i = min + 1; i < max; i++) {
+					list.add(path.get(i));
+				}
+				list.add(path.get(min));
+				for (int i = max + 1; i < path.size(); i++) {
+					list.add(path.get(i));
+				}
+				
 				return new Path(list);
 			}
 		});
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> 5 --> [5,6,7,8,9,0,1,2,3,4]
@@ -93,7 +109,7 @@ public class Mutation {
 			}
 		});
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> [1,0,3,2,5,4,7,6,9,8]
@@ -116,7 +132,7 @@ public class Mutation {
 			}
 		});
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> 4, 6 --> [0,1,2,3,6,5,4,7,8,9]
@@ -149,12 +165,10 @@ public class Mutation {
 				return new Path(list);
 			}
 		});
-
-		size = choices.size();
 	}
 
 	public static Strategy getStrategy() {
-		return choices.get(rand.nextInt(size));
+		return strategies.get(rand.nextInt(size));
 	}
 
 	public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {

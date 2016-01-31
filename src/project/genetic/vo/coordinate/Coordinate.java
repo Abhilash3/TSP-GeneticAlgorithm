@@ -67,8 +67,7 @@ public final class Coordinate implements ICoordinate, Serializable {
 	@Override
 	public String toString() {
 		if (toString == null) {
-			toString = new StringBuilder().append("(").append(x).append(", ")
-					.append(y).append(")").toString();
+			toString = "(" + x + ", " + y + ")";
 		}
 		return toString;
 	}

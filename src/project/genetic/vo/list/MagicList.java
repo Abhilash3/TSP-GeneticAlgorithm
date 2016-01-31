@@ -24,9 +24,7 @@ public class MagicList<E> extends ArrayList<E> implements Chromosome<E> {
 
 	@Override
 	public boolean add(E e) {
-		if (contains(e))
-			return false;
-		return super.add(e);
+		return !contains(e) && super.add(e);
 	}
 
 	@Override

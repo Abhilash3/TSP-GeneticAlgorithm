@@ -12,7 +12,7 @@ public class Constants {
 	public static final int Generations = 5000;
 	public static final boolean Elitism = true;
 	
-	public static final int Graphs = 2;
+	public static final int Graphs = 1;
 	public static final int GraphDivisions = 25;
 	
 	public static final int padding = 50;

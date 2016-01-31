@@ -1,5 +1,8 @@
 package project.tsp;
 
+import static project.common.Constants.CityNumber;
+import static project.common.Constants.TSP_FILE;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,8 +14,6 @@ import project.genetic.Genetic;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.coordinate.ICoordinate;
 import project.ui.UI;
-import static project.common.Constants.CityNumber;
-import static project.common.Constants.TSP_FILE;
 
 public class TSP {
 

@@ -1,7 +1,6 @@
 package project.genetic.fitness;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 
 import project.genetic.vo.coordinate.ICoordinate;
@@ -16,23 +15,8 @@ import project.genetic.vo.list.individual.Individual;
 public class Fitness {
 
 	private static Fitness self;
-	private static Comparator<Individual<ICoordinate>> comparator;
 
-	private Fitness() {
-		comparator = new Comparator<Individual<ICoordinate>>() {
-			@Override
-			public int compare(Individual<ICoordinate> o1,
-					Individual<ICoordinate> o2) {
-				if (o1 == null && o2 == null)
-					return 0;
-				if (o1 == null)
-					return -1;
-				if (o2 == null)
-					return 1;
-				return (int) (o1.getFitness() - o2.getFitness());
-			}
-		};
-	}
+	private Fitness() {}
 
 	public static Fitness getInstance() {
 		if (self == null) {
@@ -42,19 +26,62 @@ public class Fitness {
 	}
 
 	/**
-	 * sorts the generation base on the comparator
+	 * Gets the Individual with the best fitness
 	 * 
 	 * @param generation
-	 * @return sorted generation
+	 * @return Individual with best fitness
 	 */
-	public List<Individual<ICoordinate>> sort(
+	public Individual<ICoordinate> getFittest(
 			List<Individual<ICoordinate>> generation) {
 
-		try {
-			Collections.sort(generation, comparator);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+		return getRankedIndividual(generation, 1);
+
+	}
+
+	/**
+	 * Gets the nth ranked Individual from generation
+	 * in terms of fitness
+	 * 
+	 * @param generation
+	 * @param rank
+	 * @return Individual with nth ranked fitness
+	 */
+	public Individual<ICoordinate> getRankedIndividual(
+			List<Individual<ICoordinate>> generation, int rank) {
+		if (rank < 1 || generation.size() < rank)
+			return null;
+
+		List<Individual<ICoordinate>> list = new ArrayList<Individual<ICoordinate>>(
+				rank + 1);
+
+		list.add(generation.get(0));
+		for (int i = 1; i < generation.size(); i++) {
+			Individual<ICoordinate> path = generation.get(i);
+
+			if (i < rank) {
+				int size = generation.size();
+				for (int j = 0; j < i; j++) {
+					if (Double.compare(list.get(j).getFitness(),
+							path.getFitness()) == 1) {
+						list.add(j, path);
+						break;
+					}
+				}
+				if (size == generation.size()) {
+					list.add(path);
+				}
+			} else {
+				for (int j = 0; j < list.size(); j++) {
+					if (Double.compare(list.get(j).getFitness(),
+							path.getFitness()) == 1) {
+						list.add(j, path);
+						list.remove(list.size() - 1);
+						break;
+					}
+				}
+			}
 		}
-		return generation;
+
+		return list.get(rank - 1);
 	}
 }

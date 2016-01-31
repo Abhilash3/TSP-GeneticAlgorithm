@@ -18,8 +18,12 @@ import static project.common.Constants.padding;
 import static project.common.Constants.labelPadding;
 import static project.common.Constants.Graphs;
 
-@SuppressWarnings("serial")
 public class Graph extends JComponent {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7939029888905845071L;
 
 	private int maxScore = Integer.MIN_VALUE;
 
@@ -28,9 +32,6 @@ public class Graph extends JComponent {
 
 	private Axis xAxis, yAxis;
 	private Grid grid;
-
-	private int height, width;
-	private double xScale, yScale;
 
 	public Graph() {
 		this.scores = new AArrayList<Double>();
@@ -48,7 +49,7 @@ public class Graph extends JComponent {
 			scores.getAdd(i, results.get(i));
 
 			if (maxScore < results.get(i)) {
-				maxScore = ceil(results.get(i), 0);
+				maxScore = 250 * ((int) (results.get(i) / 250) + 1);
 			}
 		}
 		repaint();
@@ -58,19 +59,18 @@ public class Graph extends JComponent {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		height = getHeight();
-		width = getWidth();
+		int height = getHeight();
+		int width = getWidth();
 
-		xScale = ((double) width - 2 * padding - labelPadding) / Generations;
-		yScale = ((double) height - 2 * padding - labelPadding) / maxScore;
+		double xScale = ((double) width - 2 * padding - labelPadding) / Generations;
+		double yScale = ((double) height - 2 * padding - labelPadding) / maxScore;
 
 		graphPoints = new AArrayList<ICoordinate>();
-		int x, y;
 		for (int i = 0; i < scores.size(); i++) {
 			graphPoints.addEmpty();
 			for (int j = 0; j < scores.getSize(i); j++) {
-				x = (int) (j * xScale + padding + labelPadding);
-				y = (int) ((maxScore - scores.get(i, j)) * yScale + padding);
+				int x = (int) (j * xScale + padding + labelPadding);
+				int y = (int) ((maxScore - scores.get(i, j)) * yScale + padding);
 				graphPoints.getAdd(i, Coordinate.getCoordinate(x, y));
 			}
 		}
@@ -85,12 +85,6 @@ public class Graph extends JComponent {
 	@Override
 	public String toString() {
 		return scores.toString();
-	}
-
-	private int ceil(double num, int ceil) {
-		for (; ceil < num; ceil += 250)
-			;
-		return ceil;
 	}
 
 }

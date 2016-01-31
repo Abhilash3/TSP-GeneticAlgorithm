@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Path;
 import project.genetic.vo.coordinate.Coordinates;
 import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.list.individual.Path;
 
 /**
  * java class definition providing crossover capabilities
@@ -19,7 +19,7 @@ public class Crossover {
 
 	private static Crossover self;
 	private static Random rand;
-	private static List<Strategy> choices;
+	private static List<Strategy> strategies;
 	private static ICoordinate city1, city2;
 	private static List<ICoordinate> list;
 	
@@ -40,8 +40,8 @@ public class Crossover {
 
 	private Crossover() {
 		Crossover.rand = new Random();
-		prepareChoices();
-		size = choices.size();
+		prepareStrategies();
+		size = strategies.size();
 	}
 
 	public static Crossover getInstance() {
@@ -51,10 +51,10 @@ public class Crossover {
 		return self;
 	}
 
-	private static void prepareChoices() {
-		choices = new ArrayList<Strategy>();
+	private static void prepareStrategies() {
+		strategies = new ArrayList<Strategy>();
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * first city from path1, get nth city from both paths and select
@@ -103,7 +103,7 @@ public class Crossover {
 			}
 		});
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * selects first random no of cities from path1, rest from path2
@@ -142,7 +142,7 @@ public class Crossover {
 			}
 		});
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * selects cities from both paths in whichever order they come with
@@ -177,7 +177,7 @@ public class Crossover {
 	}
 
 	public static Strategy getStrategy() {
-		return choices.get(rand.nextInt(size));
+		return strategies.get(rand.nextInt(size));
 	}
 
 	public Individual<ICoordinate> cross(Individual<ICoordinate> parent1,

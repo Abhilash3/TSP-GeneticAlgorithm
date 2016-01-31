@@ -1,22 +1,22 @@
 package project.genetic;
 
-import project.genetic.process.Crossover;
-import project.genetic.fitness.Fitness;
-import project.genetic.process.Mutation;
-import project.genetic.process.Selection;
-import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Path;
-import project.genetic.vo.coordinate.ICoordinate;
-import project.ui.UI;
+import static project.common.Constants.Elitism;
+import static project.common.Constants.Generations;
+import static project.common.Constants.Graphs;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static project.common.Constants.Generations;
-import static project.common.Constants.Elitism;
-import static project.common.Constants.Graphs;
+import project.genetic.fitness.Fitness;
+import project.genetic.process.Crossover;
+import project.genetic.process.Mutation;
+import project.genetic.process.Selection;
+import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.list.individual.Path;
+import project.ui.UI;
 
 /**
  * java class definition providing genetic capabilities
@@ -35,7 +35,8 @@ public class Genetic {
 	private int cityNumber;
 	private int populationSize;
 
-	protected List<Double> scores;
+	protected final List<Double> scores = new ArrayList<Double>(Graphs);
+
 	protected List<ICoordinate> coordinates;
 	protected Individual<ICoordinate> bestPath;
 
@@ -46,7 +47,7 @@ public class Genetic {
 	public Genetic(List<ICoordinate> coordinates) {
 		this.coordinates = coordinates;
 		this.cityNumber = coordinates.size();
-		this.populationSize = cityNumber * (cityNumber - 10);
+		this.populationSize = cityNumber * 5;
 	}
 
 	public Genetic(List<ICoordinate> coordinates, UI ui) {
@@ -69,8 +70,7 @@ public class Genetic {
 		for (int i = 0; i < populationSize; i++) {
 			generation.add(getRandomPath());
 		}
-		generation = fitness.sort(generation);
-		bestPath = generation.get(0);
+		bestPath = fitness.getFittest(generation);
 
 		Individual<ICoordinate> parent1, parent2, child;
 		for (int i = 1; i <= Generations; i++) {
@@ -92,18 +92,18 @@ public class Genetic {
 				newGeneration.add(child);
 
 				if (newGeneration.size() != populationSize
-						&& rand.nextInt(100) % 10 == 0) {
+						&& rand.nextInt(100) % 5 == 0) {
 					child = mutation.mutate(child);
 					newGeneration.add(child);
 				}
 
 			}
 
-			generation = fitness.sort(newGeneration);
+			generation = new ArrayList<Individual<ICoordinate>>(newGeneration);
 			newGeneration = new ArrayList<Individual<ICoordinate>>(
 					populationSize);
 
-			bestPath = generation.get(0);
+			bestPath = fitness.getFittest(generation);
 
 			if (ui != null)
 				updateUI(generation, i);
@@ -120,11 +120,11 @@ public class Genetic {
 		ui.clearMapLines();
 		ui.drawMap(bestPath);
 
-		scores = new ArrayList<Double>(Graphs);
+		scores.clear();
 		scores.add(bestPath.getFitness());
 		for (int j = 1; j < Graphs; j++) {
-			scores.add(generation.get(j * populationSize / (Graphs - 1) - 1)
-					.getFitness());
+			scores.add(fitness.getRankedIndividual(generation,
+					j * populationSize / (Graphs - 1)).getFitness());
 		}
 		ui.updateGraph(scores);
 

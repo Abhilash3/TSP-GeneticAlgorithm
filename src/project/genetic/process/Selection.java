@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 import project.genetic.fitness.Fitness;
-import project.genetic.vo.list.individual.Individual;
 import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.list.individual.Individual;
 
 /**
  * java class definition providing selection capabilities
@@ -20,7 +20,7 @@ public class Selection {
 	private static Selection self;
 	private static Fitness fitness;
 	private static Random rand;
-	private static List<Strategy> choices;
+	private static List<Strategy> strategies;
 	private static int size;
 	private static List<Individual<ICoordinate>> pool;
 	private static Individual<ICoordinate> ind;
@@ -41,7 +41,8 @@ public class Selection {
 		Selection.fitness = Fitness.getInstance();
 		Selection.rand = new Random();
 
-		prepareChoices();
+		prepareStrategies();
+		size = strategies.size();
 	}
 
 	public static Selection getInstance() {
@@ -51,10 +52,10 @@ public class Selection {
 		return self;
 	}
 
-	private static void prepareChoices() {
-		choices = new ArrayList<Strategy>();
+	private static void prepareStrategies() {
+		strategies = new ArrayList<Strategy>();
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * Roulette Wheel Selection
@@ -86,7 +87,7 @@ public class Selection {
 			}
 		});
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * Tournament Selection
@@ -104,11 +105,11 @@ public class Selection {
 				for (; pool.size() != random;)
 					pool.add(generation.get(rand.nextInt(generation.size())));
 
-				return fitness.sort(pool).get(0);
+				return fitness.getFittest(pool);
 			}
 		});
 
-		choices.add(new Strategy() {
+		strategies.add(new Strategy() {
 
 			/**
 			 * Rank Selection
@@ -136,12 +137,10 @@ public class Selection {
 				return generation.get(i - 1);
 			}
 		});
-
-		size = choices.size();
 	}
 
 	public static Strategy getStrategy() {
-		return choices.get(rand.nextInt(size));
+		return strategies.get(rand.nextInt(size));
 	}
 
 	public Individual<ICoordinate> select(

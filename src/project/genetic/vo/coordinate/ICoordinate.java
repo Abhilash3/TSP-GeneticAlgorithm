@@ -2,10 +2,10 @@ package project.genetic.vo.coordinate;
 
 public interface ICoordinate {
 	
-	public int getX();
+	int getX();
 	
-	public int getY();
+	int getY();
 	
-	public String toString();
+	String toString();
 
 }

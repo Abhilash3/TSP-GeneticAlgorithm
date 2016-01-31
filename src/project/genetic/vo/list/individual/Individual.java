@@ -166,8 +166,7 @@ public abstract class Individual<E> implements List<E> {
 	@Override
 	public String toString() {
 		if (toString == null) {
-			toString = new StringBuilder().append("[Individual: ")
-					.append(getFitness()).append("]").toString();
+			toString = "[Individual: " + getFitness() + "]";
 		}
 		return toString;
 	}
