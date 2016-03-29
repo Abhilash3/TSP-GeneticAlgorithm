@@ -122,9 +122,14 @@ public class Genetic {
 
 		scores.clear();
 		scores.add(bestPath.getFitness());
+		List<Integer> ranks = new ArrayList<Integer>();
 		for (int j = 1; j < Graphs; j++) {
-			scores.add(fitness.getRankedIndividual(generation,
-					j * populationSize / (Graphs - 1)).getFitness());
+			ranks.add(j * populationSize / (Graphs - 1));
+		}
+		List<Individual<ICoordinate>> items = 
+				fitness.getRankedIndividuals(generation, ranks);
+		for (int i = 0; i < items.size(); i++) {
+			scores.add(items.get(i).getFitness());
 		}
 		ui.updateGraph(scores);
 

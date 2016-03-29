@@ -72,4 +72,10 @@ public final class Coordinate implements ICoordinate, Serializable {
 		return toString;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Coordinate doClone() {
+		return new Coordinate(x, y);
+	}
+
 }

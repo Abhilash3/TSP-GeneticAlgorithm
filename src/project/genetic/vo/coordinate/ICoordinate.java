@@ -1,6 +1,8 @@
 package project.genetic.vo.coordinate;
 
-public interface ICoordinate {
+import project.genetic.vo.Cloneable;
+
+public interface ICoordinate extends Cloneable {
 	
 	int getX();
 	

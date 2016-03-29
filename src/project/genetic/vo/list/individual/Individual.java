@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.ListIterator;
 
 import project.genetic.vo.list.MagicList;
+import project.genetic.vo.Cloneable;
 
-public abstract class Individual<E> implements List<E> {
+public abstract class Individual<E extends Cloneable> implements List<E>, Cloneable {
 
 	protected Chromosome<E> list;
-	protected double fitness = -1;
-
+	
+	private double fitness = -1;
 	private Integer hashcode;
 	private String toString;
 
@@ -172,7 +173,7 @@ public abstract class Individual<E> implements List<E> {
 	}
 
 	public double getFitness() {
-		if (fitness < 0) {
+		if (fitness == -1) {
 			fitness = fitness();
 		}
 		return fitness;

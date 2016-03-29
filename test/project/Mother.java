@@ -1,6 +1,7 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -26,16 +27,31 @@ public class Mother {
 		return generation;
 	}
 
+	public static Path getPath() {
+		return new Path(getCoordinates());
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Individual getIndividual(final double fitness) {
+		return new Individual(Collections.EMPTY_LIST) {
+			@Override
+			protected double fitness() {
+				return fitness;
+			}
+
+			@Override
+			public Individual doClone() {
+				return null;
+			}
+		};
+	}
+
 	public static List<ICoordinate> getCoordinates() {
 		List<ICoordinate> list = new MagicList<ICoordinate>();
 		for (; list.size() != Cities; ) {
 			list.add(getCoordinate());
 		}
 		return list;
-	}
-
-	public static Path getPath() {
-		return new Path(getCoordinates());
 	}
 
 	public static Coordinate getCoordinate() {

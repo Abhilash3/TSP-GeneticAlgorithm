@@ -31,7 +31,7 @@ public class CoordinateTest extends TestCase {
 	public void testHashCode() {
 		for (ICoordinate a : coordinates) {
 			for (ICoordinate b : coordinates) {
-				if (a == b)
+				if (a.equals(b))
 					assertEquals(a.hashCode(), b.hashCode());
 				else
 					assertNotSame(a.hashCode(), b.hashCode());

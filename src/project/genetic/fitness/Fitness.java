@@ -1,6 +1,7 @@
 package project.genetic.fitness;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import project.genetic.vo.coordinate.ICoordinate;
@@ -33,55 +34,46 @@ public class Fitness {
 	 */
 	public Individual<ICoordinate> getFittest(
 			List<Individual<ICoordinate>> generation) {
-
-		return getRankedIndividual(generation, 1);
-
+		return getRankedIndividuals(generation, Collections.singletonList(1)).get(0);
 	}
 
-	/**
-	 * Gets the nth ranked Individual from generation
-	 * in terms of fitness
-	 * 
-	 * @param generation
-	 * @param rank
-	 * @return Individual with nth ranked fitness
-	 */
-	public Individual<ICoordinate> getRankedIndividual(
-			List<Individual<ICoordinate>> generation, int rank) {
-		if (rank < 1 || generation.size() < rank)
-			return null;
+	public List<Individual<ICoordinate>> getRankedIndividuals(
+			List<Individual<ICoordinate>> generation, List<Integer> ranks) {
+		if (ranks.size() == 0)
+			return new ArrayList<Individual<ICoordinate>>(0);
+		
+		int max = Collections.max(ranks);
+		if (max < 1 || generation.size() < max)
+			return new ArrayList<Individual<ICoordinate>>(0);
 
-		List<Individual<ICoordinate>> list = new ArrayList<Individual<ICoordinate>>(
-				rank + 1);
+		List<Individual<ICoordinate>> list = 
+				new ArrayList<Individual<ICoordinate>>(max + 1);
 
 		list.add(generation.get(0));
-		for (int i = 1; i < generation.size(); i++) {
-			Individual<ICoordinate> path = generation.get(i);
+		Individual<ICoordinate> path;
+		boolean added = false;
+		for (int i = 1; i < generation.size(); i++,added = false) {
+			path = generation.get(i);
 
-			if (i < rank) {
-				int size = generation.size();
-				for (int j = 0; j < i; j++) {
-					if (Double.compare(list.get(j).getFitness(),
-							path.getFitness()) == 1) {
-						list.add(j, path);
-						break;
-					}
-				}
-				if (size == generation.size()) {
-					list.add(path);
-				}
-			} else {
-				for (int j = 0; j < list.size(); j++) {
-					if (Double.compare(list.get(j).getFitness(),
-							path.getFitness()) == 1) {
-						list.add(j, path);
+			for (int j = 0; j < list.size(); j++)
+				if (Double.compare(list.get(j).getFitness(), path.getFitness()) == 1) {
+					list.add(j, path);
+					added = true;
+					if (i >= max)
 						list.remove(list.size() - 1);
-						break;
-					}
+					break;
 				}
-			}
+
+			if (i < max && !added)
+				list.add(path);
 		}
 
-		return list.get(rank - 1);
+		List<Individual<ICoordinate>> items = 
+				new ArrayList<Individual<ICoordinate>>(ranks.size());
+		for (int i = 0; i < ranks.size(); i++) {
+			items.add(list.get(ranks.get(i) - 1));
+		}
+
+		return items;
 	}
 }

@@ -4,22 +4,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.individual.Chromosome;
 
-public class MagicList<E> extends ArrayList<E> implements Chromosome<E> {
+public class MagicList<E extends Cloneable> extends ArrayList<E> implements Chromosome<E> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2587729160448267835L;
 
-	public MagicList(List<E> list) {
-		super(list.size());
-		addAll(list);
-	}
-
 	public MagicList() {
 		super();
+	}
+
+	public MagicList(int i) {
+		super(i);
+	}
+
+	public MagicList(List<E> list) {
+		this(list.size());
+		addAll(list);
 	}
 
 	@Override
@@ -46,6 +51,16 @@ public class MagicList<E> extends ArrayList<E> implements Chromosome<E> {
 				count++;
 		}
 		return count != 0;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public MagicList<E> doClone() {
+		MagicList<E> clone = new MagicList<E>();
+		for (int i = 0; i < size(); i++) {
+			clone.add((E) get(i).doClone());
+		}
+		return clone;
 	}
 
 }
