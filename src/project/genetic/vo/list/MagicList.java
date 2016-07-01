@@ -62,5 +62,30 @@ public class MagicList<E extends Cloneable> extends ArrayList<E> implements Chro
 		}
 		return clone;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (!(object instanceof MagicList<?>)) {
+			return false;
+		}
+		
+		/**
+		 * Object has to be of MagicList; verified above
+		 */
+		@SuppressWarnings("rawtypes")
+		MagicList o = (MagicList) object;
+		if (size() != o.size()) {
+			return false;
+		}
+		for (int i = 0; i < size(); i++) {
+			if (!get(i).equals(o.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }

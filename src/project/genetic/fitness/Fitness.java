@@ -1,8 +1,8 @@
 package project.genetic.fitness;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.individual.Individual;
@@ -15,65 +15,81 @@ import project.genetic.vo.list.individual.Individual;
  */
 public class Fitness {
 
-	private static Fitness self;
+	protected static List<Strategy> strategies;
 
-	private Fitness() {}
+	private static Random rand = new Random();
 
-	public static Fitness getInstance() {
-		if (self == null) {
-			self = new Fitness();
-		}
-		return self;
+	private Fitness() {
 	}
 
-	/**
-	 * Gets the Individual with the best fitness
-	 * 
-	 * @param generation
-	 * @return Individual with best fitness
-	 */
-	public Individual<ICoordinate> getFittest(
-			List<Individual<ICoordinate>> generation) {
-		return getRankedIndividuals(generation, Collections.singletonList(1)).get(0);
+	public interface Strategy {
+		void sort(List<Individual<ICoordinate>> list);
 	}
 
-	public List<Individual<ICoordinate>> getRankedIndividuals(
-			List<Individual<ICoordinate>> generation, List<Integer> ranks) {
-		if (ranks.size() == 0)
-			return new ArrayList<Individual<ICoordinate>>(0);
-		
-		int max = Collections.max(ranks);
-		if (max < 1 || generation.size() < max)
-			return new ArrayList<Individual<ICoordinate>>(0);
+	static {
+		prepareStrategies();
+	}
 
-		List<Individual<ICoordinate>> list = 
-				new ArrayList<Individual<ICoordinate>>(max + 1);
+	private static void prepareStrategies() {
+		strategies = new ArrayList<Strategy>();
 
-		list.add(generation.get(0));
-		Individual<ICoordinate> path;
-		boolean added = false;
-		for (int i = 1; i < generation.size(); i++,added = false) {
-			path = generation.get(i);
+		strategies.add(new Strategy() {
+			private List<Individual<ICoordinate>> first, second;
 
-			for (int j = 0; j < list.size(); j++)
-				if (Double.compare(list.get(j).getFitness(), path.getFitness()) == 1) {
-					list.add(j, path);
-					added = true;
-					if (i >= max)
-						list.remove(list.size() - 1);
-					break;
+			@Override
+			public void sort(List<Individual<ICoordinate>> list) {
+				mergeSort(list, 0, list.size() - 1);
+			}
+
+			private void mergeSort(List<Individual<ICoordinate>> list, int low,
+					int high) {
+				if (low < high) {
+					int mid = (high + low) / 2;
+					mergeSort(list, low, mid);
+					mergeSort(list, mid + 1, high);
+					merge(list, low, high);
 				}
+			}
 
-			if (i < max && !added)
-				list.add(path);
-		}
+			public void merge(List<Individual<ICoordinate>> list, int low,
+					int high) {
+				int mid = (high + low) / 2;
 
-		List<Individual<ICoordinate>> items = 
-				new ArrayList<Individual<ICoordinate>>(ranks.size());
-		for (int i = 0; i < ranks.size(); i++) {
-			items.add(list.get(ranks.get(i) - 1));
-		}
+				first = new ArrayList<Individual<ICoordinate>>(list.subList(
+						low, mid + 1));
+				second = new ArrayList<Individual<ICoordinate>>(list.subList(
+						mid + 1, high + 1));
 
-		return items;
+				for (int i = 0, j = 0, k = low; k < high + 1; k++) {
+					if (i < first.size() && j < second.size()) {
+						if (first.get(i).getFitness() > second.get(j)
+								.getFitness()) {
+							list.set(k, second.get(j++));
+						} else {
+							list.set(k, first.get(i++));
+						}
+					} else if (i < first.size()) {
+						list.set(k, first.get(i++));
+					} else {
+						list.set(k, second.get(j++));
+					}
+				}
+			}
+		});
+	}
+
+	protected static Strategy getStrategy() {
+		return strategies.get(rand.nextInt(strategies.size()));
+	}
+
+	public static Individual<ICoordinate> getFittest(
+			List<Individual<ICoordinate>> generation) {
+		return sort(generation).get(0);
+	}
+
+	public static List<Individual<ICoordinate>> sort(
+			List<Individual<ICoordinate>> generation) {
+		getStrategy().sort(generation);
+		return generation;
 	}
 }

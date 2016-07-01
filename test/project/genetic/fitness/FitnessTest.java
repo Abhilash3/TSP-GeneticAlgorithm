@@ -1,7 +1,6 @@
 package project.genetic.fitness;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,46 +13,69 @@ import junit.framework.TestCase;
 
 public class FitnessTest extends TestCase {
 	
-	protected Fitness fitness;
 	protected List<Individual<ICoordinate>> generation;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		fitness = Fitness.getInstance();
+		
 		generation = new ArrayList<Individual<ICoordinate>>();
-		generation.add(Mother.getIndividual(3.0));
-		generation.add(Mother.getIndividual(1.0));
-		generation.add(Mother.getIndividual(5.0));
-		generation.add(Mother.getIndividual(2.0));
-		generation.add(Mother.getIndividual(4.0));
-		generation.add(Mother.getIndividual(8.0));
-		generation.add(Mother.getIndividual(6.0));
-		generation.add(Mother.getIndividual(10.0));
-		generation.add(Mother.getIndividual(7.0));
-		generation.add(Mother.getIndividual(9.0));
+		addToGeneration(generation, 16.0);
+		addToGeneration(generation, 3.0);
+		addToGeneration(generation, 11.0);
+		addToGeneration(generation, 1.0);
+		addToGeneration(generation, 5.0);
+		addToGeneration(generation, 20.0);
+		addToGeneration(generation, 15.0);
+		addToGeneration(generation, 14.0);
+		addToGeneration(generation, 2.0);
+		addToGeneration(generation, 10.0);
+		addToGeneration(generation, 4.0);
+		addToGeneration(generation, 13.0);
+		addToGeneration(generation, 8.0);
+		addToGeneration(generation, 19.0);
+		addToGeneration(generation, 6.0);
+		addToGeneration(generation, 17.0);
+		addToGeneration(generation, 7.0);
+		addToGeneration(generation, 12.0);
+		addToGeneration(generation, 9.0);
+		addToGeneration(generation, 18.0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void addToGeneration(List<Individual<ICoordinate>> generation, double fitness) {
+		generation.add(Mother.getIndividualWithFitness(fitness));
 	}
 	
 	@Test
-	public void testGetRankedIndividuals() {		
-		List<Integer> ranks = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
-		
-		List<Individual<ICoordinate>> items;
+	public void testGetRankedIndividuals() {
+
+		int size = generation.size();
 		for (int i = 0; i < 100; i++) {
-			items = fitness.getRankedIndividuals(generation, ranks);
 			
-			assertEquals(ranks.size(), items.size());
-			assertEquals(1.0, items.get(0).getFitness());
-			assertEquals(2.0, items.get(1).getFitness());
-			assertEquals(3.0, items.get(2).getFitness());
-			assertEquals(4.0, items.get(3).getFitness());
-			assertEquals(5.0, items.get(4).getFitness());
-			assertEquals(6.0, items.get(5).getFitness());
-			assertEquals(7.0, items.get(6).getFitness());
-			assertEquals(8.0, items.get(7).getFitness());
-			assertEquals(9.0, items.get(8).getFitness());
-			assertEquals(10.0, items.get(9).getFitness());
+			Fitness.sort(generation);
+			
+			assertEquals(size, generation.size());
+			assertEquals(1.0, generation.get(0).getFitness());
+			assertEquals(2.0, generation.get(1).getFitness());
+			assertEquals(3.0, generation.get(2).getFitness());
+			assertEquals(4.0, generation.get(3).getFitness());
+			assertEquals(5.0, generation.get(4).getFitness());
+			assertEquals(6.0, generation.get(5).getFitness());
+			assertEquals(7.0, generation.get(6).getFitness());
+			assertEquals(8.0, generation.get(7).getFitness());
+			assertEquals(9.0, generation.get(8).getFitness());
+			assertEquals(10.0, generation.get(9).getFitness());
+			assertEquals(11.0, generation.get(10).getFitness());
+			assertEquals(12.0, generation.get(11).getFitness());
+			assertEquals(13.0, generation.get(12).getFitness());
+			assertEquals(14.0, generation.get(13).getFitness());
+			assertEquals(15.0, generation.get(14).getFitness());
+			assertEquals(16.0, generation.get(15).getFitness());
+			assertEquals(17.0, generation.get(16).getFitness());
+			assertEquals(18.0, generation.get(17).getFitness());
+			assertEquals(19.0, generation.get(18).getFitness());
+			assertEquals(20.0, generation.get(19).getFitness());
 			
 			Collections.shuffle(generation);
 		}

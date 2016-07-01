@@ -43,12 +43,12 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
 	@Override
 	public Object[] toArray() {
-		return list.toArray();
+		throw new UnsupportedOperationException("toArray not supproted");
 	}
 
 	@Override
 	public <T> T[] toArray(T[] a) {
-		return list.toArray(a);
+		throw new UnsupportedOperationException("toArray not supproted");
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
 	@Override
 	public E get(int index) {
-		return list.get(index);
+		return list.get(index).doClone();
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
 	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
-		return list.subList(fromIndex, toIndex);
+		throw new UnsupportedOperationException("Sublist not supproted");
 	}
 
 	@Override
@@ -142,15 +142,18 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 			return false;
 		if (this == object)
 			return true;
-		if (!(object instanceof Individual))
+		if (!(object instanceof Individual<?>))
 			return false;
 
 		/**
 		 * Object has to be of Individual; verified above
 		 */
-		@SuppressWarnings("unchecked")
-		Individual<E> o = (Individual<E>) object;
-		return Double.compare(getFitness(), o.getFitness()) == 0;
+		@SuppressWarnings("rawtypes")
+		Individual o = (Individual) object;
+		if (Double.compare(getFitness(), o.getFitness()) == 0) {
+			return list.equals(o.list);
+		}
+		return false;
 	}
 
 	@Override

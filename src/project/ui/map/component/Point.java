@@ -16,11 +16,10 @@ public class Point {
 		return p;
 	}
 
-	public void draw(Graphics g) {
-		int x = p.getX();
-		int y = p.getY();
-		g.fillRoundRect(x - 2, y - 2, 4, 4, 1, 1);
-		//g.drawString(p.toString(), x, y);
+	public void draw(Graphics g, double xScale, double yScale) {
+		g.fillRoundRect((int) (p.getX() * xScale) - 2, 
+				(int) (p.getY() * yScale) - 2,	4, 4, 1, 1);
+		//g.drawString(p.toString(), p.getX(), p.getY());
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.util.List;
 
 import project.genetic.vo.coordinate.Coordinates;
 import project.genetic.vo.coordinate.ICoordinate;
-import project.genetic.vo.list.MagicList;
 
 public class Path extends Individual<ICoordinate> {
 	
@@ -25,11 +24,7 @@ public class Path extends Individual<ICoordinate> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Path doClone() {
-		List<ICoordinate> clone = new MagicList<ICoordinate>();
-		for (int i = 0; i < list.size(); i++) {
-			clone.add((ICoordinate) list.get(i).doClone());
-		}
-		return new Path(clone);
+		return new Path((List<ICoordinate>) list.doClone());
 	}
 
 }

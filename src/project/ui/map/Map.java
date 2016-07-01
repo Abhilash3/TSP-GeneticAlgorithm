@@ -21,6 +21,12 @@ public class Map extends JComponent {
 
 	private Set<Line> linesToBeRemoved;
 	private Set<Point> pointsToBeRemoved;
+	private int[] max = new int[2];
+	
+	{
+		max[0] = 0;
+		max[1] = 0;
+	}
 
 	/**
 	 * connect coordinates using the path provided
@@ -35,6 +41,7 @@ public class Map extends JComponent {
 			for (int i = 1; i < path.size(); i++)
 				lines.add(new Line(path.get(i - 1), path.get(i)));
 		}
+		getMaxValues(path);
 		repaint();
 	}
 
@@ -48,6 +55,7 @@ public class Map extends JComponent {
 			for (ICoordinate iCoordinate : coordinates)
 				points.add(new Point(iCoordinate));
 		}
+		getMaxValues(coordinates);
 		repaint();
 	}
 
@@ -126,13 +134,27 @@ public class Map extends JComponent {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 
+		double xScale = ((double) getWidth() - 20) / max[0];
+		double yScale = ((double) getHeight() - 20) / max[1];
+
 		synchronized (lines) {
 			for (Line line : lines)
-				line.draw(g2);
+				line.draw(g2, xScale, yScale);
 		}
 		synchronized (points) {
 			for (Point point : points)
-				point.draw(g2);
+				point.draw(g2, xScale, yScale);
+		}
+	}
+	
+	private void getMaxValues(List<ICoordinate> list) {
+		for (ICoordinate coordinate : list) {
+			int x = coordinate.getX();
+			int y = coordinate.getY();
+			if (max[0] < x)
+				max[0] = x;
+			if (max[1] < y)
+				max[1] = y;
 		}
 	}
 

@@ -4,12 +4,12 @@ import java.awt.Color;
 
 public class Constants {
 	
-	private Constants() {};
+	private Constants() {}
 	
-	public static final int CityNumber = 100;
+	public static final int CityNumber = 25;
 	public static final String TSP_FILE = "coordinates.txt";
 	
-	public static final int Generations = 5000;
+	public static final int Generations = 1000;
 	public static final boolean Elitism = true;
 	
 	public static final int Graphs = 1;

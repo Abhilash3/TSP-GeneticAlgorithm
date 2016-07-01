@@ -1,5 +1,7 @@
 package project;
 
+import static project.common.Constants.CityNumber;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,9 +12,10 @@ import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
 import project.genetic.vo.list.individual.Path;
-import static project.common.Constants.CityNumber;
 
 public class Mother {
+	
+	private Mother() {}
 
 	protected static int Cities = CityNumber;
 	protected static int Population = 2 * Cities;
@@ -32,7 +35,7 @@ public class Mother {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static Individual getIndividual(final double fitness) {
+	public static Individual getIndividualWithFitness(final double fitness) {
 		return new Individual(Collections.EMPTY_LIST) {
 			@Override
 			protected double fitness() {
@@ -41,7 +44,7 @@ public class Mother {
 
 			@Override
 			public Individual doClone() {
-				return null;
+				return this;
 			}
 		};
 	}

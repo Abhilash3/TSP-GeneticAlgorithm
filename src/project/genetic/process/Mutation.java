@@ -17,12 +17,10 @@ import project.genetic.vo.list.individual.Path;
  */
 public class Mutation {
 
-	private static Mutation self;
-	private static Random rand;
-	private static List<Strategy> strategies;
-	private static int size;
-	private static List<ICoordinate> list;
-
+	protected static List<Strategy> strategies;
+	
+	private static Random rand = new Random();
+	
 	public interface Strategy {
 
 		/**
@@ -34,23 +32,15 @@ public class Mutation {
 		public Individual<ICoordinate> mutate(Individual<ICoordinate> path);
 	}
 
-	private Mutation() {
-		Mutation.rand = new Random();
+	static {
 		prepareChoices();
-		size = strategies.size();
-	}
-
-	public static Mutation getInstance() {
-		if (self == null) {
-			self = new Mutation();
-		}
-		return self;
 	}
 
 	private static void prepareChoices() {
 		strategies = new ArrayList<Strategy>();
 
 		strategies.add(new Strategy() {
+			private List<ICoordinate> list;
 
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> 2, 8 --> [0,8,2,3,4,5,6,7,2,9]
@@ -62,8 +52,13 @@ public class Mutation {
 			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
 
 				list = new MagicList<ICoordinate>();
-				int random1 = rand.nextInt(path.size() - 1);
-				int random2 = rand.nextInt(path.size() - 1);
+				int random1 = -1;
+				int random2 = -1;
+				
+				do {
+					random1 = rand.nextInt(path.size() - 2) + 1;
+					random2 = rand.nextInt(path.size() - 2) + 1;
+				} while (random1 == random2);
 				
 				int min = Math.min(random1, random2);
 				int max = Math.max(random1, random2);
@@ -85,6 +80,7 @@ public class Mutation {
 		});
 
 		strategies.add(new Strategy() {
+			private List<ICoordinate> list;
 
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> 5 --> [5,6,7,8,9,0,1,2,3,4]
@@ -110,6 +106,7 @@ public class Mutation {
 		});
 
 		strategies.add(new Strategy() {
+			private List<ICoordinate> list;
 
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> [1,0,3,2,5,4,7,6,9,8]
@@ -133,6 +130,7 @@ public class Mutation {
 		});
 
 		strategies.add(new Strategy() {
+			private List<ICoordinate> list;
 
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> 2, 8 --> [0,1,7,6,5,4,3,2,8,9]
@@ -167,11 +165,11 @@ public class Mutation {
 		});
 	}
 
-	public static Strategy getStrategy() {
-		return strategies.get(rand.nextInt(size));
+	protected static Strategy getStrategy() {
+		return strategies.get(rand.nextInt(strategies.size()));
 	}
 
-	public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
+	public static Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
 		return getStrategy().mutate(path);
 	}
 

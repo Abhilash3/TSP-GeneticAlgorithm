@@ -4,6 +4,6 @@ import java.util.List;
 
 import project.genetic.vo.Cloneable;
 
-public interface Chromosome<E> extends List<E>, Cloneable {
+public interface Chromosome<E extends Cloneable> extends List<E>, Cloneable {
 
 }

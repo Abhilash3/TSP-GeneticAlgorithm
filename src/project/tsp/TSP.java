@@ -34,9 +34,6 @@ public class TSP {
 				if (!coordinates.contains(city))
 					coordinates.add(city);
 			}
-			
-			in.close();
-			fileIn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			coordinates = new ArrayList<ICoordinate>();
@@ -44,6 +41,13 @@ public class TSP {
 				coordinates.add(Coordinate.getCoordinate(
 						(rand.nextInt(55) + 5) * 10,
 						(rand.nextInt(55) + 5) * 10));
+			}
+		} finally {
+			try {
+				in.close();
+				fileIn.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 

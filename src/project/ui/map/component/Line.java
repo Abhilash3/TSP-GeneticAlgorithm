@@ -24,8 +24,11 @@ public class Line {
 		return p1.equals(iCoordinate) || p2.equals(iCoordinate);
 	}
 
-	public void draw(Graphics g) {
-		g.drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+	public void draw(Graphics g, double xScale, double yScale) {
+		g.drawLine((int) (p1.getX() * xScale), 
+				(int) (p1.getY() * yScale), 
+				(int) (p2.getX() * xScale), 
+				(int) (p2.getY() * yScale));
 	}
 
 	@Override

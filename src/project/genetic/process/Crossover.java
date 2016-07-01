@@ -17,13 +17,9 @@ import project.genetic.vo.list.individual.Path;
  */
 public class Crossover {
 
-	private static Crossover self;
-	private static Random rand;
-	private static List<Strategy> strategies;
-	private static ICoordinate city1, city2;
-	private static List<ICoordinate> list;
+	protected static List<Strategy> strategies;
 	
-	private static int size;
+	private static Random rand = new Random();
 
 	public interface Strategy {
 
@@ -38,23 +34,18 @@ public class Crossover {
 				Individual<ICoordinate> path2);
 	}
 
-	private Crossover() {
-		Crossover.rand = new Random();
+	protected Crossover() {}
+	
+	static {
 		prepareStrategies();
-		size = strategies.size();
-	}
-
-	public static Crossover getInstance() {
-		if (self == null) {
-			self = new Crossover();
-		}
-		return self;
 	}
 
 	private static void prepareStrategies() {
 		strategies = new ArrayList<Strategy>();
 
 		strategies.add(new Strategy() {
+			private List<ICoordinate> list;
+			private ICoordinate city, city1, city2;
 
 			/**
 			 * first city from path1, get nth city from both paths and select
@@ -77,8 +68,9 @@ public class Crossover {
 					city2 = path2.get(i);
 
 					if (!list.contains(city1) && !list.contains(city2)) {
-						double distance1 = Coordinates.distance(path1.get(i - 1), city1);
-						double distance2 = Coordinates.distance(path2.get(i - 1), city2);
+						city = list.get(i - 1);
+						double distance1 = distance(city, city1);
+						double distance2 = distance(city, city2);
 						if (Double.compare(distance1, distance2) > 0) {
 							list.add(city2);
 						} else {
@@ -90,9 +82,9 @@ public class Crossover {
 						list.add(city2);
 					} else {
 						for (int j = 0; j < path1.size(); j++) {
-							city1 = path1.get(j);
-							if (!list.contains(city1)) {
-								list.add(city1);
+							city = path1.get(j);
+							if (!list.contains(city)) {
+								list.add(city);
 								break;
 							}
 						}
@@ -101,9 +93,15 @@ public class Crossover {
 
 				return new Path(list);
 			}
+
+			private double distance(ICoordinate city1, ICoordinate city2) {
+				return Coordinates.distance(city1, city2);
+			}
 		});
 
 		strategies.add(new Strategy() {
+			private List<ICoordinate> list;
+			private ICoordinate city1, city2;
 
 			/**
 			 * selects first random no of cities from path1, rest from path2
@@ -143,6 +141,8 @@ public class Crossover {
 		});
 
 		strategies.add(new Strategy() {
+			private List<ICoordinate> list;
+			private ICoordinate city1, city2;
 
 			/**
 			 * selects cities from both paths in whichever order they come with
@@ -176,11 +176,11 @@ public class Crossover {
 		});
 	}
 
-	public static Strategy getStrategy() {
-		return strategies.get(rand.nextInt(size));
+	protected static Strategy getStrategy() {
+		return strategies.get(rand.nextInt(strategies.size()));
 	}
 
-	public Individual<ICoordinate> cross(Individual<ICoordinate> parent1,
+	public static Individual<ICoordinate> cross(Individual<ICoordinate> parent1,
 			Individual<ICoordinate> parent2) {
 		return getStrategy().cross(parent1, parent2);
 	}

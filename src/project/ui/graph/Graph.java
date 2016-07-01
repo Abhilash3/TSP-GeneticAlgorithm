@@ -75,16 +75,16 @@ public class Graph extends JComponent {
 			}
 		}
 
-		grid.drawGrid(g, height, width);
 		xAxis.reDraw(g, height, width, Generations);
 		yAxis.reDraw(g, height, width, maxScore);
+		grid.drawGrid(g, height, width);
 		grid.drawChart(g, graphPoints);
 
 	}
 
 	@Override
 	public String toString() {
-		return scores.toString();
+		return "Graph:" + scores.toString();
 	}
 
 }

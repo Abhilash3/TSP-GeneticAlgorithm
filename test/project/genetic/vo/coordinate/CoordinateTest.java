@@ -2,8 +2,8 @@ package project.genetic.vo.coordinate;
 
 import java.util.List;
 
-import project.Mother;
 import junit.framework.TestCase;
+import project.Mother;
 
 public class CoordinateTest extends TestCase {
 
