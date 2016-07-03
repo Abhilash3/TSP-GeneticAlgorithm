@@ -6,6 +6,7 @@ import java.util.Random;
 
 import project.genetic.vo.coordinate.Coordinates;
 import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
 import project.genetic.vo.list.individual.Path;
 
@@ -57,7 +58,7 @@ public class Crossover {
 			@Override
 			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
 				
-				list = new ArrayList<ICoordinate>();
+				list = new MagicList<ICoordinate>();
 				list.add(path1.get(0));
 				
 				for (int i = 1; i < path1.size(); i++) {
@@ -111,9 +112,9 @@ public class Crossover {
 			@Override
 			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
 
+				list = new MagicList<ICoordinate>();
+
 				int random = rand.nextInt(path1.size() - 1) + 1;
-				list = new ArrayList<ICoordinate>();
-				
 				for (int i = 0; i < random; i++) {
 					list.add(path1.get(i));
 				}
@@ -152,7 +153,7 @@ public class Crossover {
 			@Override
 			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
 
-				list = new ArrayList<ICoordinate>();
+				list = new MagicList<ICoordinate>();
 				
 				for (int i = 0; list.size() != path1.size(); i++) {
 					city1 = path1.get(i);
