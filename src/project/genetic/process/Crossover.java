@@ -26,12 +26,11 @@ public class Crossover {
 		/**
 		 * method generating crossover options and generating child path
 		 * 
-		 * @param path1
-		 * @param path2
-		 * @return childPath
+		 * @param path1 parent 1
+		 * @param path2 parent 2
+		 * @return child
 		 */
-		public Individual<ICoordinate> cross(Individual<ICoordinate> path1,
-				Individual<ICoordinate> path2);
+		Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2);
 	}
 
 	protected Crossover() {}
@@ -51,13 +50,12 @@ public class Crossover {
 			 * first city from path1, get nth city from both paths and select
 			 * whichever is closer to n-1th city in child path
 			 * 
-			 * @param path1
-			 * @param path2
-			 * @return child path
+			 * @param path1 parent 1
+			 * @param path2 parent 2
+			 * @return child
 			 */
 			@Override
-			public Individual<ICoordinate> cross(Individual<ICoordinate> path1,
-					Individual<ICoordinate> path2) {
+			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
 				
 				list = new ArrayList<ICoordinate>();
 				list.add(path1.get(0));
@@ -106,13 +104,12 @@ public class Crossover {
 			/**
 			 * selects first random no of cities from path1, rest from path2
 			 * 
-			 * @param path1
-			 * @param path2
-			 * @return child path
+			 * @param path1 parent 1
+			 * @param path2 parent 2
+			 * @return child
 			 */
 			@Override
-			public Individual<ICoordinate> cross(Individual<ICoordinate> path1,
-					Individual<ICoordinate> path2) {
+			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
 
 				int random = rand.nextInt(path1.size() - 1) + 1;
 				list = new ArrayList<ICoordinate>();
@@ -148,13 +145,12 @@ public class Crossover {
 			 * selects cities from both paths in whichever order they come with
 			 * no duplication
 			 * 
-			 * @param path1
-			 * @param path2
-			 * @return
+			 * @param path1 parent 1
+			 * @param path2 parent 2
+			 * @return child
 			 */
 			@Override
-			public Individual<ICoordinate> cross(Individual<ICoordinate> path1,
-					Individual<ICoordinate> path2) {
+			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
 
 				list = new ArrayList<ICoordinate>();
 				
@@ -180,8 +176,7 @@ public class Crossover {
 		return strategies.get(rand.nextInt(strategies.size()));
 	}
 
-	public static Individual<ICoordinate> cross(Individual<ICoordinate> parent1,
-			Individual<ICoordinate> parent2) {
+	public static Individual<ICoordinate> cross(Individual<ICoordinate> parent1, Individual<ICoordinate> parent2) {
 		return getStrategy().cross(parent1, parent2);
 	}
 }

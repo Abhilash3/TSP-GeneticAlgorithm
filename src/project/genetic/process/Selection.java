@@ -26,11 +26,10 @@ public class Selection {
 		/**
 		 * method generating selection options and selecting path
 		 * 
-		 * @param generation
-		 * @return selected path
+		 * @param generation generation pool
+		 * @return selection
 		 */
-		public Individual<ICoordinate> select(
-				List<Individual<ICoordinate>> generation);
+		Individual<ICoordinate> select(List<Individual<ICoordinate>> generation);
 	}
 
 	static {
@@ -47,8 +46,8 @@ public class Selection {
 			/**
 			 * Roulette Wheel Selection
 			 * 
-			 * @param generation
-			 * @return path
+			 * @param generation generation pool
+			 * @return selection
 			 */
 			@Override
 			public Individual<ICoordinate> select(
@@ -80,8 +79,8 @@ public class Selection {
 			/**
 			 * Tournament Selection
 			 * 
-			 * @param generation
-			 * @return path
+			 * @param generation generation pool
+			 * @return selection
 			 */
 			@Override
 			public Individual<ICoordinate> select(
@@ -104,8 +103,8 @@ public class Selection {
 			/**
 			 * Rank Selection
 			 * 
-			 * @param generation
-			 * @return path
+			 * @param generation generation pool
+			 * @return selection
 			 */
 			@Override
 			public Individual<ICoordinate> select(

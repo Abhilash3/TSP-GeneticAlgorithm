@@ -18,10 +18,12 @@ public class Fitness {
 	protected static List<Strategy> strategies;
 
 	private static Random rand = new Random();
-    private static Order DefaultOrder = Order.ASC;
 
 	private Fitness() {}
 
+    /**
+     * order to sort list
+     */
 	private enum Order {
         ASC {
             @Override
@@ -40,7 +42,13 @@ public class Fitness {
     }
 
 	public interface Strategy {
-		void sort(List<Individual<ICoordinate>> list);
+        /**
+         * method generating sorting options and sorted path
+         *
+         * @param list list of objects
+         * @param order order in which to sort
+         */
+		void sort(List<Individual<ICoordinate>> list, Order order);
 	}
 
 	static {
@@ -51,15 +59,22 @@ public class Fitness {
 		strategies = new ArrayList<Strategy>();
 
 		strategies.add(new Strategy() {
+			private Order order;
 			private List<Individual<ICoordinate>> first, second;
 
+            /**
+             * MergeSort
+             *
+             * @param list list of objects
+             * @param order order in which to sort
+             */
 			@Override
-			public void sort(List<Individual<ICoordinate>> list) {
+			public void sort(List<Individual<ICoordinate>> list, Order order) {
+				this.order = order;
 				mergeSort(list, 0, list.size() - 1);
 			}
 
-			private void mergeSort(List<Individual<ICoordinate>> list, int low,
-					int high) {
+			private void mergeSort(List<Individual<ICoordinate>> list, int low, int high) {
 				if (low < high) {
 					int mid = (high + low) / 2;
 					mergeSort(list, low, mid);
@@ -68,8 +83,7 @@ public class Fitness {
 				}
 			}
 
-			public void merge(List<Individual<ICoordinate>> list, int low,
-					int high) {
+			private void merge(List<Individual<ICoordinate>> list, int low, int high) {
 				int mid = (high + low) / 2;
 
 				first = new ArrayList<Individual<ICoordinate>>(list.subList(
@@ -79,7 +93,7 @@ public class Fitness {
 
 				for (int i = 0, j = 0, k = low; k < high + 1; k++) {
 					if (i < first.size() && j < second.size()) {
-						if (DefaultOrder.compare(first.get(i), second.get(j)) == 1) {
+						if (order.compare(first.get(i), second.get(j)) == 1) {
 							list.set(k, second.get(j++));
 						} else {
 							list.set(k, first.get(i++));
@@ -98,14 +112,12 @@ public class Fitness {
 		return strategies.get(rand.nextInt(strategies.size()));
 	}
 
-	public static Individual<ICoordinate> getFittest(
-			List<Individual<ICoordinate>> generation) {
+	public static Individual<ICoordinate> getFittest(List<Individual<ICoordinate>> generation) {
 		return sort(generation).get(0);
 	}
 
-	public static List<Individual<ICoordinate>> sort(
-			List<Individual<ICoordinate>> generation) {
-		getStrategy().sort(generation);
+	public static List<Individual<ICoordinate>> sort(List<Individual<ICoordinate>> generation) {
+		getStrategy().sort(generation, Order.ASC);
 		return generation;
 	}
 }

@@ -26,10 +26,10 @@ public class Mutation {
 		/**
 		 * method generating mutation options and mutating path
 		 * 
-		 * @param path
+		 * @param path individual
 		 * @return mutated path
 		 */
-		public Individual<ICoordinate> mutate(Individual<ICoordinate> path);
+		Individual<ICoordinate> mutate(Individual<ICoordinate> path);
 	}
 
 	static {
@@ -45,8 +45,8 @@ public class Mutation {
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> 2, 8 --> [0,8,2,3,4,5,6,7,2,9]
 			 * 
-			 * @param path
-			 * @return path
+			 * @param path individual
+			 * @return mutated path
 			 */
 			@Override
 			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
@@ -85,8 +85,8 @@ public class Mutation {
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> 5 --> [5,6,7,8,9,0,1,2,3,4]
 			 * 
-			 * @param path
-			 * @return path
+			 * @param path individual
+			 * @return mutated path
 			 */
 			@Override
 			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
@@ -111,8 +111,8 @@ public class Mutation {
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> [1,0,3,2,5,4,7,6,9,8]
 			 * 
-			 * @param path
-			 * @return path
+			 * @param path individual
+			 * @return mutated path
 			 */
 			@Override
 			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
@@ -135,8 +135,8 @@ public class Mutation {
 			/**
 			 * [0,1,2,3,4,5,6,7,8,9] --> 2, 8 --> [0,1,7,6,5,4,3,2,8,9]
 			 * 
-			 * @param path
-			 * @return path
+			 * @param path individual
+			 * @return mutated path
 			 */
 			@Override
 			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
