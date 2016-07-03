@@ -28,7 +28,6 @@ public class Genetic {
 
 	protected static Random rand = new Random();
 
-	private int cityNumber;
 	private int populationSize;
 
 	protected final List<Double> scores = new ArrayList<Double>(Graphs);
@@ -42,8 +41,7 @@ public class Genetic {
 
 	public Genetic(List<ICoordinate> coordinates) {
 		this.coordinates = coordinates;
-		cityNumber = coordinates.size();
-		populationSize = cityNumber * 5;
+		populationSize = coordinates.size() * 5;
 	}
 
 	public Genetic(List<ICoordinate> coordinates, UI ui) {
@@ -144,13 +142,8 @@ public class Genetic {
 
 		scores.clear();
 		scores.add(bestPath.getFitness());
-		List<Integer> ranks = new ArrayList<Integer>();
 		for (int j = 1; j < Graphs; j++) {
-			ranks.add(j * populationSize / (Graphs - 1));
-		}
-		Fitness.sort(generation);
-		for (Integer item : ranks) {
-			scores.add(generation.get(item).getFitness());
+            scores.add(generation.get(j * populationSize / (Graphs - 1) - 1).getFitness());
 		}
 		ui.updateGraph(scores);
 

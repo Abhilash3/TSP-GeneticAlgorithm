@@ -8,7 +8,7 @@ import java.util.ListIterator;
 import project.genetic.vo.list.MagicList;
 import project.genetic.vo.Cloneable;
 
-public abstract class Individual<E extends Cloneable> implements List<E>, Cloneable {
+public abstract class Individual<E extends Cloneable> implements List<E>, Cloneable, Comparable<Individual<E>> {
 
 	protected Chromosome<E> list;
 	
@@ -43,22 +43,22 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
 	@Override
 	public Object[] toArray() {
-		throw new UnsupportedOperationException("toArray not supproted");
+		throw new UnsupportedOperationException("toArray not supported");
 	}
 
 	@Override
 	public <T> T[] toArray(T[] a) {
-		throw new UnsupportedOperationException("toArray not supproted");
+		throw new UnsupportedOperationException("toArray not supported");
 	}
 
 	@Override
 	public boolean add(E e) {
-		throw new UnsupportedOperationException("Add not supproted");
+		throw new UnsupportedOperationException("Add not supported");
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		throw new UnsupportedOperationException("Remove not supproted");
+		throw new UnsupportedOperationException("Remove not supported");
 	}
 
 	@Override
@@ -68,27 +68,27 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
-		throw new UnsupportedOperationException("AddAll not supproted");
+		throw new UnsupportedOperationException("AddAll not supported");
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
-		throw new UnsupportedOperationException("AddAll not supproted");
+		throw new UnsupportedOperationException("AddAll not supported");
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		throw new UnsupportedOperationException("RemoveAll not supproted");
+		throw new UnsupportedOperationException("RemoveAll not supported");
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		throw new UnsupportedOperationException("RetainAll not supproted");
+		throw new UnsupportedOperationException("RetainAll not supported");
 	}
 
 	@Override
 	public void clear() {
-		throw new UnsupportedOperationException("Clear not supproted");
+		throw new UnsupportedOperationException("Clear not supported");
 	}
 
 	@Override
@@ -98,17 +98,17 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
 	@Override
 	public E set(int index, E element) {
-		throw new UnsupportedOperationException("Set not supproted");
+		throw new UnsupportedOperationException("Set not supported");
 	}
 
 	@Override
 	public void add(int index, E element) {
-		throw new UnsupportedOperationException("Add not supproted");
+		throw new UnsupportedOperationException("Add not supported");
 	}
 
 	@Override
 	public E remove(int index) {
-		throw new UnsupportedOperationException("Remove not supproted");
+		throw new UnsupportedOperationException("Remove not supported");
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
 	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
-		throw new UnsupportedOperationException("Sublist not supproted");
+		throw new UnsupportedOperationException("subList not supported");
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 		 */
 		@SuppressWarnings("rawtypes")
 		Individual o = (Individual) object;
-		if (Double.compare(getFitness(), o.getFitness()) == 0) {
+		if (compareTo(o) == 0) {
 			return list.equals(o.list);
 		}
 		return false;
@@ -166,6 +166,11 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 		}
 		return hashcode;
 	}
+
+	@Override
+	public int compareTo(Individual<E> individual) {
+        return Double.compare(getFitness(), individual.getFitness());
+    }
 
 	@Override
 	public String toString() {

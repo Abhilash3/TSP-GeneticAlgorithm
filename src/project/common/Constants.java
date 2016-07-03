@@ -6,13 +6,13 @@ public class Constants {
 	
 	private Constants() {}
 	
-	public static final int CityNumber = 25;
+	public static final int CityNumber = 50;
 	public static final String TSP_FILE = "coordinates.txt";
 	
 	public static final int Generations = 1000;
 	public static final boolean Elitism = true;
 	
-	public static final int Graphs = 1;
+	public static final int Graphs = 3;
 	public static final int GraphDivisions = 25;
 	
 	public static final int padding = 50;

@@ -18,9 +18,26 @@ public class Fitness {
 	protected static List<Strategy> strategies;
 
 	private static Random rand = new Random();
+    private static Order DefaultOrder = Order.ASC;
 
-	private Fitness() {
-	}
+	private Fitness() {}
+
+	private enum Order {
+        ASC {
+            @Override
+            public int compare(Individual a, Individual b) {
+                return a.compareTo(b);
+            }
+        },
+        DESC {
+            @Override
+            public int compare(Individual a, Individual b) {
+                return ASC.compare(a, b) * -1;
+            }
+        };
+
+        public abstract int compare(Individual a, Individual b);
+    }
 
 	public interface Strategy {
 		void sort(List<Individual<ICoordinate>> list);
@@ -62,8 +79,7 @@ public class Fitness {
 
 				for (int i = 0, j = 0, k = low; k < high + 1; k++) {
 					if (i < first.size() && j < second.size()) {
-						if (first.get(i).getFitness() > second.get(j)
-								.getFitness()) {
+						if (DefaultOrder.compare(first.get(i), second.get(j)) == 1) {
 							list.set(k, second.get(j++));
 						} else {
 							list.set(k, first.get(i++));
