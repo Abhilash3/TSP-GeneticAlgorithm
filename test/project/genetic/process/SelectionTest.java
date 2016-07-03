@@ -12,24 +12,31 @@ import junit.framework.TestCase;
 public class SelectionTest extends TestCase {
 	
 	private List<Individual<ICoordinate>> generation;
+	protected TestSelection testSelection;
 	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		generation = Mother.getGeneration();
+		testSelection = new TestSelection();
 	}
 	
 	public void testSelectionStrategy() {
-		Set<Selection.Strategy> choices = new HashSet<Selection.Strategy>();
-
 		Individual<ICoordinate> child;
+		Selection.Strategy strategy;
+
 		for (int i = 0; i < 1000; i++) {
-			Selection.Strategy strategy = Selection.getStrategy();
+			strategy = testSelection.getTestStrategy(i % Selection.strategies.size());
+
 			child = strategy.select(generation);
+
 			assertTrue(generation.contains(child));
-			choices.add(strategy);
 		}
-		
-		assertEquals(Selection.strategies.size(), choices.size());
+	}
+
+	private class TestSelection extends Selection {
+		protected Selection.Strategy getTestStrategy(int n) {
+			return strategies.get(n);
+		}
 	}
 }
