@@ -1,13 +1,11 @@
 package project.genetic.process;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import project.genetic.fitness.Fitness;
 import project.genetic.vo.coordinate.ICoordinate;
-import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
 
 /**
@@ -41,7 +39,6 @@ public class Selection {
 		strategies = new ArrayList<Strategy>();
 
 		strategies.add(new Strategy() {
-			private List<Individual<ICoordinate>> pool;
 			private Individual<ICoordinate> ind;
 
 			/**
@@ -59,16 +56,18 @@ public class Selection {
 					if (max < ind.getFitness())
 						max = ind.getFitness();
 				}
-
-				pool = new MagicList<Individual<ICoordinate>>();
-				for (int i = 0; i < generation.size(); i++) {
-					ind = generation.get(i);
-					int random = (int) ((max - ind.getFitness()) * 100 / max) + 1;
-					for (int j = 0; j < random; j++)
-						pool.add(ind);
+				
+				double random = rand.nextDouble() * max;
+				int low = 0, high = generation.size() - 1;
+				double sum = 0;
+				for (int mid = (high + low) / 2; true; ) {
+					ind = generation.get(mid);
+					sum += ind.getFitness();
+					if (sum > random) {
+						break;
+					}
 				}
-				Collections.shuffle(pool);
-				return pool.get(rand.nextInt(pool.size()));
+				return ind;
 
 			}
 		});
