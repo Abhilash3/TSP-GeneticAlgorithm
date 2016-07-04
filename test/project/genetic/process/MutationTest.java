@@ -1,8 +1,5 @@
 package project.genetic.process;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import junit.framework.TestCase;
 import project.Mother;
 import project.genetic.vo.coordinate.ICoordinate;
@@ -18,15 +15,29 @@ public class MutationTest extends TestCase {
 		testMutation = new TestMutation();
 	}
 	
-	public void testMutationStrategy() {
+	public void testMutationFirstStrategy() {
+		testStrategy(testMutation.getTestStrategy(0));
+	}
+	
+	public void testMutationSecondStrategy() {
+		testStrategy(testMutation.getTestStrategy(1));
+	}
+	
+	public void testMutationThirdStrategy() {
+		testStrategy(testMutation.getTestStrategy(2));
+	}
+	
+	public void testMutationForthStrategy() {
+		testStrategy(testMutation.getTestStrategy(3));
+	}
+	
+	private void testStrategy(final Mutation.Strategy strategy) {
 		Individual<ICoordinate> ind;
-		Mutation.Strategy strategy;
-
 		Individual<ICoordinate> child;
+	
 		for (int i = 0; i < 1000; i++) {
-			strategy = testMutation.getTestStrategy(i % Mutation.strategies.size());
 			ind = Mother.getPath();
-
+	
 			child = strategy.mutate(ind);
 			assertEquals(ind.size(), child.size());
 		}

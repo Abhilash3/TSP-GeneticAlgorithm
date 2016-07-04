@@ -1,8 +1,5 @@
 package project.genetic.process;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import junit.framework.TestCase;
 import project.Mother;
 import project.genetic.vo.coordinate.ICoordinate;
@@ -18,14 +15,24 @@ public class CrossoverTest extends TestCase {
         testCrossover = new TestCrossover();
 	}
 	
-	public void testCrossoverStrategy() {
+	public void testCrossoverFirstStrategy() {
+		testStrategy(testCrossover.getTestStrategy(0));
+	}
+	
+	public void testCrossoverSecondStrategy() {
+		testStrategy(testCrossover.getTestStrategy(1));
+	}
+	
+	public void testCrossoverThirdStrategy() {
+		testStrategy(testCrossover.getTestStrategy(2));
+	}
+	
+	private void testStrategy(final Crossover.Strategy strategy) {
         Individual<ICoordinate> parent1;
         Individual<ICoordinate> parent2;
 		Individual<ICoordinate> child;
-        Crossover.Strategy strategy;
 
 		for (int i = 0; i < 1000; i++) {
-            strategy = testCrossover.getTestStrategy(i % Crossover.strategies.size());
             parent1 = Mother.getPath();
             parent2 = Mother.getPath();
 

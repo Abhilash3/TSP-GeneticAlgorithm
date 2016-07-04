@@ -1,8 +1,6 @@
 package project.genetic.process;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import project.Mother;
 import project.genetic.vo.coordinate.ICoordinate;
@@ -21,13 +19,22 @@ public class SelectionTest extends TestCase {
 		testSelection = new TestSelection();
 	}
 	
-	public void testSelectionStrategy() {
+	public void testSelectionFirstStrategy() {
+		testStrategy(testSelection.getTestStrategy(0));
+	}
+	
+	public void testSelectionSecondStrategy() {
+		testStrategy(testSelection.getTestStrategy(1));
+	}
+	
+	public void testSelectionThirdStrategy() {
+		testStrategy(testSelection.getTestStrategy(2));
+	}
+	
+	private void testStrategy(final Selection.Strategy strategy) {
 		Individual<ICoordinate> child;
-		Selection.Strategy strategy;
-
+		
 		for (int i = 0; i < 1000; i++) {
-			strategy = testSelection.getTestStrategy(i % Selection.strategies.size());
-
 			child = strategy.select(generation);
 
 			assertTrue(generation.contains(child));

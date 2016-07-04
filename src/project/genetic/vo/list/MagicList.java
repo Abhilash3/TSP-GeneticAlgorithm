@@ -58,7 +58,7 @@ public class MagicList<E extends Cloneable> extends ArrayList<E> implements Chro
 	public MagicList<E> doClone() {
 		MagicList<E> clone = new MagicList<E>();
 		for (int i = 0; i < size(); i++) {
-			clone.add(get(i).doClone());
+			clone.add((E) get(i).doClone());
 		}
 		return clone;
 	}

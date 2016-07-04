@@ -168,7 +168,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 	}
 
 	@Override
-	public int compareTo(Individual<E> individual) {
+	public int compareTo(@SuppressWarnings("rawtypes") Individual individual) {
         return Double.compare(getFitness(), individual.getFitness());
     }
 

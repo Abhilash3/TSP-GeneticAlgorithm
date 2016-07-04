@@ -27,19 +27,22 @@ public class Fitness {
      */
 	private enum Order {
         ASC {
-            @Override
+            @SuppressWarnings("rawtypes")
+			@Override
             public int compare(Individual a, Individual b) {
                 return a.compareTo(b);
             }
         },
         DESC {
-            @Override
+            @SuppressWarnings("rawtypes")
+			@Override
             public int compare(Individual a, Individual b) {
                 return ASC.compare(a, b) * -1;
             }
         };
 
-        public abstract int compare(Individual a, Individual b);
+        @SuppressWarnings("rawtypes")
+		public abstract int compare(Individual a, Individual b);
     }
 
 	public interface Strategy {

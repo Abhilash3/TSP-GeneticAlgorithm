@@ -7,6 +7,7 @@ import java.util.Random;
 
 import project.genetic.fitness.Fitness;
 import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
 
 /**
@@ -50,8 +51,7 @@ public class Selection {
 			 * @return selection
 			 */
 			@Override
-			public Individual<ICoordinate> select(
-					List<Individual<ICoordinate>> generation) {
+			public Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
 
 				double max = 0;
 				for (int i = 0; i < generation.size(); i++) {
@@ -60,7 +60,7 @@ public class Selection {
 						max = ind.getFitness();
 				}
 
-				pool = new ArrayList<Individual<ICoordinate>>();
+				pool = new MagicList<Individual<ICoordinate>>();
 				for (int i = 0; i < generation.size(); i++) {
 					ind = generation.get(i);
 					int random = (int) ((max - ind.getFitness()) * 100 / max) + 1;
@@ -83,13 +83,12 @@ public class Selection {
 			 * @return selection
 			 */
 			@Override
-			public Individual<ICoordinate> select(
-					List<Individual<ICoordinate>> generation) {
+			public Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
 
 				int size = generation.size();
 				int random = rand.nextInt(size - 2) + 2;
 
-				pool = new ArrayList<Individual<ICoordinate>>();
+				pool = new MagicList<Individual<ICoordinate>>();
 				while (pool.size() != random) {
 					pool.add(generation.get(rand.nextInt(size)));
 				}
@@ -107,8 +106,7 @@ public class Selection {
 			 * @return selection
 			 */
 			@Override
-			public Individual<ICoordinate> select(
-					List<Individual<ICoordinate>> generation) {
+			public Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
 
 				int sum = 0, i = 1;
 				while (i <= generation.size()) {
@@ -134,8 +132,7 @@ public class Selection {
 		return strategies.get(rand.nextInt(strategies.size()));
 	}
 
-	public static Individual<ICoordinate> select(
-			List<Individual<ICoordinate>> generation) {
+	public static Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
 		return getStrategy().select(generation);
 	}
 }
