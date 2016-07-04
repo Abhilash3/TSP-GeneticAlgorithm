@@ -1,51 +1,105 @@
 package project.genetic.process;
 
-import junit.framework.TestCase;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit3.MockObjectTestCase;
+import org.jmock.lib.legacy.ClassImposteriser;
 import project.Mother;
 import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.individual.Individual;
 
-public class MutationTest extends TestCase {
+import java.util.Random;
 
+public class MutationTest extends MockObjectTestCase {
+
+    private Mockery mockery;
 	protected TestMutation testMutation;
-	
-	@Override
+	private static Random _mockRandom;
+
+    @Override
 	public void setUp() throws Exception {
-		super.setUp();
+        mockery = new Mockery() {
+            {
+                setImposteriser(ClassImposteriser.INSTANCE);
+            }
+        };
 		testMutation = new TestMutation();
-	}
-	
-	public void testMutationFirstStrategy() {
-		testStrategy(testMutation.getTestStrategy(0));
-	}
-	
-	public void testMutationSecondStrategy() {
-		testStrategy(testMutation.getTestStrategy(1));
-	}
-	
-	public void testMutationThirdStrategy() {
-		testStrategy(testMutation.getTestStrategy(2));
-	}
-	
-	public void testMutationForthStrategy() {
-		testStrategy(testMutation.getTestStrategy(3));
-	}
-	
-	private void testStrategy(final Mutation.Strategy strategy) {
-		Individual<ICoordinate> ind;
-		Individual<ICoordinate> child;
-	
-		for (int i = 0; i < 1000; i++) {
-			ind = Mother.getPath();
-	
-			child = strategy.mutate(ind);
-			assertEquals(ind.size(), child.size());
-		}
+		_mockRandom = mockery.mock(Random.class);
 	}
 
-	private class TestMutation extends Mutation {
+	public void testMutationFirstStrategy() {
+        Individual<ICoordinate> ind = Mother.getPath();
+        Mutation.Strategy strategy = testMutation.getTestStrategy(0);
+
+        mockery.checking(new Expectations() {
+            {
+                exactly(2).of(_mockRandom).nextInt(ind.size() - 2);
+                will(onConsecutiveCalls(returnValue(5), returnValue(8)));
+            }
+        });
+
+        Individual<ICoordinate> child = strategy.mutate(ind);
+
+        assertEquals(ind.size(), child.size());
+        assertEquals(ind.get(6), child.get(9));
+        assertEquals(ind.get(9), child.get(6));
+        for (int i = 0; i < ind.size(); i++) {
+            if (!(i == 6 || i == 9)) {
+                assertEquals(ind.get(i), child.get(i));
+            }
+        }
+	}
+
+	public void testMutationSecondStrategy() {
+        Individual<ICoordinate> ind = Mother.getPath();
+        Mutation.Strategy strategy = testMutation.getTestStrategy(1);
+
+        Individual<ICoordinate> child = strategy.mutate(ind);
+
+        assertEquals(ind.size(), child.size());
+        for (int i = 0; i < ind.size(); i += 2) {
+            assertEquals(ind.get(i), child.get(i + 1));
+            assertEquals(ind.get(i + 1), child.get(i));
+        }
+	}
+
+	public void testMutationThirdStrategy() {
+        Individual<ICoordinate> ind = Mother.getPath();
+        Mutation.Strategy strategy = testMutation.getTestStrategy(2);
+
+        mockery.checking(new Expectations() {
+            {
+                exactly(2).of(_mockRandom).nextInt(ind.size() - 1);
+                will(onConsecutiveCalls(returnValue(5), returnValue(8)));
+            }
+        });
+
+        Individual<ICoordinate> child = strategy.mutate(ind);
+
+        assertEquals(ind.size(), child.size());
+        assertEquals(ind.get(5), child.get(8));
+        assertEquals(ind.get(6), child.get(7));
+        assertEquals(ind.get(7), child.get(6));
+        assertEquals(ind.get(8), child.get(5));
+        for (int i = 0; i < ind.size(); i++) {
+            if (i < 5 || i > 8) {
+                assertEquals(ind.get(i), child.get(i));
+            }
+        }
+	}
+
+	private static class TestMutation extends Mutation {
+        static {
+            self = new TestMutation();
+        }
+
 		protected Mutation.Strategy getTestStrategy(int n) {
 			return strategies.get(n);
 		}
+
+        @Override
+        protected Random getRandom() {
+            return _mockRandom;
+        }
 	}
 }

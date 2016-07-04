@@ -101,7 +101,7 @@ public class Genetic {
 	private Individual<ICoordinate> mutate(Individual<ICoordinate> child) {
 		Individual<ICoordinate> mutate;
 		do {
-			mutate = Mutation.mutate(child);
+			mutate = Mutation.getInstance().mutate(child);
 		} while (child.equals(mutate));
 		return mutate;
 	}

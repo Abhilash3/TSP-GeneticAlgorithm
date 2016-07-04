@@ -17,9 +17,8 @@ import project.genetic.vo.list.individual.Path;
  */
 public class Mutation {
 
+    protected static Mutation self;
 	protected static List<Strategy> strategies;
-	
-	private static Random rand = new Random();
 	
 	public interface Strategy {
 
@@ -30,10 +29,6 @@ public class Mutation {
 		 * @return mutated path
 		 */
 		Individual<ICoordinate> mutate(Individual<ICoordinate> path);
-	}
-
-	static {
-		prepareChoices();
 	}
 
 	private static void prepareChoices() {
@@ -52,12 +47,11 @@ public class Mutation {
 			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
 
 				list = new MagicList<ICoordinate>();
-				int random1 = -1;
-				int random2 = -1;
+				int random1, random2;
 				
 				do {
-					random1 = rand.nextInt(path.size() - 2) + 1;
-					random2 = rand.nextInt(path.size() - 2) + 1;
+					random1 = self.getRandom().nextInt(path.size() - 2) + 1;
+					random2 = self.getRandom().nextInt(path.size() - 2) + 1;
 				} while (random1 == random2);
 				
 				int min = Math.min(random1, random2);
@@ -75,32 +69,6 @@ public class Mutation {
 					list.add(path.get(i));
 				}
 				
-				return new Path(list);
-			}
-		});
-
-		strategies.add(new Strategy() {
-			private List<ICoordinate> list;
-
-			/**
-			 * [0,1,2,3,4,5,6,7,8,9] --> 5 --> [5,6,7,8,9,0,1,2,3,4]
-			 * 
-			 * @param path individual
-			 * @return mutated path
-			 */
-			@Override
-			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
-
-				list = new MagicList<ICoordinate>();
-				int random = rand.nextInt(path.size() - 1) + 1;
-				for (int i = 0; i < random; i++) {
-					list.add(path.get(i));
-				}
-
-				for (int i = random, j = 0; i < path.size(); i++, j++) {
-					list.add(j, path.get(i));
-				}
-
 				return new Path(list);
 			}
 		});
@@ -142,8 +110,8 @@ public class Mutation {
 			public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
 
 				list = new MagicList<ICoordinate>();
-				int random1 = rand.nextInt(path.size() - 1);
-				int random2 = rand.nextInt(path.size() - 1);
+				int random1 = self.getRandom().nextInt(path.size() - 1);
+				int random2 = self.getRandom().nextInt(path.size() - 1);
 				
 				int min = Math.min(random1, random2);
 				int max = Math.max(random1, random2);
@@ -152,11 +120,11 @@ public class Mutation {
 					list.add(path.get(i));
 				}
 
-				for (int i = max - 1; i >= min; i--) {
+				for (int i = max; i >= min; i--) {
 					list.add(path.get(i));
 				}
 
-				for (int i = max; i < path.size(); i++) {
+				for (int i = max + 1; i < path.size(); i++) {
 					list.add(path.get(i));
 				}
 
@@ -165,11 +133,26 @@ public class Mutation {
 		});
 	}
 
-	protected static Strategy getStrategy() {
-		return strategies.get(rand.nextInt(strategies.size()));
+    protected Mutation() {
+        prepareChoices();
+    }
+
+    public static Mutation getInstance() {
+        if (self == null) {
+            self = new Mutation();
+        }
+        return self;
+    }
+
+    protected Random getRandom() {
+        return new Random();
+    }
+
+	protected Strategy getStrategy() {
+		return strategies.get(getRandom().nextInt(strategies.size()));
 	}
 
-	public static Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
+	public Individual<ICoordinate> mutate(Individual<ICoordinate> path) {
 		return getStrategy().mutate(path);
 	}
 
