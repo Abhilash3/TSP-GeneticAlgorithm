@@ -88,7 +88,7 @@ public class Selection {
 				int size = generation.size();
 				int random = rand.nextInt(size - 2) + 2;
 
-				pool = new MagicList<Individual<ICoordinate>>();
+				pool = new ArrayList<Individual<ICoordinate>>();
 				while (pool.size() != random) {
 					pool.add(generation.get(rand.nextInt(size)));
 				}

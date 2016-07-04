@@ -4,7 +4,6 @@ import static project.common.Constants.CityNumber;
 import static project.common.Constants.TSP_FILE;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +28,13 @@ public class TSP {
 			in = new ObjectInputStream(fileIn);
 			
 			ICoordinate city;
-			for (int i = 0; i < CityNumber; i++) {
+			for (; coordinates.size() < CityNumber; ) {
 				city = (Coordinate) in.readObject();
 				if (!coordinates.contains(city))
 					coordinates.add(city);
 			}
+			in.close();
+			fileIn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			coordinates = new ArrayList<ICoordinate>();
@@ -41,13 +42,6 @@ public class TSP {
 				coordinates.add(Coordinate.getCoordinate(
 						(rand.nextInt(55) + 5) * 10,
 						(rand.nextInt(55) + 5) * 10));
-			}
-		} finally {
-			try {
-				in.close();
-				fileIn.close();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 

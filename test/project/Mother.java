@@ -58,8 +58,7 @@ public class Mother {
 	}
 
 	public static Coordinate getCoordinate() {
-		return Coordinate.getCoordinate((rand.nextInt(55) + 5) * 10,
-				(rand.nextInt(55) + 5) * 10);
+		return Coordinate.getCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10);
 	}
 
 }

@@ -20,7 +20,7 @@ public class FitnessTest extends TestCase {
 		super.setUp();
 		
 		generation = new ArrayList<Individual<ICoordinate>>();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1000; i++) {
 			addToGeneration(generation, Double.parseDouble(""+(i + 1)));
 		}
 	}
@@ -31,7 +31,7 @@ public class FitnessTest extends TestCase {
 	}
 	
 	@Test
-	public void testGetRankedIndividuals() {
+	public void testSort() {
 
 		int size = generation.size();
 		for (int i = 0; i < 100; i++) {

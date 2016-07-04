@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import project.genetic.vo.coordinate.ICoordinate;
-import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
 
 /**
@@ -90,10 +89,8 @@ public class Fitness {
 			private void merge(List<Individual<ICoordinate>> list, int low, int high) {
 				int mid = (high + low) / 2;
 
-				first = new MagicList<Individual<ICoordinate>>(list.subList(
-						low, mid + 1));
-				second = new MagicList<Individual<ICoordinate>>(list.subList(
-						mid + 1, high + 1));
+				first = new ArrayList<Individual<ICoordinate>>(list.subList(low, mid + 1));
+				second = new ArrayList<Individual<ICoordinate>>(list.subList(mid + 1, high + 1));
 
 				for (int i = 0, j = 0, k = low; k < high + 1; k++) {
 					if (i < first.size() && j < second.size()) {
