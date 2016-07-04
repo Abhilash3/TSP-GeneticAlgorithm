@@ -58,10 +58,9 @@ public class Selection {
 				}
 				
 				double random = rand.nextDouble() * max;
-				int low = 0, high = generation.size() - 1;
 				double sum = 0;
-				for (int mid = (high + low) / 2; true; ) {
-					ind = generation.get(mid);
+				for (int i = 0 ; i < generation.size(); i++) {
+					ind = generation.get(i);
 					sum += ind.getFitness();
 					if (sum > random) {
 						break;
