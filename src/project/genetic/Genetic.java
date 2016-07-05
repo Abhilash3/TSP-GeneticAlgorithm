@@ -121,7 +121,7 @@ public class Genetic {
 	}
 
 	private Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
-		return Selection.select(generation);
+		return Selection.getInstance().select(generation);
 	}
 
 	private void populateFirstGeneration(List<Individual<ICoordinate>> generation) {

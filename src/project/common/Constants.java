@@ -6,7 +6,7 @@ public class Constants {
 	
 	private Constants() {}
 	
-	public static final int CityNumber = 50;
+	public static final int CityNumber = 100;
 	public static final String TSP_FILE = "coordinates.txt";
 	
 	public static final int Generations = 1000;

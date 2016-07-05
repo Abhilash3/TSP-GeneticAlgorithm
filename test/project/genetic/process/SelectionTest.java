@@ -1,49 +1,140 @@
 package project.genetic.process;
 
 import java.util.List;
+import java.util.Random;
+
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit3.MockObjectTestCase;
+import org.jmock.lib.legacy.ClassImposteriser;
 
 import project.Mother;
-import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.individual.Individual;
-import junit.framework.TestCase;
 
-public class SelectionTest extends TestCase {
+public class SelectionTest extends MockObjectTestCase {
 	
-	private List<Individual<ICoordinate>> generation;
+	private Mockery mockery;
+	
+	@SuppressWarnings("rawtypes")
+	private List _mockGeneration;
+	private static Random _mockRandom;
+	
 	protected TestSelection testSelection;
 	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		generation = Mother.getGeneration();
+		mockery = new Mockery() {
+			{
+				setImposteriser(ClassImposteriser.INSTANCE);
+			}
+		};
+		_mockGeneration = mockery.mock(List.class);
+		_mockRandom = mockery.mock(Random.class);
 		testSelection = new TestSelection();
 	}
 	
 	public void testSelectionFirstStrategy() {
-		testStrategy(testSelection.getTestStrategy(0));
+		Selection.Strategy strategy = testSelection.getTestStrategy(0);
+		
+		mockery.checking(new Expectations() {
+			{
+				allowing(_mockGeneration).size();
+				will(returnValue(10));
+				
+				exactly(10).of(_mockGeneration).get(with(any(Integer.class)));
+				will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(5)), 
+						returnValue(Mother.getIndividualWithFitness(9)), returnValue(Mother.getIndividualWithFitness(2)),
+						returnValue(Mother.getIndividualWithFitness(3)), returnValue(Mother.getIndividualWithFitness(8)),
+						returnValue(Mother.getIndividualWithFitness(10)), returnValue(Mother.getIndividualWithFitness(1)),
+						returnValue(Mother.getIndividualWithFitness(6)), returnValue(Mother.getIndividualWithFitness(7)),
+						returnValue(Mother.getIndividualWithFitness(4))));
+				
+				oneOf(_mockRandom).nextDouble();
+				will(returnValue(0.5));
+				
+				atMost(10).of(_mockGeneration).get(with(any(Integer.class)));
+				will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(5)), 
+						returnValue(Mother.getIndividualWithFitness(9)), returnValue(Mother.getIndividualWithFitness(2)),
+						returnValue(Mother.getIndividualWithFitness(3)), returnValue(Mother.getIndividualWithFitness(8)),
+						returnValue(Mother.getIndividualWithFitness(10)), returnValue(Mother.getIndividualWithFitness(1)),
+						returnValue(Mother.getIndividualWithFitness(6)), returnValue(Mother.getIndividualWithFitness(7)),
+						returnValue(Mother.getIndividualWithFitness(4))));
+			}
+		});
+
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Individual child = strategy.select(_mockGeneration);
+		
+		assertEquals(Mother.getIndividualWithFitness(2), child);
 	}
 	
 	public void testSelectionSecondStrategy() {
-		testStrategy(testSelection.getTestStrategy(1));
+		Selection.Strategy strategy = testSelection.getTestStrategy(1);
+		
+		mockery.checking(new Expectations() {
+			{
+				allowing(_mockGeneration).size();
+				will(returnValue(10));
+				
+				oneOf(_mockRandom).nextInt(8);
+				will(returnValue(4));
+				
+				for (int i = 0; i < 6; i++) {
+					oneOf(_mockRandom).nextInt(10);
+					will(returnValue(i));
+				}
+				exactly(6).of(_mockGeneration).get(with(any(Integer.class)));
+				will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(5)), 
+						returnValue(Mother.getIndividualWithFitness(9)), returnValue(Mother.getIndividualWithFitness(2)),
+						returnValue(Mother.getIndividualWithFitness(3)), returnValue(Mother.getIndividualWithFitness(8)),
+						returnValue(Mother.getIndividualWithFitness(10))));
+			}
+		});
+
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Individual child = strategy.select(_mockGeneration);
+		
+		assertEquals(Mother.getIndividualWithFitness(2), child);
 	}
 	
 	public void testSelectionThirdStrategy() {
-		testStrategy(testSelection.getTestStrategy(2));
-	}
-	
-	private void testStrategy(final Selection.Strategy strategy) {
-		Individual<ICoordinate> child;
+		Selection.Strategy strategy = testSelection.getTestStrategy(2);
 		
-		for (int i = 0; i < 1000; i++) {
-			child = strategy.select(generation);
+		mockery.checking(new Expectations() {
+			{
+				allowing(_mockGeneration).size();
+				will(returnValue(10));
+				
+				oneOf(_mockRandom).nextInt(54);
+				will(returnValue(20));
+				
+				oneOf(_mockGeneration).get(with(7));
+				will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(1))));
+			}
+		});
 
-			assertTrue(generation.contains(child));
-		}
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Individual child = strategy.select(_mockGeneration);
+		
+		assertEquals(Mother.getIndividualWithFitness(1), child);
 	}
 
-	private class TestSelection extends Selection {
+	private static class TestSelection extends Selection {
+		static {
+			self = new TestSelection();
+		}
+		
 		protected Selection.Strategy getTestStrategy(int n) {
 			return strategies.get(n);
+		}
+		
+		@Override
+		protected Random getRandom() {
+			return _mockRandom;
 		}
 	}
 }

@@ -28,7 +28,7 @@ public class MutationTest extends MockObjectTestCase {
 	}
 
 	public void testMutationFirstStrategy() {
-        Individual<ICoordinate> ind = Mother.getPath();
+        final Individual<ICoordinate> ind = Mother.getPath();
         Mutation.Strategy strategy = testMutation.getTestStrategy(0);
 
         mockery.checking(new Expectations() {
@@ -51,7 +51,7 @@ public class MutationTest extends MockObjectTestCase {
 	}
 
 	public void testMutationSecondStrategy() {
-        Individual<ICoordinate> ind = Mother.getPath();
+        final Individual<ICoordinate> ind = Mother.getPath();
         Mutation.Strategy strategy = testMutation.getTestStrategy(1);
 
         Individual<ICoordinate> child = strategy.mutate(ind);
@@ -64,7 +64,7 @@ public class MutationTest extends MockObjectTestCase {
 	}
 
 	public void testMutationThirdStrategy() {
-        Individual<ICoordinate> ind = Mother.getPath();
+        final Individual<ICoordinate> ind = Mother.getPath();
         Mutation.Strategy strategy = testMutation.getTestStrategy(2);
 
         mockery.checking(new Expectations() {

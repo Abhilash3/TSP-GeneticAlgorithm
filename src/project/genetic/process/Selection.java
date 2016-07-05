@@ -16,9 +16,8 @@ import project.genetic.vo.list.individual.Individual;
  */
 public class Selection {
 
+	protected static Selection self;
 	protected static List<Strategy> strategies;
-	
-	private static Random rand = new Random();
 
 	public interface Strategy {
 
@@ -31,11 +30,7 @@ public class Selection {
 		Individual<ICoordinate> select(List<Individual<ICoordinate>> generation);
 	}
 
-	static {
-		prepareStrategies();
-	}
-
-	private static void prepareStrategies() {
+	private void prepareStrategies() {
 		strategies = new ArrayList<Strategy>();
 
 		strategies.add(new Strategy() {
@@ -50,18 +45,20 @@ public class Selection {
 			@Override
 			public Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
 
-				double max = 0;
+				double max = 0, indFitness;
 				for (int i = 0; i < generation.size(); i++) {
 					ind = generation.get(i);
-					if (max < ind.getFitness())
-						max = ind.getFitness();
+					indFitness = (double) 1 / ind.getFitness();
+					if (max < indFitness) {
+						max = indFitness;
+					}
 				}
 				
-				double random = rand.nextDouble() * max;
+				double random = self.getRandom().nextDouble() * max;
 				double sum = 0;
 				for (int i = 0 ; i < generation.size(); i++) {
 					ind = generation.get(i);
-					sum += ind.getFitness();
+					sum += (double) 1 / ind.getFitness();
 					if (sum > random) {
 						break;
 					}
@@ -84,11 +81,11 @@ public class Selection {
 			public Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
 
 				int size = generation.size();
-				int random = rand.nextInt(size - 2) + 2;
+				int random = self.getRandom().nextInt(size - 2) + 2;
 
 				pool = new ArrayList<Individual<ICoordinate>>();
 				while (pool.size() != random) {
-					pool.add(generation.get(rand.nextInt(size)));
+					pool.add(generation.get(self.getRandom().nextInt(size)));
 				}
 
 				return Fitness.getFittest(pool);
@@ -111,7 +108,7 @@ public class Selection {
 					sum += i++;
 				}
 
-				int random = rand.nextInt(sum - 1) + 1;
+				int random = self.getRandom().nextInt(sum - 1) + 1;
 				sum = 0;
 				i = 0;
 				while (i < generation.size()) {
@@ -125,12 +122,27 @@ public class Selection {
 			}
 		});
 	}
-
-	protected static Strategy getStrategy() {
-		return strategies.get(rand.nextInt(strategies.size()));
+	
+	protected Selection() {
+		prepareStrategies();
+	}
+	
+	public static Selection getInstance() {
+		if (self == null) {
+			self = new Selection();
+		}
+		return self;
+	}
+	
+	protected Random getRandom() {
+		return new Random();
 	}
 
-	public static Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
+	protected Strategy getStrategy() {
+		return strategies.get(getRandom().nextInt(strategies.size()));
+	}
+
+	public Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
 		return getStrategy().select(generation);
 	}
 }
