@@ -3,15 +3,15 @@ package project.genetic.process;
 import java.util.List;
 import java.util.Random;
 
+import junit.framework.TestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.integration.junit3.MockObjectTestCase;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import project.Mother;
 import project.genetic.vo.list.individual.Individual;
 
-public class SelectionTest extends MockObjectTestCase {
+public class SelectionTest extends TestCase {
 	
 	private Mockery mockery;
 	

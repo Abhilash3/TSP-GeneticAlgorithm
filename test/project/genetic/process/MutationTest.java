@@ -1,8 +1,8 @@
 package project.genetic.process;
 
+import junit.framework.TestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.integration.junit3.MockObjectTestCase;
 import org.jmock.lib.legacy.ClassImposteriser;
 import project.Mother;
 import project.genetic.vo.coordinate.ICoordinate;
@@ -10,7 +10,7 @@ import project.genetic.vo.list.individual.Individual;
 
 import java.util.Random;
 
-public class MutationTest extends MockObjectTestCase {
+public class MutationTest extends TestCase {
 
     private Mockery mockery;
 	protected TestMutation testMutation;
