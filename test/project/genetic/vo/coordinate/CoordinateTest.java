@@ -39,4 +39,29 @@ public class CoordinateTest extends TestCase {
 		}
 	}
 
+	public void testToString() {
+		for (ICoordinate a : coordinates) {
+			for (ICoordinate b : coordinates) {
+				if (a.equals(b))
+					assertTrue(a.toString().equals(b.toString()));
+				else
+					assertFalse(a.toString().equals(b.toString()));
+			}
+		}
+	}
+
+	public void testEquals() {
+		Coordinate coordinate1 = Coordinate.getCoordinate(10, 10);
+		Coordinate coordinate2 = Coordinate.getCoordinate(20, 20);
+
+		assertFalse(coordinate1.equals(null));
+		assertFalse(coordinate2.equals(null));
+
+		assertFalse(coordinate1.equals(coordinate2));
+		assertFalse(coordinate2.equals(coordinate1));
+
+		assertTrue(coordinate1.equals(coordinate1));
+		assertTrue(coordinate2.equals(coordinate2));
+	}
+
 }
