@@ -48,7 +48,7 @@ public class Selection {
 				double max = 0, indFitness;
 				for (int i = 0; i < generation.size(); i++) {
 					ind = generation.get(i);
-					indFitness = (double) 1 / ind.getFitness();
+					indFitness = ind.getFitness();
 					if (max < indFitness) {
 						max = indFitness;
 					}
@@ -58,7 +58,7 @@ public class Selection {
 				double sum = 0;
 				for (int i = 0 ; i < generation.size(); i++) {
 					ind = generation.get(i);
-					sum += (double) 1 / ind.getFitness();
+					sum += ind.getFitness();
 					if (sum > random) {
 						break;
 					}

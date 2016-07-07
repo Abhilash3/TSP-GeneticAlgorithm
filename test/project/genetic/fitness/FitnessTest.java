@@ -29,8 +29,7 @@ public class FitnessTest extends TestCase {
 	private void addToGeneration(List<Individual<ICoordinate>> generation, double fitness) {
 		generation.add(Mother.getIndividualWithFitness(fitness));
 	}
-	
-	@Test
+
 	public void testSort() {
 
 		int size = generation.size();
@@ -40,7 +39,7 @@ public class FitnessTest extends TestCase {
 
 			assertEquals(size, generation.size());
 			for (int j = 0; j < generation.size(); j++) {
-				assertEquals(j + 1+".0", Double.toString(generation.get(j).getFitness()));
+				assertEquals(1000 - j +".0", Double.toString(generation.get(j).getFitness()));
 			}			
 			Collections.shuffle(generation);
 		}

@@ -18,7 +18,7 @@ public class Path extends Individual<ICoordinate> {
 			fitness += Coordinates.distance(list.get(i - 1), list.get(i));
 		}
 		fitness += Coordinates.distance(list.get(list.size() - 1), list.get(0));
-		return fitness;
+		return 1 / fitness;
 	}
 	
 	@SuppressWarnings("unchecked")

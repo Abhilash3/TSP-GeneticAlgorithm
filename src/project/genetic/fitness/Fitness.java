@@ -94,7 +94,7 @@ public class Fitness {
 
 				for (int i = 0, j = 0, k = low; k < high + 1; k++) {
 					if (i < first.size() && j < second.size()) {
-						if (order.compare(first.get(i), second.get(j)) == 1) {
+						if (order.compare(first.get(i), second.get(j)) == -1) {
 							list.set(k, second.get(j++));
 						} else {
 							list.set(k, first.get(i++));

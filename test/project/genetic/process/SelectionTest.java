@@ -67,7 +67,7 @@ public class SelectionTest extends TestCase {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Individual child = strategy.select(_mockGeneration);
 		
-		assertEquals(Mother.getIndividualWithFitness(2), child);
+		assertEquals(Mother.getIndividualWithFitness(9), child);
 	}
 	
 	public void testSelectionSecondStrategy() {
@@ -97,7 +97,7 @@ public class SelectionTest extends TestCase {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Individual child = strategy.select(_mockGeneration);
 		
-		assertEquals(Mother.getIndividualWithFitness(2), child);
+		assertEquals(Mother.getIndividualWithFitness(10), child);
 	}
 	
 	public void testSelectionThirdStrategy() {
@@ -109,10 +109,10 @@ public class SelectionTest extends TestCase {
 				will(returnValue(10));
 				
 				oneOf(_mockRandom).nextInt(54);
-				will(returnValue(20));
+				will(returnValue(30));
 				
-				oneOf(_mockGeneration).get(with(7));
-				will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(1))));
+				oneOf(_mockGeneration).get(with(8));
+				will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(6))));
 			}
 		});
 
@@ -120,7 +120,7 @@ public class SelectionTest extends TestCase {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Individual child = strategy.select(_mockGeneration);
 		
-		assertEquals(Mother.getIndividualWithFitness(1), child);
+		assertEquals(Mother.getIndividualWithFitness(6), child);
 	}
 
 	private static class TestSelection extends Selection {

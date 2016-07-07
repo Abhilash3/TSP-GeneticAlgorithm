@@ -141,13 +141,12 @@ public class Genetic {
 		ui.drawMap(bestPath);
 
 		scores.clear();
-		scores.add(bestPath.getFitness());
+		scores.add(1 / bestPath.getFitness());
 		for (int j = 1; j < Graphs; j++) {
-            scores.add(generation.get(j * populationSize / (Graphs - 1) - 1).getFitness());
+            scores.add(1 / generation.get(j * populationSize / (Graphs - 1) - 1).getFitness());
 		}
 		ui.updateGraph(scores);
 
-		ui.setText(String.format(Format, "Generation", n, "Best Result",
-				bestPath.getFitness()));
+		ui.setText(String.format(Format, "Generation", n, "Best Result", 1 / bestPath.getFitness()));
 	}
 }
