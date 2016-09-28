@@ -17,7 +17,7 @@ public final class Coordinate implements ICoordinate, Serializable {
 	protected final int x;
 	protected final int y;
 
-	private transient Integer hashcode;
+	private transient int hashcode = -1;
 	private transient String toString;
 
 	private Coordinate(int x, int y) {
@@ -39,7 +39,7 @@ public final class Coordinate implements ICoordinate, Serializable {
 
 	@Override
 	public int hashCode() {
-		if (hashcode == null) {
+		if (hashcode == -1) {
 			int result = 17;
 			result = 31 * result + x;
 			result = 31 * result + y;

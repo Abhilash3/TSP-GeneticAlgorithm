@@ -137,7 +137,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 	}
 
 	@Override
-	public boolean equals(Object object) {
+	public final boolean equals(Object object) {
 		if (object == null)
 			return false;
 		if (this == object)
@@ -168,7 +168,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 	}
 
 	@Override
-	public int compareTo(@SuppressWarnings("rawtypes") Individual individual) {
+	public final int compareTo(@SuppressWarnings("rawtypes") Individual individual) {
         return Double.compare(getFitness(), individual.getFitness());
     }
 

@@ -60,7 +60,7 @@ public class Genetic {
 		List<Individual<ICoordinate>> newGeneration = new ArrayList<Individual<ICoordinate>>(populationSize);
 
 		populateFirstGeneration(generation);
-		bestPath = Fitness.getFittest(generation);
+		bestPath = Fitness.<Individual<ICoordinate>>getInstance().getFittest(generation);
 
 		Individual<ICoordinate> parent1, parent2, child;
 		for (int i = 1; i <= Generations; i++) {
@@ -86,7 +86,7 @@ public class Genetic {
 
 			generation = new ArrayList<Individual<ICoordinate>>(newGeneration);
 			newGeneration = new ArrayList<Individual<ICoordinate>>(populationSize);
-			bestPath = Fitness.getFittest(generation);
+			bestPath = Fitness.<Individual<ICoordinate>>getInstance().getFittest(generation);
 
 			if (ui != null)
 				updateUI(generation, i);
@@ -101,14 +101,14 @@ public class Genetic {
 	private Individual<ICoordinate> mutate(Individual<ICoordinate> child) {
 		Individual<ICoordinate> mutate;
 		do {
-			mutate = Mutation.getInstance().mutate(child);
+			mutate = Mutation.<Individual<ICoordinate>>getInstance(Path.class).mutate(child);
 		} while (child.equals(mutate));
 		return mutate;
 	}
 
 	private Individual<ICoordinate> crossover(Individual<ICoordinate> parent1,
 			Individual<ICoordinate> parent2) {
-		return Crossover.cross(parent1, parent2);
+		return Crossover.<Individual<ICoordinate>>getInstance(Path.class).cross(parent1, parent2);
 	}
 
 	private Individual<ICoordinate> select(List<Individual<ICoordinate>> generation,
@@ -121,7 +121,7 @@ public class Genetic {
 	}
 
 	private Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
-		return Selection.getInstance().select(generation);
+		return Selection.<Individual<ICoordinate>>getInstance().select(generation);
 	}
 
 	private void populateFirstGeneration(List<Individual<ICoordinate>> generation) {

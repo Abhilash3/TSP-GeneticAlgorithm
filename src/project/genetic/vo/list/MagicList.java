@@ -7,7 +7,7 @@ import java.util.List;
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.individual.Chromosome;
 
-public class MagicList<E extends Cloneable> extends ArrayList<E> implements Chromosome<E> {
+public final class MagicList<E extends Cloneable> extends ArrayList<E> implements Chromosome<E> {
 
 	/**
 	 * 

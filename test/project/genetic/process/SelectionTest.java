@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Random;
 
 import junit.framework.TestCase;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import project.Mother;
+import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.individual.Individual;
 
 public class SelectionTest extends TestCase {
@@ -19,7 +21,7 @@ public class SelectionTest extends TestCase {
 	private List _mockGeneration;
 	private static Random _mockRandom;
 	
-	protected TestSelection testSelection;
+	protected Selection<Individual<ICoordinate>> testSelection;
 	
 	@Override
 	public void setUp() throws Exception {
@@ -31,11 +33,41 @@ public class SelectionTest extends TestCase {
 		};
 		_mockGeneration = mockery.mock(List.class);
 		_mockRandom = mockery.mock(Random.class);
-		testSelection = new TestSelection();
+		testSelection = getSelection();
 	}
 	
-	public void testSelectionFirstStrategy() {
-		Selection.Strategy strategy = testSelection.getTestStrategy(0);
+	public void testSelectionTournamentSelectionStrategy() {
+		Selection.Strategy<Individual<ICoordinate>> strategy = testSelection.getTournamentSelectionStrategy();
+		
+		mockery.checking(new Expectations() {
+			{
+				allowing(_mockGeneration).size();
+				will(returnValue(10));
+				
+				oneOf(_mockRandom).nextInt(8);
+				will(returnValue(4));
+				
+				for (int i = 0; i < 6; i++) {
+					oneOf(_mockRandom).nextInt(10);
+					will(returnValue(i));
+				}
+				exactly(6).of(_mockGeneration).get(with(any(Integer.class)));
+				will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(5)), 
+						returnValue(Mother.getIndividualWithFitness(9)), returnValue(Mother.getIndividualWithFitness(2)),
+						returnValue(Mother.getIndividualWithFitness(3)), returnValue(Mother.getIndividualWithFitness(8)),
+						returnValue(Mother.getIndividualWithFitness(10))));
+			}
+		});
+
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Individual child = strategy.select(_mockGeneration);
+		
+		assertEquals(Mother.getIndividualWithFitness(10), child);
+	}
+	
+	public void testSelectionRouletteWheelSelectionStrategy() {
+		Selection.Strategy<Individual<ICoordinate>> strategy = testSelection.getRouletteWheelSelectionStrategy();
 		
 		mockery.checking(new Expectations() {
 			{
@@ -70,38 +102,8 @@ public class SelectionTest extends TestCase {
 		assertEquals(Mother.getIndividualWithFitness(9), child);
 	}
 	
-	public void testSelectionSecondStrategy() {
-		Selection.Strategy strategy = testSelection.getTestStrategy(1);
-		
-		mockery.checking(new Expectations() {
-			{
-				allowing(_mockGeneration).size();
-				will(returnValue(10));
-				
-				oneOf(_mockRandom).nextInt(8);
-				will(returnValue(4));
-				
-				for (int i = 0; i < 6; i++) {
-					oneOf(_mockRandom).nextInt(10);
-					will(returnValue(i));
-				}
-				exactly(6).of(_mockGeneration).get(with(any(Integer.class)));
-				will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(5)), 
-						returnValue(Mother.getIndividualWithFitness(9)), returnValue(Mother.getIndividualWithFitness(2)),
-						returnValue(Mother.getIndividualWithFitness(3)), returnValue(Mother.getIndividualWithFitness(8)),
-						returnValue(Mother.getIndividualWithFitness(10))));
-			}
-		});
-
-
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		Individual child = strategy.select(_mockGeneration);
-		
-		assertEquals(Mother.getIndividualWithFitness(10), child);
-	}
-	
-	public void testSelectionThirdStrategy() {
-		Selection.Strategy strategy = testSelection.getTestStrategy(2);
+	public void testSelectionRankSelectionStrategy() {
+		Selection.Strategy<Individual<ICoordinate>> strategy = testSelection.getRankSelectionStrategy();
 		
 		mockery.checking(new Expectations() {
 			{
@@ -123,18 +125,12 @@ public class SelectionTest extends TestCase {
 		assertEquals(Mother.getIndividualWithFitness(6), child);
 	}
 
-	private static class TestSelection extends Selection {
-		static {
-			self = new TestSelection();
-		}
-		
-		protected Selection.Strategy getTestStrategy(int n) {
-			return strategies.get(n);
-		}
-		
-		@Override
-		protected Random getRandom() {
-			return _mockRandom;
-		}
+	private Selection<Individual<ICoordinate>> getSelection() {
+		return new Selection<Individual<ICoordinate>>() {
+			@Override
+			protected Random getRandom() {
+				return _mockRandom;
+			}
+		};
 	}
 }

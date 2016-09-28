@@ -1,6 +1,9 @@
 package project.genetic.process;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -8,7 +11,6 @@ import project.genetic.vo.coordinate.Coordinates;
 import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Path;
 
 /**
  * java class definition providing crossover capabilities
@@ -16,13 +18,11 @@ import project.genetic.vo.list.individual.Path;
  * @author ABHILASHKUMARV
  * 
  */
-public class Crossover {
-
-	protected static List<Strategy> strategies;
+public class Crossover<T extends Individual<ICoordinate>> {
 	
-	private static Random rand = new Random();
+	private Class<? extends T> clazz;
 
-	public interface Strategy {
+	public interface Strategy<T> {
 
 		/**
 		 * method generating crossover options and generating child path
@@ -31,19 +31,19 @@ public class Crossover {
 		 * @param path2 parent 2
 		 * @return child
 		 */
-		Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2);
+		T cross(T path1, T path2);
 	}
 
-	protected Crossover() {}
+	protected Crossover(Class<? extends T> clazz) {
+		this.clazz = clazz;
+	}
 	
-	static {
-		prepareStrategies();
+	public static <E extends Individual<ICoordinate>> Crossover<E> getInstance(Class<? extends E> clazz) {
+		return new Crossover<E>(clazz);
 	}
 
-	private static void prepareStrategies() {
-		strategies = new ArrayList<Strategy>();
-
-		strategies.add(new Strategy() {
+	protected Strategy<T> getNearestNeighbourStrategy() {
+		return new Strategy<T>() {
 			private List<ICoordinate> list;
 			private ICoordinate city, city1, city2;
 
@@ -56,9 +56,9 @@ public class Crossover {
 			 * @return child
 			 */
 			@Override
-			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
+			public T cross(T path1, T path2) {
 				
-				list = new MagicList<ICoordinate>();
+				list = new ArrayList<ICoordinate>();
 				list.add(path1.get(0));
 				
 				for (int i = 1; i < path1.size(); i++) {
@@ -90,15 +90,24 @@ public class Crossover {
 					}
 				}
 
-				return new Path(list);
+				try {
+					return clazz.getConstructor(List.class).newInstance(list);
+				} catch (InstantiationException | IllegalAccessException
+						| IllegalArgumentException | InvocationTargetException
+						| NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+					return null;
+				}
 			}
 
 			private double distance(ICoordinate city1, ICoordinate city2) {
 				return Coordinates.distance(city1, city2);
 			}
-		});
+		};
+	}
 
-		strategies.add(new Strategy() {
+	protected Strategy<T> getInitialRandomFromFirstRestFromSecondStrategy() {
+		return new Strategy<T>() {
 			private List<ICoordinate> list;
 			private ICoordinate city1, city2;
 
@@ -110,11 +119,11 @@ public class Crossover {
 			 * @return child
 			 */
 			@Override
-			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
+			public T cross(T path1, T path2) {
 
 				list = new MagicList<ICoordinate>();
 
-				int random = rand.nextInt(path1.size() - 1) + 1;
+				int random = getRandom().nextInt(path1.size() - 1) + 1;
 				for (int i = 0; i < random; i++) {
 					list.add(path1.get(i));
 				}
@@ -134,11 +143,20 @@ public class Crossover {
 					}
 				}
 
-				return new Path(list);
+				try {
+					return clazz.getConstructor(List.class).newInstance(list);
+				} catch (InstantiationException | IllegalAccessException
+						| IllegalArgumentException | InvocationTargetException
+						| NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+					return null;
+				}
 			}
-		});
+		};
+	}
 
-		strategies.add(new Strategy() {
+	protected Strategy<T> getFirstComeFirstServeStrategy() {
+		return new Strategy<T>() {
 			private List<ICoordinate> list;
 			private ICoordinate city1, city2;
 
@@ -151,9 +169,9 @@ public class Crossover {
 			 * @return child
 			 */
 			@Override
-			public Individual<ICoordinate> cross(Individual<ICoordinate> path1, Individual<ICoordinate> path2) {
+			public T cross(T path1, T path2) {
 
-				list = new MagicList<ICoordinate>();
+				list = new ArrayList<ICoordinate>();
 				
 				for (int i = 0; list.size() != path1.size(); i++) {
 					city1 = path1.get(i);
@@ -168,16 +186,31 @@ public class Crossover {
 						list.add(city2);
 				}
 
-				return new Path(list);
+				try {
+					return clazz.getConstructor(List.class).newInstance(list);
+				} catch (InstantiationException | IllegalAccessException
+						| IllegalArgumentException | InvocationTargetException
+						| NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+					return null;
+				}
 			}
-		});
+		};
+	}
+	
+	protected Random getRandom() {
+		return new Random();
 	}
 
-	protected static Strategy getStrategy() {
-		return strategies.get(rand.nextInt(strategies.size()));
+	protected Strategy<T> getStrategy() {
+		List<Strategy<T>> strategies = Arrays.asList(getNearestNeighbourStrategy(),
+				getInitialRandomFromFirstRestFromSecondStrategy(), getFirstComeFirstServeStrategy());
+		
+		Collections.shuffle(strategies);
+		return strategies.get(0);
 	}
 
-	public static Individual<ICoordinate> cross(Individual<ICoordinate> parent1, Individual<ICoordinate> parent2) {
+	public T cross(T parent1, T parent2) {
 		return getStrategy().cross(parent1, parent2);
 	}
 }

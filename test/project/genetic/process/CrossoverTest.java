@@ -4,30 +4,31 @@ import junit.framework.TestCase;
 import project.Mother;
 import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.list.individual.Path;
 
 public class CrossoverTest extends TestCase {
 
-    protected TestCrossover testCrossover;
+    protected Crossover<Individual<ICoordinate>> testCrossover;
 	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-        testCrossover = new TestCrossover();
+        testCrossover = getCrossover();
 	}
 	
-	public void testCrossoverFirstStrategy() {
-		testStrategy(testCrossover.getTestStrategy(0));
+	public void testCrossoverNearestNeighbourStrategy() {
+		testStrategy(testCrossover.getNearestNeighbourStrategy());
 	}
 	
-	public void testCrossoverSecondStrategy() {
-		testStrategy(testCrossover.getTestStrategy(1));
+	public void testCrossoverInitialRandomFromFirstRestFromSecondStrategy() {
+		testStrategy(testCrossover.getInitialRandomFromFirstRestFromSecondStrategy());
 	}
 	
-	public void testCrossoverThirdStrategy() {
-		testStrategy(testCrossover.getTestStrategy(2));
+	public void testCrossoverFirstComeFirstServeStrategy() {
+		testStrategy(testCrossover.getFirstComeFirstServeStrategy());
 	}
 	
-	private void testStrategy(final Crossover.Strategy strategy) {
+	private void testStrategy(final Crossover.Strategy<Individual<ICoordinate>> strategy) {
         Individual<ICoordinate> parent1;
         Individual<ICoordinate> parent2;
 		Individual<ICoordinate> child;
@@ -43,9 +44,7 @@ public class CrossoverTest extends TestCase {
         }
 	}
 
-    private class TestCrossover extends Crossover {
-        protected Crossover.Strategy getTestStrategy(int n) {
-            return strategies.get(n);
-        }
+    private Crossover<Individual<ICoordinate>> getCrossover() {
+    	return new Crossover<Individual<ICoordinate>>(Path.class);
     }
 }

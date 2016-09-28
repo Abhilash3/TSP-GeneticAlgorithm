@@ -5,7 +5,7 @@ import java.util.List;
 import project.genetic.vo.coordinate.Coordinates;
 import project.genetic.vo.coordinate.ICoordinate;
 
-public class Path extends Individual<ICoordinate> {
+public final class Path extends Individual<ICoordinate> {
 	
 	public Path(List<ICoordinate> list) {
 		super(list);

@@ -1,19 +1,22 @@
 package project.genetic.process;
 
 import junit.framework.TestCase;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+
 import project.Mother;
 import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.list.individual.Path;
 
 import java.util.Random;
 
 public class MutationTest extends TestCase {
 
     private Mockery mockery;
-	protected TestMutation testMutation;
+	protected Mutation<Individual<ICoordinate>> testMutation;
 	private static Random _mockRandom;
 
     @Override
@@ -23,13 +26,13 @@ public class MutationTest extends TestCase {
                 setImposteriser(ClassImposteriser.INSTANCE);
             }
         };
-		testMutation = new TestMutation();
+		testMutation = getMutation();
 		_mockRandom = mockery.mock(Random.class);
 	}
 
 	public void testMutationFirstStrategy() {
         final Individual<ICoordinate> ind = Mother.getPath();
-        Mutation.Strategy strategy = testMutation.getTestStrategy(0);
+        Mutation.Strategy<Individual<ICoordinate>> strategy = testMutation.getSwapTwoCitiesStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -52,7 +55,7 @@ public class MutationTest extends TestCase {
 
 	public void testMutationSecondStrategy() {
         final Individual<ICoordinate> ind = Mother.getPath();
-        Mutation.Strategy strategy = testMutation.getTestStrategy(1);
+        Mutation.Strategy<Individual<ICoordinate>> strategy = testMutation.getSwapAdjacentCitiesStrategy();
 
         Individual<ICoordinate> child = strategy.mutate(ind);
 
@@ -65,7 +68,7 @@ public class MutationTest extends TestCase {
 
 	public void testMutationThirdStrategy() {
         final Individual<ICoordinate> ind = Mother.getPath();
-        Mutation.Strategy strategy = testMutation.getTestStrategy(2);
+        Mutation.Strategy<Individual<ICoordinate>> strategy = testMutation.getReverseCityOrderStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -88,18 +91,12 @@ public class MutationTest extends TestCase {
         }
 	}
 
-	private static class TestMutation extends Mutation {
-        static {
-            self = new TestMutation();
-        }
-
-		protected Mutation.Strategy getTestStrategy(int n) {
-			return strategies.get(n);
-		}
-
-        @Override
-        protected Random getRandom() {
-            return _mockRandom;
-        }
+	private Mutation<Individual<ICoordinate>> getMutation() {
+        return new Mutation<Individual<ICoordinate>>(Path.class) {
+	        @Override
+	        protected Random getRandom() {
+	            return _mockRandom;
+	        }
+        };
 	}
 }
