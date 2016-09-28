@@ -16,36 +16,36 @@ import project.ui.UI;
 
 public class TSP {
 
-	private static Random rand = new Random();
+    private static Random rand = new Random();
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		List<ICoordinate> coordinates = new ArrayList<ICoordinate>();
-		FileInputStream fileIn = null;
-		ObjectInputStream in = null;
-		try {
-			fileIn = new FileInputStream(TSP_FILE);
-			in = new ObjectInputStream(fileIn);
-			
-			ICoordinate city;
-			for (; coordinates.size() < CityNumber; ) {
-				city = (Coordinate) in.readObject();
-				if (!coordinates.contains(city))
-					coordinates.add(city);
-			}
-			in.close();
-			fileIn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			coordinates = new ArrayList<ICoordinate>();
-			for (; coordinates.size() < CityNumber;) {
-				coordinates.add(Coordinate.getCoordinate(
-						(rand.nextInt(55) + 5) * 10,
-						(rand.nextInt(55) + 5) * 10));
-			}
-		}
+        List<ICoordinate> coordinates = new ArrayList<ICoordinate>();
+        FileInputStream fileIn;
+        ObjectInputStream in;
+        try {
+            fileIn = new FileInputStream(TSP_FILE);
+            in = new ObjectInputStream(fileIn);
 
-		new Genetic(coordinates, new UI(coordinates)).simulate();
+            ICoordinate city;
+            for (; coordinates.size() < CityNumber; ) {
+                city = (Coordinate) in.readObject();
+                if (!coordinates.contains(city))
+                    coordinates.add(city);
+            }
+            in.close();
+            fileIn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            coordinates = new ArrayList<ICoordinate>();
+            for (; coordinates.size() < CityNumber; ) {
+                coordinates.add(Coordinate.getCoordinate(
+                        (rand.nextInt(55) + 5) * 10,
+                        (rand.nextInt(55) + 5) * 10));
+            }
+        }
 
-	}
+        new Genetic(coordinates, new UI(coordinates)).simulate();
+
+    }
 }

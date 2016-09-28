@@ -4,12 +4,12 @@ import java.util.List;
 
 public interface LList<E> extends List<List<E>> {
 
-	void getAdd(int i, E e);
+    void getAdd(int i, E e);
 
-	void addEmpty();
+    void addEmpty();
 
-	int getSize(int i);
+    int getSize(int i);
 
-	E get(int i, int j);
+    E get(int i, int j);
 
 }

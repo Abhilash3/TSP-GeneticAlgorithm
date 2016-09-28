@@ -20,133 +20,132 @@ import project.ui.UI;
 
 /**
  * java class definition providing genetic capabilities
- * 
+ *
  * @author ABHILASHKUMARV
- * 
  */
 public class Genetic {
 
-	protected static Random rand = new Random();
+    protected static Random rand = new Random();
 
-	private int populationSize;
+    private int populationSize;
 
-	protected final List<Double> scores = new ArrayList<Double>(Graphs);
+    protected final List<Double> scores = new ArrayList<Double>(Graphs);
 
-	protected List<ICoordinate> coordinates;
-	protected Individual<ICoordinate> bestPath;
+    protected List<ICoordinate> coordinates;
+    protected Individual<ICoordinate> bestPath;
 
-	private UI ui;
+    private UI ui;
 
-	private static final String Format = "%s: %6s      %s: %.6f";
+    private static final String Format = "%s: %6s      %s: %.6f";
 
-	public Genetic(List<ICoordinate> coordinates) {
-		this.coordinates = coordinates;
-		populationSize = coordinates.size() * 5;
-	}
+    public Genetic(List<ICoordinate> coordinates) {
+        this.coordinates = coordinates;
+        populationSize = coordinates.size() * 5;
+    }
 
-	public Genetic(List<ICoordinate> coordinates, UI ui) {
-		this(coordinates);
-		this.ui = ui;
-	}
+    public Genetic(List<ICoordinate> coordinates, UI ui) {
+        this(coordinates);
+        this.ui = ui;
+    }
 
-	/**
-	 * simulate the genetic process
-	 * 
-	 * @return
-	 */
-	public Individual<ICoordinate> simulate() {
+    /**
+     * simulate the genetic process
+     *
+     * @return
+     */
+    public Individual<ICoordinate> simulate() {
 
-		List<Individual<ICoordinate>> generation = new ArrayList<Individual<ICoordinate>>(populationSize);
-		List<Individual<ICoordinate>> newGeneration = new ArrayList<Individual<ICoordinate>>(populationSize);
+        List<Individual<ICoordinate>> generation = new ArrayList<Individual<ICoordinate>>(populationSize);
+        List<Individual<ICoordinate>> newGeneration = new ArrayList<Individual<ICoordinate>>(populationSize);
 
-		populateFirstGeneration(generation);
-		bestPath = Fitness.<Individual<ICoordinate>>getInstance().getFittest(generation);
+        populateFirstGeneration(generation);
+        bestPath = Fitness.<Individual<ICoordinate>>getInstance().getFittest(generation);
 
-		Individual<ICoordinate> parent1, parent2, child;
-		for (int i = 1; i <= Generations; i++) {
+        Individual<ICoordinate> parent1, parent2, child;
+        for (int i = 1; i <= Generations; i++) {
 
-			if (Elitism)
-				newGeneration.add(bestPath);
+            if (Elitism)
+                newGeneration.add(bestPath);
 
-			for (; newGeneration.size() != populationSize;) {
+            for (; newGeneration.size() != populationSize; ) {
 
-				parent1 = select(generation);
-				parent2 = select(generation, parent1);
+                parent1 = select(generation);
+                parent2 = select(generation, parent1);
 
-				child = crossover(parent1, parent2);
-				newGeneration.add(child);
+                child = crossover(parent1, parent2);
+                newGeneration.add(child);
 
-				if (newGeneration.size() != populationSize
-						&& rand.nextInt(100) % 5 == 0) {
-					child = mutate(child);
-					newGeneration.add(child);
-				}
+                if (newGeneration.size() != populationSize
+                        && rand.nextInt(100) % 5 == 0) {
+                    child = mutate(child);
+                    newGeneration.add(child);
+                }
 
-			}
+            }
 
-			generation = new ArrayList<Individual<ICoordinate>>(newGeneration);
-			newGeneration = new ArrayList<Individual<ICoordinate>>(populationSize);
-			bestPath = Fitness.<Individual<ICoordinate>>getInstance().getFittest(generation);
+            generation = new ArrayList<Individual<ICoordinate>>(newGeneration);
+            newGeneration = new ArrayList<Individual<ICoordinate>>(populationSize);
+            bestPath = Fitness.<Individual<ICoordinate>>getInstance().getFittest(generation);
 
-			if (ui != null)
-				updateUI(generation, i);
-			else
-				System.out.println(String.format(Format, "Generation", i,
-						"Best Result", bestPath.getFitness()));
-		}
+            if (ui != null)
+                updateUI(generation, i);
+            else
+                System.out.println(String.format(Format, "Generation", i,
+                        "Best Result", bestPath.getFitness()));
+        }
 
-		return bestPath;
-	}
+        return bestPath;
+    }
 
-	private Individual<ICoordinate> mutate(Individual<ICoordinate> child) {
-		Individual<ICoordinate> mutate;
-		do {
-			mutate = Mutation.<Individual<ICoordinate>>getInstance(Path.class).mutate(child);
-		} while (child.equals(mutate));
-		return mutate;
-	}
+    private Individual<ICoordinate> mutate(Individual<ICoordinate> child) {
+        Individual<ICoordinate> mutate;
+        do {
+            mutate = Mutation.<Individual<ICoordinate>>getInstance(Path.class).mutate(child);
+        } while (child.equals(mutate));
+        return mutate;
+    }
 
-	private Individual<ICoordinate> crossover(Individual<ICoordinate> parent1,
-			Individual<ICoordinate> parent2) {
-		return Crossover.<Individual<ICoordinate>>getInstance(Path.class).cross(parent1, parent2);
-	}
+    private Individual<ICoordinate> crossover(Individual<ICoordinate> parent1,
+                                              Individual<ICoordinate> parent2) {
+        return Crossover.<Individual<ICoordinate>>getInstance(Path.class).cross(parent1, parent2);
+    }
 
-	private Individual<ICoordinate> select(List<Individual<ICoordinate>> generation,
-								Individual<ICoordinate> parent1) {
-		Individual<ICoordinate> parent2;
-		do {
-			parent2 = select(generation);
-		} while (parent2.equals(parent1));
-		return parent2;
-	}
+    private Individual<ICoordinate> select(List<Individual<ICoordinate>> generation,
+                                           Individual<ICoordinate> parent1) {
+        Individual<ICoordinate> parent2;
+        do {
+            parent2 = select(generation);
+        } while (parent2.equals(parent1));
+        return parent2;
+    }
 
-	private Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
-		return Selection.<Individual<ICoordinate>>getInstance().select(generation);
-	}
+    private Individual<ICoordinate> select(List<Individual<ICoordinate>> generation) {
+        return Selection.<Individual<ICoordinate>>getInstance().select(generation);
+    }
 
-	private void populateFirstGeneration(List<Individual<ICoordinate>> generation) {
-		for (int i = 0; i < populationSize; i++) {
-			generation.add(randomPath());
-		}
-	}
-	
-	protected Individual<ICoordinate> randomPath() {
-		Collections.shuffle(coordinates);
-		return new Path(coordinates);
-	}
+    private void populateFirstGeneration(List<Individual<ICoordinate>> generation) {
+        for (int i = 0; i < populationSize; i++) {
+            generation.add(randomPath());
+        }
+    }
 
-	private void updateUI(List<Individual<ICoordinate>> generation, int n) {
+    protected Individual<ICoordinate> randomPath() {
+        Collections.shuffle(coordinates);
+        return new Path(coordinates);
+    }
 
-		ui.clearMapLines();
-		ui.drawMap(bestPath);
+    private void updateUI(List<Individual<ICoordinate>> generation, int n) {
 
-		scores.clear();
-		scores.add(1 / bestPath.getFitness());
-		for (int j = 1; j < Graphs; j++) {
+        ui.clearMapLines();
+        ui.drawMap(bestPath);
+
+        scores.clear();
+        scores.add(1 / bestPath.getFitness());
+        for (int j = 1; j < Graphs; j++) {
             scores.add(1 / generation.get(j * populationSize / (Graphs - 1) - 1).getFitness());
-		}
-		ui.updateGraph(scores);
+        }
+        ui.updateGraph(scores);
 
-		ui.setText(String.format(Format, "Generation", n, "Best Result", 1 / bestPath.getFitness()));
-	}
+        ui.setText(String.format(Format, "Generation", n, "Best Result", 1 / bestPath.getFitness()));
+    }
 }
