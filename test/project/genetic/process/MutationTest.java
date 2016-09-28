@@ -16,21 +16,21 @@ import java.util.Random;
 public class MutationTest extends TestCase {
 
     private Mockery mockery;
-	protected Mutation<Individual<ICoordinate>> testMutation;
-	private static Random _mockRandom;
+    protected Mutation<Individual<ICoordinate>> testMutation;
+    private static Random _mockRandom;
 
     @Override
-	public void setUp() throws Exception {
+    public void setUp() throws Exception {
         mockery = new Mockery() {
             {
                 setImposteriser(ClassImposteriser.INSTANCE);
             }
         };
-		testMutation = getMutation();
-		_mockRandom = mockery.mock(Random.class);
-	}
+        testMutation = getMutation();
+        _mockRandom = mockery.mock(Random.class);
+    }
 
-	public void testMutationFirstStrategy() {
+    public void testMutationFirstStrategy() {
         final Individual<ICoordinate> ind = Mother.getPath();
         Mutation.Strategy<Individual<ICoordinate>> strategy = testMutation.getSwapTwoCitiesStrategy();
 
@@ -51,9 +51,9 @@ public class MutationTest extends TestCase {
                 assertEquals(ind.get(i), child.get(i));
             }
         }
-	}
+    }
 
-	public void testMutationSecondStrategy() {
+    public void testMutationSecondStrategy() {
         final Individual<ICoordinate> ind = Mother.getPath();
         Mutation.Strategy<Individual<ICoordinate>> strategy = testMutation.getSwapAdjacentCitiesStrategy();
 
@@ -64,9 +64,9 @@ public class MutationTest extends TestCase {
             assertEquals(ind.get(i), child.get(i + 1));
             assertEquals(ind.get(i + 1), child.get(i));
         }
-	}
+    }
 
-	public void testMutationThirdStrategy() {
+    public void testMutationThirdStrategy() {
         final Individual<ICoordinate> ind = Mother.getPath();
         Mutation.Strategy<Individual<ICoordinate>> strategy = testMutation.getReverseCityOrderStrategy();
 
@@ -89,14 +89,14 @@ public class MutationTest extends TestCase {
                 assertEquals(ind.get(i), child.get(i));
             }
         }
-	}
+    }
 
-	private Mutation<Individual<ICoordinate>> getMutation() {
+    private Mutation<Individual<ICoordinate>> getMutation() {
         return new Mutation<Individual<ICoordinate>>(Path.class) {
-	        @Override
-	        protected Random getRandom() {
-	            return _mockRandom;
-	        }
+            @Override
+            protected Random getRandom() {
+                return _mockRandom;
+            }
         };
-	}
+    }
 }
