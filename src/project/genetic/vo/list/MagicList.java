@@ -28,6 +28,13 @@ public final class MagicList<E extends Cloneable> extends ArrayList<E> implement
 	}
 
 	@Override
+	public void add(int n, E e) {
+		if (!contains(e)) {
+			super.add(n, e);
+		}
+	}
+
+	@Override
 	public boolean add(E e) {
 		return !contains(e) && super.add(e);
 	}
@@ -35,9 +42,11 @@ public final class MagicList<E extends Cloneable> extends ArrayList<E> implement
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
 		int count = 0;
-		for (E e : c)
-			if (add(e))
+		for (E e : c) {
+			if (add(e)) {
 				count++;
+			}
+		}
 		return count != 0;
 	}
 
@@ -47,8 +56,9 @@ public final class MagicList<E extends Cloneable> extends ArrayList<E> implement
 		for (E e : c) {
 			int prevSize = size();
 			add (index + count, e);
-			if (prevSize + 1 == size())
+			if (prevSize + 1 == size()) {
 				count++;
+			}
 		}
 		return count != 0;
 	}
