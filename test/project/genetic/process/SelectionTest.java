@@ -10,7 +10,7 @@ import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import project.Mother;
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.individual.Individual;
 
 public class SelectionTest extends TestCase {
@@ -21,7 +21,7 @@ public class SelectionTest extends TestCase {
     private List _mockGeneration;
     private static Random _mockRandom;
 
-    protected Selection<Individual<ICoordinate>> testSelection;
+    protected Selection<Individual<Coordinate>> testSelection;
 
     @Override
     public void setUp() throws Exception {
@@ -37,7 +37,7 @@ public class SelectionTest extends TestCase {
     }
 
     public void testSelectionTournamentSelectionStrategy() {
-        Selection.Strategy<Individual<ICoordinate>> strategy = testSelection.getTournamentSelectionStrategy();
+        Selection.Strategy<Individual<Coordinate>> strategy = testSelection.getTournamentSelectionStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -67,7 +67,7 @@ public class SelectionTest extends TestCase {
     }
 
     public void testSelectionRouletteWheelSelectionStrategy() {
-        Selection.Strategy<Individual<ICoordinate>> strategy = testSelection.getRouletteWheelSelectionStrategy();
+        Selection.Strategy<Individual<Coordinate>> strategy = testSelection.getRouletteWheelSelectionStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -103,7 +103,7 @@ public class SelectionTest extends TestCase {
     }
 
     public void testSelectionRankSelectionStrategy() {
-        Selection.Strategy<Individual<ICoordinate>> strategy = testSelection.getRankSelectionStrategy();
+        Selection.Strategy<Individual<Coordinate>> strategy = testSelection.getRankSelectionStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -125,8 +125,8 @@ public class SelectionTest extends TestCase {
         assertEquals(Mother.getIndividualWithFitness(6), child);
     }
 
-    private Selection<Individual<ICoordinate>> getSelection() {
-        return new Selection<Individual<ICoordinate>>() {
+    private Selection<Individual<Coordinate>> getSelection() {
+        return new Selection<Individual<Coordinate>>() {
             @Override
             protected Random getRandom() {
                 return _mockRandom;

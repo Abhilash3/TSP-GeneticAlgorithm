@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import project.genetic.vo.Cloneable;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
 import project.genetic.vo.list.individual.Path;
@@ -23,8 +23,8 @@ public class Mother {
 
     protected static Random rand = new Random();
 
-    public static List<Individual<ICoordinate>> getGeneration() {
-        List<Individual<ICoordinate>> generation = new ArrayList<Individual<ICoordinate>>();
+    public static List<Individual<Coordinate>> getGeneration() {
+        List<Individual<Coordinate>> generation = new ArrayList<Individual<Coordinate>>();
         for (int i = 0; i < Population; i++) {
             generation.add(getPath());
         }
@@ -37,21 +37,26 @@ public class Mother {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static Individual getIndividualWithFitness(final double fitness) {
-        return new Individual(Collections.EMPTY_LIST) {
+        return new Individual<Cloneable>(Collections.EMPTY_LIST) {
             @Override
-            protected double fitness() {
+            public Individual<Cloneable> doClone() {
+                return this;
+            }
+
+            @Override
+            public double getFitness() {
                 return fitness;
             }
 
             @Override
-            public Individual doClone() {
-                return this;
+            protected double fitness(Cloneable e1, Cloneable e2) {
+                return 0;
             }
         };
     }
 
-    public static List<ICoordinate> getCoordinates() {
-        List<ICoordinate> list = new MagicList<ICoordinate>();
+    public static List<Coordinate> getCoordinates() {
+        List<Coordinate> list = new MagicList<Coordinate>();
         for (; list.size() != Cities; ) {
             list.add(getCoordinate());
         }

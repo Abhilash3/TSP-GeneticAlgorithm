@@ -2,7 +2,7 @@ package project.ui.map.component;
 
 import java.awt.Graphics;
 
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.coordinate.Coordinate;
 
 /**
  * java class definition for drawing line
@@ -11,16 +11,16 @@ import project.genetic.vo.coordinate.ICoordinate;
  */
 public class Line {
 
-    private ICoordinate p1;
-    private ICoordinate p2;
+    private Coordinate p1;
+    private Coordinate p2;
 
-    public Line(ICoordinate p1, ICoordinate p2) {
+    public Line(Coordinate p1, Coordinate p2) {
         this.p1 = p1;
         this.p2 = p2;
     }
 
-    public boolean isVisiting(ICoordinate iCoordinate) {
-        return p1.equals(iCoordinate) || p2.equals(iCoordinate);
+    public boolean isVisiting(Coordinate Coordinate) {
+        return p1.equals(Coordinate) || p2.equals(Coordinate);
     }
 
     public void draw(Graphics g, double xScale, double yScale) {

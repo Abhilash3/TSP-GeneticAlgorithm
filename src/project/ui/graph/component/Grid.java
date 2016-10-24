@@ -7,7 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.List;
 
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.LList;
 
 import static project.common.Constants.padding;
@@ -49,15 +49,15 @@ public class Grid {
 
     }
 
-    public void drawChart(Graphics g, LList<ICoordinate> graphPoints) {
+    public void drawChart(Graphics g, LList<Coordinate> graphPoints) {
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         Stroke oldStroke = g2.getStroke();
-        List<ICoordinate> graph;
-        ICoordinate iCoordinate;
+        List<Coordinate> graph;
+        Coordinate iCoordinate;
         for (int i = 0; i < graphPoints.size(); i++) {
             graph = graphPoints.get(i);
 

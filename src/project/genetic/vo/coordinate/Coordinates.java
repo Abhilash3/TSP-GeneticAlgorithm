@@ -10,7 +10,7 @@ public class Coordinates {
      * @param c2 coordinate 2
      * @return distance between them
      */
-    public static double distance(ICoordinate c1, ICoordinate c2) {
+    public static double distance(Coordinate c1, Coordinate c2) {
         return Math.hypot(c1.getX() - c2.getX(), c1.getY() - c2.getY());
     }
 

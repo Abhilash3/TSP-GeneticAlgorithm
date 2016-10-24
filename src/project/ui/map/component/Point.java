@@ -1,18 +1,18 @@
 package project.ui.map.component;
 
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.coordinate.Coordinate;
 
 import java.awt.Graphics;
 
 public class Point {
 
-    private ICoordinate p;
+    private Coordinate p;
 
-    public Point(ICoordinate p) {
+    public Point(Coordinate p) {
         this.p = p;
     }
 
-    public ICoordinate getCoordinate() {
+    public Coordinate getCoordinate() {
         return p;
     }
 

@@ -5,28 +5,28 @@ import java.util.Collections;
 import java.util.List;
 
 import project.Mother;
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.individual.Individual;
 import junit.framework.TestCase;
 
 public class FitnessTest extends TestCase {
 
-    protected Fitness<Individual<ICoordinate>> fitness;
-    protected List<Individual<ICoordinate>> generation;
+    protected Fitness<Individual<Coordinate>> fitness;
+    protected List<Individual<Coordinate>> generation;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
-        fitness = Fitness.<Individual<ICoordinate>>getInstance();
-        generation = new ArrayList<Individual<ICoordinate>>();
+        fitness = Fitness.<Individual<Coordinate>>getInstance();
+        generation = new ArrayList<Individual<Coordinate>>();
         for (int i = 0; i < 1000; i++) {
             addToGeneration(generation, Double.parseDouble("" + (i + 1)));
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void addToGeneration(List<Individual<ICoordinate>> generation, double fitness) {
+    private void addToGeneration(List<Individual<Coordinate>> generation, double fitness) {
         generation.add(Mother.getIndividualWithFitness(fitness));
     }
 

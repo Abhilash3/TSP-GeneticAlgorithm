@@ -2,13 +2,13 @@ package project.genetic.process;
 
 import junit.framework.TestCase;
 import project.Mother;
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.individual.Individual;
 import project.genetic.vo.list.individual.Path;
 
 public class CrossoverTest extends TestCase {
 
-    protected Crossover<Individual<ICoordinate>> testCrossover;
+    protected Crossover<Individual<Coordinate>> testCrossover;
 
     @Override
     public void setUp() throws Exception {
@@ -28,10 +28,10 @@ public class CrossoverTest extends TestCase {
         testStrategy(testCrossover.getFirstComeFirstServeStrategy());
     }
 
-    private void testStrategy(final Crossover.Strategy<Individual<ICoordinate>> strategy) {
-        Individual<ICoordinate> parent1;
-        Individual<ICoordinate> parent2;
-        Individual<ICoordinate> child;
+    private void testStrategy(final Crossover.Strategy<Individual<Coordinate>> strategy) {
+        Individual<Coordinate> parent1;
+        Individual<Coordinate> parent2;
+        Individual<Coordinate> child;
 
         for (int i = 0; i < 1000; i++) {
             parent1 = Mother.getPath();
@@ -44,7 +44,7 @@ public class CrossoverTest extends TestCase {
         }
     }
 
-    private Crossover<Individual<ICoordinate>> getCrossover() {
-        return new Crossover<Individual<ICoordinate>>(Path.class);
+    private Crossover<Individual<Coordinate>> getCrossover() {
+        return new Crossover<Individual<Coordinate>>(Path.class);
     }
 }

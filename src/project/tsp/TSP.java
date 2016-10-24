@@ -11,7 +11,6 @@ import java.util.Random;
 
 import project.genetic.Genetic;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.coordinate.ICoordinate;
 import project.ui.UI;
 
 public class TSP {
@@ -20,14 +19,14 @@ public class TSP {
 
     public static void main(String[] args) {
 
-        List<ICoordinate> coordinates = new ArrayList<ICoordinate>();
+        List<Coordinate> coordinates = new ArrayList<Coordinate>();
         FileInputStream fileIn;
         ObjectInputStream in;
         try {
             fileIn = new FileInputStream(TSP_FILE);
             in = new ObjectInputStream(fileIn);
 
-            ICoordinate city;
+            Coordinate city;
             for (; coordinates.size() < CityNumber; ) {
                 city = (Coordinate) in.readObject();
                 if (!coordinates.contains(city))
@@ -37,7 +36,7 @@ public class TSP {
             fileIn.close();
         } catch (Exception e) {
             e.printStackTrace();
-            coordinates = new ArrayList<ICoordinate>();
+            coordinates = new ArrayList<Coordinate>();
             for (; coordinates.size() < CityNumber; ) {
                 coordinates.add(Coordinate.getCoordinate(
                         (rand.nextInt(55) + 5) * 10,

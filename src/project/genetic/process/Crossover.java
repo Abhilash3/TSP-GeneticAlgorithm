@@ -1,14 +1,14 @@
 package project.genetic.process;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import project.genetic.vo.coordinate.Coordinates;
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.MagicList;
 import project.genetic.vo.list.individual.Individual;
 
@@ -17,7 +17,7 @@ import project.genetic.vo.list.individual.Individual;
  *
  * @author ABHILASHKUMARV
  */
-public class Crossover<T extends Individual<ICoordinate>> {
+public class Crossover<T extends Individual<? extends Cloneable>> {
 
     private Class<? extends T> clazz;
 
@@ -37,14 +37,14 @@ public class Crossover<T extends Individual<ICoordinate>> {
         this.clazz = clazz;
     }
 
-    public static <E extends Individual<ICoordinate>> Crossover<E> getInstance(Class<? extends E> clazz) {
+    public static <E extends Individual<? extends Cloneable>> Crossover<E> getInstance(Class<? extends E> clazz) {
         return new Crossover<E>(clazz);
     }
 
     protected Strategy<T> getNearestNeighbourStrategy() {
         return new Strategy<T>() {
-            private List<ICoordinate> list;
-            private ICoordinate city, city1, city2;
+            private List<Cloneable> list;
+            private Cloneable city, city1, city2;
 
             /**
              * first city from path1, get nth city from both paths and select
@@ -57,7 +57,7 @@ public class Crossover<T extends Individual<ICoordinate>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new ArrayList<ICoordinate>();
+                list = new ArrayList<Cloneable>();
                 list.add(path1.get(0));
 
                 for (int i = 1; i < path1.size(); i++) {
@@ -67,9 +67,9 @@ public class Crossover<T extends Individual<ICoordinate>> {
 
                     if (!list.contains(city1) && !list.contains(city2)) {
                         city = list.get(i - 1);
-                        double distance1 = distance(city, city1);
-                        double distance2 = distance(city, city2);
-                        if (Double.compare(distance1, distance2) > 0) {
+                        double factor1 = factor(city, city1);
+                        double factor2 = factor(city, city2);
+                        if (Double.compare(factor1, factor2) > 0) {
                             list.add(city2);
                         } else {
                             list.add(city1);
@@ -99,16 +99,26 @@ public class Crossover<T extends Individual<ICoordinate>> {
                 }
             }
 
-            private double distance(ICoordinate city1, ICoordinate city2) {
-                return Coordinates.distance(city1, city2);
+            private double factor(Cloneable city1, Cloneable city2) {
+                try {
+                    Method factorMethod = clazz.getDeclaredMethod("fitness", city1.getClass(), city2.getClass());
+                    factorMethod.setAccessible(true);
+
+                    T obj = clazz.getConstructor(List.class).newInstance(Collections.emptyList());
+                    return (Double) factorMethod.invoke(obj, city1, city2);
+                } catch (NoSuchMethodException | InstantiationException
+                        | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return Double.POSITIVE_INFINITY;
+                }
             }
         };
     }
 
     protected Strategy<T> getInitialRandomFromFirstRestFromSecondStrategy() {
         return new Strategy<T>() {
-            private List<ICoordinate> list;
-            private ICoordinate city1, city2;
+            private List<Cloneable> list;
+            private Cloneable city1, city2;
 
             /**
              * selects first random no of cities from path1, rest from path2
@@ -120,7 +130,7 @@ public class Crossover<T extends Individual<ICoordinate>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new MagicList<ICoordinate>();
+                list = new MagicList<Cloneable>();
 
                 int random = getRandom().nextInt(path1.size() - 1) + 1;
                 for (int i = 0; i < random; i++) {
@@ -156,8 +166,8 @@ public class Crossover<T extends Individual<ICoordinate>> {
 
     protected Strategy<T> getFirstComeFirstServeStrategy() {
         return new Strategy<T>() {
-            private List<ICoordinate> list;
-            private ICoordinate city1, city2;
+            private List<Cloneable> list;
+            private Cloneable city1, city2;
 
             /**
              * selects cities from both paths in whichever order they come with
@@ -170,7 +180,7 @@ public class Crossover<T extends Individual<ICoordinate>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new ArrayList<ICoordinate>();
+                list = new ArrayList<Cloneable>();
 
                 for (int i = 0; list.size() != path1.size(); i++) {
                     city1 = path1.get(i);

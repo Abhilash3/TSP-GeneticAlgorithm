@@ -150,10 +150,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
          */
         @SuppressWarnings("rawtypes")
         Individual o = (Individual) object;
-        if (compareTo(o) == 0) {
-            return list.equals(o.list);
-        }
-        return false;
+        return compareTo(o) == 0 && list.equals(o.list);
     }
 
     @Override
@@ -182,11 +179,16 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
     public double getFitness() {
         if (fitness == -1) {
-            fitness = fitness();
+            fitness = 0;
+            for (int i = 1; i < list.size(); i++) {
+                fitness += fitness(list.get(i - 1), list.get(i));
+            }
+            fitness += fitness(list.get(list.size() - 1), list.get(0));
+            fitness = 1 / fitness;
         }
         return fitness;
     }
 
-    protected abstract double fitness();
+    protected abstract double fitness(E e1, E e2);
 
 }

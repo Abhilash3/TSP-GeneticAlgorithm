@@ -10,7 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.coordinate.Coordinate;
+import project.genetic.vo.coordinate.Coordinate;
 import project.ui.graph.Graph;
 import project.ui.map.Map;
 
@@ -21,7 +22,7 @@ public class UI extends JFrame {
     protected Graph graph;
     protected JTextField textField;
 
-    public UI(List<ICoordinate> coordinates) {
+    public UI(List<Coordinate> coordinates) {
         super("Simulation");
         setUp();
         drawCoordinates(coordinates);
@@ -63,7 +64,7 @@ public class UI extends JFrame {
         map.clearPoints();
     }
 
-    public void clearMapPoints(List<ICoordinate> coordinates) {
+    public void clearMapPoints(List<Coordinate> coordinates) {
         map.clearPoints(coordinates);
     }
 
@@ -71,7 +72,7 @@ public class UI extends JFrame {
         map.clearLines();
     }
 
-    public void clearMapLines(List<ICoordinate> coordinates) {
+    public void clearMapLines(List<Coordinate> coordinates) {
         map.clearLines(coordinates);
     }
 
@@ -79,11 +80,11 @@ public class UI extends JFrame {
         map.clear();
     }
 
-    public void drawCoordinates(List<ICoordinate> coordinates) {
+    public void drawCoordinates(List<Coordinate> coordinates) {
         map.drawCoordinates(coordinates);
     }
 
-    public void drawMap(List<ICoordinate> bestPath) {
+    public void drawMap(List<Coordinate> bestPath) {
         map.drawMap(bestPath);
     }
 

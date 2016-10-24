@@ -1,7 +1,6 @@
 package project.ui.graph;
 
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.coordinate.ICoordinate;
 import project.genetic.vo.list.LList;
 import project.genetic.vo.list.AArrayList;
 import project.ui.graph.component.Axis;
@@ -28,7 +27,7 @@ public class Graph extends JComponent {
     private int maxScore = Integer.MIN_VALUE;
 
     private LList<Double> scores;
-    private LList<ICoordinate> graphPoints;
+    private LList<Coordinate> graphPoints;
 
     private Axis xAxis, yAxis;
     private Grid grid;
@@ -65,7 +64,7 @@ public class Graph extends JComponent {
         double xScale = ((double) width - 2 * padding - labelPadding) / Generations;
         double yScale = ((double) height - 2 * padding - labelPadding) / maxScore;
 
-        graphPoints = new AArrayList<ICoordinate>();
+        graphPoints = new AArrayList<Coordinate>();
         for (int i = 0; i < scores.size(); i++) {
             graphPoints.addEmpty();
             for (int j = 0; j < scores.getSize(i); j++) {

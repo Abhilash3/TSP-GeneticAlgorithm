@@ -1,5 +1,7 @@
 package project.genetic.vo.coordinate;
 
+import project.genetic.vo.Cloneable;
+
 import java.io.Serializable;
 
 /**
@@ -7,7 +9,7 @@ import java.io.Serializable;
  *
  * @author ABHILASHKUMARV
  */
-public final class Coordinate implements ICoordinate, Serializable {
+public final class Coordinate implements Cloneable, Serializable {
 
     /**
      *

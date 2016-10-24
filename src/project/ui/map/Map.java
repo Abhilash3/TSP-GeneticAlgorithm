@@ -1,6 +1,7 @@
 package project.ui.map;
 
-import project.genetic.vo.coordinate.ICoordinate;
+import project.genetic.vo.coordinate.Coordinate;
+import project.genetic.vo.coordinate.Coordinate;
 import project.ui.map.component.Line;
 import project.ui.map.component.Point;
 
@@ -32,7 +33,7 @@ public class Map extends JComponent {
      *
      * @param path list of cities to draw
      */
-    public void drawMap(List<ICoordinate> path) {
+    public void drawMap(List<Coordinate> path) {
         synchronized (lines) {
             if (path.size() > 1)
                 lines.add(new Line(path.get(path.size() - 1), path.get(0)));
@@ -48,10 +49,10 @@ public class Map extends JComponent {
      *
      * @param coordinates list of cities to draw
      */
-    public void drawCoordinates(List<ICoordinate> coordinates) {
+    public void drawCoordinates(List<Coordinate> coordinates) {
         synchronized (points) {
-            for (ICoordinate iCoordinate : coordinates)
-                points.add(new Point(iCoordinate));
+            for (Coordinate Coordinate : coordinates)
+                points.add(new Point(Coordinate));
         }
         getMaxValues(coordinates);
         repaint();
@@ -69,11 +70,11 @@ public class Map extends JComponent {
      *
      * @param coordinates list of cities to remove
      */
-    public void clearLines(List<ICoordinate> coordinates) {
+    public void clearLines(List<Coordinate> coordinates) {
         Set<Line> linesToBeRemoved = new HashSet<Line>();
-        for (ICoordinate iCoordinate : coordinates)
+        for (Coordinate Coordinate : coordinates)
             for (Line line : lines)
-                if (line.isVisiting(iCoordinate))
+                if (line.isVisiting(Coordinate))
                     linesToBeRemoved.add(line);
         synchronized (lines) {
             lines.removeAll(linesToBeRemoved);
@@ -93,7 +94,7 @@ public class Map extends JComponent {
      *
      * @param coordinates list of cities to remove
      */
-    public void clearPoints(List<ICoordinate> coordinates) {
+    public void clearPoints(List<Coordinate> coordinates) {
         Set<Point> pointsToBeRemoved = new HashSet<Point>();
         for (Point point : points)
             if (coordinates.contains(point.getCoordinate()))
@@ -119,7 +120,7 @@ public class Map extends JComponent {
      *
      * @param coordinates list of cities to remove
      */
-    public void clear(List<ICoordinate> coordinates) {
+    public void clear(List<Coordinate> coordinates) {
         clearLines(coordinates);
         clearPoints(coordinates);
     }
@@ -145,8 +146,8 @@ public class Map extends JComponent {
         }
     }
 
-    private void getMaxValues(List<ICoordinate> list) {
-        for (ICoordinate coordinate : list) {
+    private void getMaxValues(List<Coordinate> list) {
+        for (Coordinate coordinate : list) {
             int x = coordinate.getX();
             int y = coordinate.getY();
             if (max[0] < x)

@@ -7,7 +7,7 @@ import project.Mother;
 
 public class CoordinateTest extends TestCase {
 
-    private List<ICoordinate> coordinates;
+    private List<Coordinate> coordinates;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -15,7 +15,7 @@ public class CoordinateTest extends TestCase {
     }
 
     public void testDistance() {
-        ICoordinate[] city = new Coordinate[2];
+        Coordinate[] city = new Coordinate[2];
         for (int i = 1; i < coordinates.size(); i++) {
             city[0] = coordinates.get(i - 1);
             city[1] = coordinates.get(i);
@@ -29,8 +29,8 @@ public class CoordinateTest extends TestCase {
     }
 
     public void testHashCode() {
-        for (ICoordinate a : coordinates) {
-            for (ICoordinate b : coordinates) {
+        for (Coordinate a : coordinates) {
+            for (Coordinate b : coordinates) {
                 if (a.equals(b))
                     assertEquals(a.hashCode(), b.hashCode());
                 else
@@ -40,8 +40,8 @@ public class CoordinateTest extends TestCase {
     }
 
     public void testToString() {
-        for (ICoordinate a : coordinates) {
-            for (ICoordinate b : coordinates) {
+        for (Coordinate a : coordinates) {
+            for (Coordinate b : coordinates) {
                 if (a.equals(b))
                     assertTrue(a.toString().equals(b.toString()));
                 else
