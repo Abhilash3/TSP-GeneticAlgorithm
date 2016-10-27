@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.MagicList;
+import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.list.individual.Individual;
 
 /**
@@ -51,7 +51,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new MagicList<Cloneable>();
+                list = new NoDuplicateList<Cloneable>();
                 int random1, random2;
 
                 do {
@@ -99,7 +99,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new MagicList<Cloneable>();
+                list = new NoDuplicateList<Cloneable>();
                 for (int i = 1; i < path.size(); i += 2) {
                     list.add(path.get(i));
                     list.add(path.get(i - 1));
@@ -132,7 +132,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new MagicList<Cloneable>();
+                list = new NoDuplicateList<Cloneable>();
                 int random1 = getRandom().nextInt(path.size() - 1);
                 int random2 = getRandom().nextInt(path.size() - 1);
 

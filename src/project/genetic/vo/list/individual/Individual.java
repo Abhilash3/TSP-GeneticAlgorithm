@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import project.genetic.vo.list.MagicList;
+import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.Cloneable;
 
 public abstract class Individual<E extends Cloneable> implements List<E>, Cloneable, Comparable<Individual<E>> {
@@ -18,7 +18,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
     public Individual(List<E> list) {
         super();
-        this.list = new MagicList<E>(list);
+        this.list = new NoDuplicateList<E>(list);
     }
 
     @Override
@@ -38,7 +38,18 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
     @Override
     public Iterator<E> iterator() {
-        return list.iterator();
+        final Iterator<E> iterator = list.iterator();
+        return new Iterator<E>() {
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public E next() {
+                return iterator.next().doClone();
+            }
+        };
     }
 
     @Override
@@ -123,12 +134,61 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
     @Override
     public ListIterator<E> listIterator() {
-        return list.listIterator();
+        return listIterator(list.listIterator());
     }
 
     @Override
     public ListIterator<E> listIterator(int index) {
-        return list.listIterator(index);
+        return listIterator(list.listIterator(index));
+    }
+
+    private ListIterator<E> listIterator(final ListIterator<E> iterator) {
+        return new ListIterator<E>() {
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public E next() {
+                return iterator.next().doClone();
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return iterator.hasPrevious();
+            }
+
+            @Override
+            public E previous() {
+                return iterator.previous().doClone();
+            }
+
+            @Override
+            public int nextIndex() {
+                return iterator.nextIndex();
+            }
+
+            @Override
+            public int previousIndex() {
+                return iterator.previousIndex();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Remove not supported");
+            }
+
+            @Override
+            public void set(E e) {
+                throw new UnsupportedOperationException("Set not supported");
+            }
+
+            @Override
+            public void add(E e) {
+                throw new UnsupportedOperationException("Add not supported");
+            }
+        };
     }
 
     @Override

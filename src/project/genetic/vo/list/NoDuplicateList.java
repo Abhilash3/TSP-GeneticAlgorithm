@@ -7,22 +7,22 @@ import java.util.List;
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.individual.Chromosome;
 
-public final class MagicList<E extends Cloneable> extends ArrayList<E> implements Chromosome<E> {
+public final class NoDuplicateList<E extends Cloneable> extends ArrayList<E> implements Chromosome<E> {
 
     /**
      *
      */
     private static final long serialVersionUID = 2587729160448267835L;
 
-    public MagicList() {
+    public NoDuplicateList() {
         super();
     }
 
-    public MagicList(int i) {
+    public NoDuplicateList(int i) {
         super(i);
     }
 
-    public MagicList(List<E> list) {
+    public NoDuplicateList(List<E> list) {
         this(list.size());
         addAll(list);
     }
@@ -65,8 +65,8 @@ public final class MagicList<E extends Cloneable> extends ArrayList<E> implement
 
     @SuppressWarnings("unchecked")
     @Override
-    public MagicList<E> doClone() {
-        MagicList<E> clone = new MagicList<E>();
+    public NoDuplicateList<E> doClone() {
+        NoDuplicateList<E> clone = new NoDuplicateList<E>();
         for (int i = 0; i < size(); i++) {
             clone.add((E) get(i).doClone());
         }
@@ -78,15 +78,15 @@ public final class MagicList<E extends Cloneable> extends ArrayList<E> implement
         if (this == object) {
             return true;
         }
-        if (!(object instanceof MagicList<?>)) {
+        if (!(object instanceof NoDuplicateList<?>)) {
             return false;
         }
 
         /**
-         * Object has to be of MagicList; verified above
+         * Object has to be of NoDuplicateList; verified above
          */
         @SuppressWarnings("rawtypes")
-        MagicList o = (MagicList) object;
+        NoDuplicateList o = (NoDuplicateList) object;
         if (size() != o.size()) {
             return false;
         }

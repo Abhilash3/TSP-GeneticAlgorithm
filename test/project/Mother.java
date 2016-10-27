@@ -9,13 +9,14 @@ import java.util.Random;
 
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.MagicList;
+import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.list.individual.Individual;
 import project.genetic.vo.list.individual.Path;
 
 public class Mother {
 
     private Mother() {
+        throw new UnsupportedOperationException("Util Class");
     }
 
     protected static int Cities = CityNumber;
@@ -35,7 +36,7 @@ public class Mother {
         return new Path(getCoordinates());
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings("unchecked")
     public static Individual getIndividualWithFitness(final double fitness) {
         return new Individual<Cloneable>(Collections.EMPTY_LIST) {
             @Override
@@ -56,7 +57,7 @@ public class Mother {
     }
 
     public static List<Coordinate> getCoordinates() {
-        List<Coordinate> list = new MagicList<Coordinate>();
+        List<Coordinate> list = new NoDuplicateList<Coordinate>();
         for (; list.size() != Cities; ) {
             list.add(getCoordinate());
         }

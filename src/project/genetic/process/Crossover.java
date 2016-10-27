@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.MagicList;
+import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.list.individual.Individual;
 
 /**
@@ -57,7 +57,7 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new ArrayList<Cloneable>();
+                list = new NoDuplicateList<Cloneable>();
                 list.add(path1.get(0));
 
                 for (int i = 1; i < path1.size(); i++) {
@@ -106,8 +106,9 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
 
                     T obj = clazz.getConstructor(List.class).newInstance(Collections.emptyList());
                     return (Double) factorMethod.invoke(obj, city1, city2);
-                } catch (NoSuchMethodException | InstantiationException
-                        | IllegalAccessException | InvocationTargetException e) {
+                } catch (InstantiationException | IllegalAccessException
+                        | IllegalArgumentException | InvocationTargetException
+                        | NoSuchMethodException | SecurityException e) {
                     e.printStackTrace();
                     return Double.POSITIVE_INFINITY;
                 }
@@ -130,7 +131,7 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new MagicList<Cloneable>();
+                list = new NoDuplicateList<Cloneable>();
 
                 int random = getRandom().nextInt(path1.size() - 1) + 1;
                 for (int i = 0; i < random; i++) {
@@ -180,7 +181,7 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new ArrayList<Cloneable>();
+                list = new NoDuplicateList<Cloneable>();
 
                 for (int i = 0; list.size() != path1.size(); i++) {
                     city1 = path1.get(i);

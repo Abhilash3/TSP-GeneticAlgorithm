@@ -5,6 +5,7 @@ import java.awt.Color;
 public class Constants {
 
     private Constants() {
+        throw new UnsupportedOperationException("Util Class");
     }
 
     public static final int CityNumber = 100;
