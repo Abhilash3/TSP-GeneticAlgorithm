@@ -143,6 +143,10 @@ public class Selection<T extends Individual<? extends Cloneable>> {
     }
 
     public T select(List<T> generation) {
-        return getStrategy().select(generation);
+        return select(generation, getStrategy());
+    }
+
+    public T select(List<T> generation, Strategy<T> strategy) {
+        return strategy.select(generation);
     }
 }

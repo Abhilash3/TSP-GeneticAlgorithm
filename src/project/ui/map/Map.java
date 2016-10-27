@@ -130,8 +130,7 @@ public class Map extends JComponent {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         double xScale = ((double) getWidth() - 20) / max[0];
         double yScale = ((double) getHeight() - 20) / max[1];

@@ -221,6 +221,10 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
     }
 
     public T cross(T parent1, T parent2) {
-        return getStrategy().cross(parent1, parent2);
+        return cross(parent1, parent2, getStrategy());
+    }
+
+    public T cross(T parent1, T parent2, Strategy<T> strategy) {
+        return strategy.cross(parent1, parent2);
     }
 }

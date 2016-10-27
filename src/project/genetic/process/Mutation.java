@@ -176,7 +176,11 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
     }
 
     public T mutate(T path) {
-        return getStrategy().mutate(path);
+        return mutate(path, getStrategy());
+    }
+
+    public T mutate(T path, Strategy<T> strategy) {
+        return strategy.mutate(path);
     }
 
 }

@@ -108,7 +108,11 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
     }
 
     public List<T> sort(List<T> generation) {
-        getMergeSortStrategy().sort(generation, Order.ASC);
+        return sort(generation, getMergeSortStrategy());
+    }
+
+    public List<T> sort(List<T> generation, Strategy<T> strategy) {
+        strategy.sort(generation, Order.ASC);
         return generation;
     }
 }

@@ -75,8 +75,7 @@ public class Genetic {
                 child = crossover(parent1, parent2);
                 newGeneration.add(child);
 
-                if (newGeneration.size() != populationSize
-                        && rand.nextInt(100) % 5 == 0) {
+                if (newGeneration.size() != populationSize && rand.nextInt(100) % 5 == 0) {
                     child = mutate(child);
                     newGeneration.add(child);
                 }
@@ -90,8 +89,7 @@ public class Genetic {
             if (ui != null)
                 updateUI(generation, i);
             else
-                System.out.println(String.format(Format, "Generation", i,
-                        "Best Result", bestPath.getFitness()));
+                System.out.println(String.format(Format, "Generation", i, "Best Result", bestPath.getFitness()));
         }
 
         return bestPath;
