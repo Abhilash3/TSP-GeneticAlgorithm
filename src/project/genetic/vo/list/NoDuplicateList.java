@@ -1,17 +1,13 @@
 package project.genetic.vo.list;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.individual.Chromosome;
 
-public final class NoDuplicateList<E extends Cloneable> extends ArrayList<E> implements Chromosome<E> {
+public final class NoDuplicateList<E extends Cloneable> extends CloneableList<E> {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 2587729160448267835L;
 
     public NoDuplicateList() {
@@ -66,36 +62,7 @@ public final class NoDuplicateList<E extends Cloneable> extends ArrayList<E> imp
     @SuppressWarnings("unchecked")
     @Override
     public NoDuplicateList<E> doClone() {
-        NoDuplicateList<E> clone = new NoDuplicateList<E>();
-        for (int i = 0; i < size(); i++) {
-            clone.add((E) get(i).doClone());
-        }
-        return clone;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (!(object instanceof NoDuplicateList<?>)) {
-            return false;
-        }
-
-        /**
-         * Object has to be of NoDuplicateList; verified above
-         */
-        @SuppressWarnings("rawtypes")
-        NoDuplicateList o = (NoDuplicateList) object;
-        if (size() != o.size()) {
-            return false;
-        }
-        for (int i = 0; i < size(); i++) {
-            if (!get(i).equals(o.get(i))) {
-                return false;
-            }
-        }
-        return true;
+        return new NoDuplicateList<E>(super.doClone());
     }
 
 }

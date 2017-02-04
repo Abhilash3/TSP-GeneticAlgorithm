@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Path;
+import project.genetic.vo.list.individual.Route;
 
 public class CrossoverTest extends TestCase {
 
@@ -45,6 +45,6 @@ public class CrossoverTest extends TestCase {
     }
 
     private Crossover<Individual<Coordinate>> getCrossover() {
-        return new Crossover<Individual<Coordinate>>(Path.class);
+        return new Crossover<Individual<Coordinate>>(Route.class);
     }
 }

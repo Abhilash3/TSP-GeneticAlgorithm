@@ -11,7 +11,7 @@ import project.genetic.vo.Cloneable;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Path;
+import project.genetic.vo.list.individual.Route;
 
 public class Mother {
 
@@ -19,10 +19,10 @@ public class Mother {
         throw new UnsupportedOperationException("Util Class");
     }
 
-    protected static int Cities = CityNumber;
-    protected static int Population = 2 * Cities;
+    private static int Cities = CityNumber;
+    private static int Population = 2 * Cities;
 
-    protected static Random rand = new Random();
+    private static Random rand = new Random();
 
     public static List<Individual<Coordinate>> getGeneration() {
         List<Individual<Coordinate>> generation = new ArrayList<Individual<Coordinate>>();
@@ -32,13 +32,13 @@ public class Mother {
         return generation;
     }
 
-    public static Path getPath() {
-        return new Path(getCoordinates());
+    public static Route getPath() {
+        return new Route(getCoordinates());
     }
 
     @SuppressWarnings("unchecked")
-    public static Individual getIndividualWithFitness(final double fitness) {
-        return new Individual<Cloneable>(Collections.EMPTY_LIST) {
+    public static Individual getIndividualWithFitness(final double myFitness) {
+        return new Individual(Collections.EMPTY_LIST) {
             @Override
             public Individual<Cloneable> doClone() {
                 return this;
@@ -46,12 +46,7 @@ public class Mother {
 
             @Override
             public double getFitness() {
-                return fitness;
-            }
-
-            @Override
-            protected double fitness(Cloneable e1, Cloneable e2) {
-                return 0;
+                return myFitness;
             }
         };
     }

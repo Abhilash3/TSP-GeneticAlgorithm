@@ -5,9 +5,9 @@ import java.util.List;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.coordinate.Coordinates;
 
-public final class Path extends Individual<Coordinate> {
+public final class Route extends OrderedIndividual<Coordinate> {
 
-    public Path(List<Coordinate> list) {
+    public Route(List<Coordinate> list) {
         super(list);
     }
 
@@ -18,8 +18,8 @@ public final class Path extends Individual<Coordinate> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Path doClone() {
-        return new Path((List<Coordinate>) list.doClone());
+    public Route doClone() {
+        return new Route(list.doClone());
     }
 
 }

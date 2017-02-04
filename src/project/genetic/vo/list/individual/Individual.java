@@ -12,12 +12,11 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
     protected Chromosome<E> list;
 
-    private double fitness = -1;
+    protected double fitness = -1;
     private Integer hashcode;
     private String toString;
 
     public Individual(List<E> list) {
-        super();
         this.list = new NoDuplicateList<E>(list);
     }
 
@@ -198,14 +197,17 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
 
     @Override
     public final boolean equals(Object object) {
-        if (object == null)
+        if (object == null) {
             return false;
-        if (this == object)
+        }
+        if (this == object) {
             return true;
-        if (!(object instanceof Individual<?>))
+        }
+        if (!(object.getClass() == getClass())) {
             return false;
+        }
 
-        /**
+        /*
          * Object has to be of Individual; verified above
          */
         @SuppressWarnings("rawtypes")
@@ -225,7 +227,7 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
     }
 
     @Override
-    public final int compareTo(@SuppressWarnings("rawtypes") Individual individual) {
+    public final int compareTo(Individual individual) {
         return Double.compare(getFitness(), individual.getFitness());
     }
 
@@ -237,18 +239,6 @@ public abstract class Individual<E extends Cloneable> implements List<E>, Clonea
         return toString;
     }
 
-    public double getFitness() {
-        if (fitness == -1) {
-            fitness = 0;
-            for (int i = 1; i < list.size(); i++) {
-                fitness += fitness(list.get(i - 1), list.get(i));
-            }
-            fitness += fitness(list.get(list.size() - 1), list.get(0));
-            fitness = 1 / fitness;
-        }
-        return fitness;
-    }
-
-    protected abstract double fitness(E e1, E e2);
+    public abstract double getFitness();
 
 }

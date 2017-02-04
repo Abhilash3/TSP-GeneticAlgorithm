@@ -15,7 +15,7 @@ import project.genetic.process.Mutation;
 import project.genetic.process.Selection;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Path;
+import project.genetic.vo.list.individual.Route;
 import project.ui.UI;
 
 /**
@@ -98,14 +98,14 @@ public class Genetic {
     private Individual<Coordinate> mutate(Individual<Coordinate> child) {
         Individual<Coordinate> mutate;
         do {
-            mutate = Mutation.<Individual<Coordinate>>getInstance(Path.class).mutate(child);
+            mutate = Mutation.<Individual<Coordinate>>getInstance(Route.class).mutate(child);
         } while (child.equals(mutate));
         return mutate;
     }
 
     private Individual<Coordinate> crossover(Individual<Coordinate> parent1,
                                               Individual<Coordinate> parent2) {
-        return Crossover.<Individual<Coordinate>>getInstance(Path.class).cross(parent1, parent2);
+        return Crossover.<Individual<Coordinate>>getInstance(Route.class).cross(parent1, parent2);
     }
 
     private Individual<Coordinate> select(List<Individual<Coordinate>> generation,
@@ -129,7 +129,7 @@ public class Genetic {
 
     protected Individual<Coordinate> randomPath() {
         Collections.shuffle(coordinates);
-        return new Path(coordinates);
+        return new Route(coordinates);
     }
 
     private void updateUI(List<Individual<Coordinate>> generation, int n) {

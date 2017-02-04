@@ -9,7 +9,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Path;
+import project.genetic.vo.list.individual.Route;
 
 import java.util.Random;
 
@@ -92,7 +92,7 @@ public class MutationTest extends TestCase {
     }
 
     private Mutation<Individual<Coordinate>> getMutation() {
-        return new Mutation<Individual<Coordinate>>(Path.class) {
+        return new Mutation<Individual<Coordinate>>(Route.class) {
             @Override
             protected Random getRandom() {
                 return _mockRandom;
