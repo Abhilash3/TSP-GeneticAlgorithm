@@ -2,15 +2,13 @@ package project.genetic.vo.individual;
 
 import java.util.List;
 
-import project.genetic.vo.list.ICloneableList;
 import project.genetic.vo.list.ImmutableList;
 import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.Cloneable;
 
 import static java.lang.String.format;
 
-public abstract class Individual<E extends Cloneable> extends ImmutableList<E>
-        implements ICloneableList<E>, Comparable<Individual<E>> {
+public abstract class Individual<E extends Cloneable> extends ImmutableList<E> implements Comparable<Individual<E>> {
 
     double fitness = -1;
     private Integer hashcode;

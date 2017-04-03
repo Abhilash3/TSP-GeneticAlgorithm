@@ -29,7 +29,7 @@ public class Genetic {
 
     private int populationSize;
 
-    protected final List<Double> scores = new ArrayList<Double>(Graphs);
+    protected final List<Double> scores = new ArrayList<>(Graphs);
 
     protected List<Coordinate> coordinates;
     protected Individual<Coordinate> bestPath;

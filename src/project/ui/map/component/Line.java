@@ -4,6 +4,8 @@ import java.awt.Graphics;
 
 import project.genetic.vo.coordinate.Coordinate;
 
+import static java.lang.String.format;
+
 /**
  * java class definition for drawing line
  *
@@ -32,8 +34,7 @@ public class Line {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("{").append(p1).append("->")
-                .append(p2).append("}").toString();
+        return format("{%s->%s}", p1, p2);
     }
 
 }

@@ -133,8 +133,12 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             public T mutate(T path) {
 
                 list = new NoDuplicateList<>();
-                int random1 = getRandom().nextInt(path.size() - 1);
-                int random2 = getRandom().nextInt(path.size() - 1);
+                int random1, random2;
+
+                do {
+                    random1 = getRandom().nextInt(path.size() - 2) + 1;
+                    random2 = getRandom().nextInt(path.size() - 2) + 1;
+                } while (random1 == random2);
 
                 int min = Math.min(random1, random2);
                 int max = Math.max(random1, random2);

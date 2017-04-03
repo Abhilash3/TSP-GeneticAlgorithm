@@ -38,13 +38,10 @@ public class Grid {
         for (int i = 0; i <= GraphDivisions; i += 1) {
             y = (int) (height - (height - padding * 2 - labelPadding)
                     * (double) i / GraphDivisions - padding - labelPadding);
-            g.drawLine(padding + labelPadding + pointWidth, y, width - padding,
-                    y);
+            g.drawLine(padding + labelPadding + pointWidth, y, width - padding, y);
 
-            x = (int) ((width - padding * 2 - labelPadding) * (double) i
-                    / GraphDivisions + padding + labelPadding);
-            g.drawLine(x, height - padding - labelPadding - pointWidth, x,
-                    padding);
+            x = (int) ((width - padding * 2 - labelPadding) * (double) i / GraphDivisions + padding + labelPadding);
+            g.drawLine(x, height - padding - labelPadding - pointWidth, x, padding);
         }
 
     }
@@ -52,8 +49,7 @@ public class Grid {
     public void drawChart(Graphics g, LList<Coordinate> graphPoints) {
 
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Stroke oldStroke = g2.getStroke();
         List<Coordinate> graph;
@@ -65,19 +61,16 @@ public class Grid {
             g2.setStroke(GRAPH_STROKE);
             if (graph.size() > 0) {
                 iCoordinate = graph.get(graph.size() - 1);
-                g.drawLine(padding + labelPadding, iCoordinate.getY(), width
-                        - padding, iCoordinate.getY());
-                g.drawLine(iCoordinate.getX(), height - padding - labelPadding,
-                        iCoordinate.getX(), padding);
+                g.drawLine(padding + labelPadding, iCoordinate.getY(), width - padding, iCoordinate.getY());
+                g.drawLine(iCoordinate.getX(), height - padding - labelPadding, iCoordinate.getX(), padding);
             }
 
             g2.setColor(PointColor);
             g2.setStroke(oldStroke);
             for (int j = 0; j < graph.size(); j++) {
                 iCoordinate = graph.get(j);
-                g2.fillRoundRect(iCoordinate.getX() - pointWidth / 2,
-                        iCoordinate.getY() - pointWidth / 2, pointWidth,
-                        pointWidth, pointWidth / 4, pointWidth / 4);
+                g2.fillRoundRect(iCoordinate.getX() - pointWidth / 2, iCoordinate.getY() - pointWidth / 2,
+                        pointWidth, pointWidth, pointWidth / 4, pointWidth / 4);
             }
         }
 

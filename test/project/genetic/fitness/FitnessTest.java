@@ -4,19 +4,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.Test;
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Individual;
-import junit.framework.TestCase;
 
-public class FitnessTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class FitnessTest {
 
     protected Fitness<Individual<Coordinate>> fitness;
     protected List<Individual<Coordinate>> generation;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
 
         fitness = Fitness.getInstance();
         generation = new ArrayList<>();
@@ -30,8 +32,8 @@ public class FitnessTest extends TestCase {
         generation.add(Mother.getIndividualWithFitness(fitness));
     }
 
-    public void testSort() {
-
+    @Test
+    public void sort() {
         int size = generation.size();
         for (int i = 0; i < 100; i++) {
 

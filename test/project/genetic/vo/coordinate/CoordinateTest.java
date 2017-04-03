@@ -2,34 +2,39 @@ package project.genetic.vo.coordinate;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import project.Mother;
 import project.genetic.util.Coordinates;
 
-public class CoordinateTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class CoordinateTest {
 
     private List<Coordinate> coordinates;
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         coordinates = Mother.getPath();
     }
 
-    public void testDistance() {
+    @Test
+    public void distance() {
         Coordinate[] city = new Coordinate[2];
         for (int i = 1; i < coordinates.size(); i++) {
             city[0] = coordinates.get(i - 1);
             city[1] = coordinates.get(i);
 
-            assertEquals(Coordinates.distance(city[0], city[1]),
-                    Coordinates.distance(city[1], city[0]));
+            assertEquals(0, Double.compare(Coordinates.distance(city[0], city[1]),
+                    Coordinates.distance(city[1], city[0])));
 
-            assertEquals(0.0, Coordinates.distance(city[0], city[0]));
-            assertEquals(0.0, Coordinates.distance(city[1], city[1]));
+            assertEquals(0, Double.compare(0.0, Coordinates.distance(city[0], city[0])));
+            assertEquals(0, Double.compare(0.0, Coordinates.distance(city[1], city[1])));
         }
     }
 
-    public void testHashCode() {
+    @Test
+    public void HashCode() {
         for (Coordinate a : coordinates) {
             for (Coordinate b : coordinates) {
                 if (a.equals(b))
@@ -40,7 +45,8 @@ public class CoordinateTest extends TestCase {
         }
     }
 
-    public void testToString() {
+    @Test
+    public void ToString() {
         for (Coordinate a : coordinates) {
             for (Coordinate b : coordinates) {
                 if (a.equals(b))
@@ -51,7 +57,8 @@ public class CoordinateTest extends TestCase {
         }
     }
 
-    public void testEquals() {
+    @Test
+    public void equals() {
         Coordinate coordinate1 = Coordinate.getCoordinate(10, 10);
         Coordinate coordinate2 = Coordinate.getCoordinate(20, 20);
 

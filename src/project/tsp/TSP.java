@@ -19,7 +19,7 @@ public class TSP {
 
     public static void main(String[] args) {
 
-        List<Coordinate> coordinates = new ArrayList<Coordinate>();
+        List<Coordinate> coordinates = new ArrayList<>();
         FileInputStream fileIn;
         ObjectInputStream in;
         try {
@@ -36,11 +36,9 @@ public class TSP {
             fileIn.close();
         } catch (Exception e) {
             e.printStackTrace();
-            coordinates = new ArrayList<Coordinate>();
+            coordinates = new ArrayList<>();
             for (; coordinates.size() < CityNumber; ) {
-                coordinates.add(Coordinate.getCoordinate(
-                        (rand.nextInt(55) + 5) * 10,
-                        (rand.nextInt(55) + 5) * 10));
+                coordinates.add(Coordinate.getCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10));
             }
         }
 

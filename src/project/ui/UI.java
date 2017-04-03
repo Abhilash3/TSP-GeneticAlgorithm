@@ -11,7 +11,6 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.coordinate.Coordinate;
 import project.ui.graph.Graph;
 import project.ui.map.Map;
 

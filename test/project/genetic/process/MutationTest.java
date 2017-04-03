@@ -1,11 +1,11 @@
 package project.genetic.process;
 
-import junit.framework.TestCase;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 
+import org.junit.Before;
+import org.junit.Test;
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Individual;
@@ -13,13 +13,15 @@ import project.genetic.vo.individual.Route;
 
 import java.util.Random;
 
-public class MutationTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class MutationTest {
 
     private Mockery mockery;
     protected Mutation<Individual<Coordinate>> testMutation;
     private static Random _mockRandom;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         mockery = new Mockery() {
             {
@@ -30,7 +32,8 @@ public class MutationTest extends TestCase {
         _mockRandom = mockery.mock(Random.class);
     }
 
-    public void testMutationFirstStrategy() {
+    @Test
+    public void mutationFirstStrategy() {
         final Individual<Coordinate> ind = Mother.getPath();
         Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getSwapTwoCitiesStrategy();
 
@@ -53,7 +56,8 @@ public class MutationTest extends TestCase {
         }
     }
 
-    public void testMutationSecondStrategy() {
+    @Test
+    public void mutationSecondStrategy() {
         final Individual<Coordinate> ind = Mother.getPath();
         Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getSwapAdjacentCitiesStrategy();
 
@@ -66,14 +70,15 @@ public class MutationTest extends TestCase {
         }
     }
 
-    public void testMutationThirdStrategy() {
+    @Test
+    public void mutationThirdStrategy() {
         final Individual<Coordinate> ind = Mother.getPath();
         Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getReverseCityOrderStrategy();
 
         mockery.checking(new Expectations() {
             {
-                exactly(2).of(_mockRandom).nextInt(ind.size() - 1);
-                will(onConsecutiveCalls(returnValue(5), returnValue(8)));
+                exactly(2).of(_mockRandom).nextInt(ind.size() - 2);
+                will(onConsecutiveCalls(returnValue(4), returnValue(7)));
             }
         });
 

@@ -25,7 +25,7 @@ public class Mother {
     private static Random rand = new Random();
 
     public static List<Individual<Coordinate>> getGeneration() {
-        List<Individual<Coordinate>> generation = new ArrayList<Individual<Coordinate>>();
+        List<Individual<Coordinate>> generation = new ArrayList<>();
         for (int i = 0; i < Population; i++) {
             generation.add(getPath());
         }
@@ -37,7 +37,7 @@ public class Mother {
     }
 
     @SuppressWarnings("unchecked")
-    public static Individual getIndividualWithFitness(final double myFitness) {
+    public static Individual getIndividualWithFitness(final double fitness) {
         return new Individual(Collections.EMPTY_LIST) {
             @Override
             public Individual<Cloneable> doClone() {
@@ -46,14 +46,14 @@ public class Mother {
 
             @Override
             public double getFitness() {
-                return myFitness;
+                return fitness;
             }
         };
     }
 
     public static List<Coordinate> getCoordinates() {
-        List<Coordinate> list = new NoDuplicateList<Coordinate>();
-        for (; list.size() != Cities; ) {
+        List<Coordinate> list = new NoDuplicateList<>();
+        while (list.size() != Cities) {
             list.add(getCoordinate());
         }
         return list;

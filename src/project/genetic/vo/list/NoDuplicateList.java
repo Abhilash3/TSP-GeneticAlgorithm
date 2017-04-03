@@ -5,9 +5,7 @@ import java.util.List;
 
 import project.genetic.vo.Cloneable;
 
-public final class NoDuplicateList<E extends Cloneable> extends CloneableList<E> {
-
-    private static final long serialVersionUID = 2587729160448267835L;
+public class NoDuplicateList<E extends Cloneable> extends CloneableList<E> {
 
     public NoDuplicateList() {
         super();
@@ -53,7 +51,7 @@ public final class NoDuplicateList<E extends Cloneable> extends CloneableList<E>
         for (E e : c) {
             int prevSize = size();
             add(index + count, e);
-            if (prevSize + 1 == size()) {
+            if (size() == prevSize + 1) {
                 count++;
             }
         }
@@ -68,7 +66,7 @@ public final class NoDuplicateList<E extends Cloneable> extends CloneableList<E>
     @SuppressWarnings("unchecked")
     @Override
     public NoDuplicateList<E> doClone() {
-        return new NoDuplicateList<E>(super.doClone());
+        return new NoDuplicateList<>(super.doClone());
     }
 
 }

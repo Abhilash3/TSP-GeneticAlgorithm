@@ -1,7 +1,6 @@
 package project.ui.map;
 
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.coordinate.Coordinate;
 import project.ui.map.component.Line;
 import project.ui.map.component.Point;
 
@@ -17,8 +16,8 @@ import javax.swing.JComponent;
 @SuppressWarnings("serial")
 public class Map extends JComponent {
 
-    private final Set<Line> lines = new HashSet<Line>();
-    private final Set<Point> points = new HashSet<Point>();
+    private final Set<Line> lines = new HashSet<>();
+    private final Set<Point> points = new HashSet<>();
 
     private int[] max = new int[2];
 
@@ -71,7 +70,7 @@ public class Map extends JComponent {
      * @param coordinates list of cities to remove
      */
     public void clearLines(List<Coordinate> coordinates) {
-        Set<Line> linesToBeRemoved = new HashSet<Line>();
+        Set<Line> linesToBeRemoved = new HashSet<>();
         for (Coordinate Coordinate : coordinates)
             for (Line line : lines)
                 if (line.isVisiting(Coordinate))
@@ -95,7 +94,7 @@ public class Map extends JComponent {
      * @param coordinates list of cities to remove
      */
     public void clearPoints(List<Coordinate> coordinates) {
-        Set<Point> pointsToBeRemoved = new HashSet<Point>();
+        Set<Point> pointsToBeRemoved = new HashSet<>();
         for (Point point : points)
             if (coordinates.contains(point.getCoordinate()))
                 pointsToBeRemoved.add(point);

@@ -1,30 +1,35 @@
 package project.genetic.process;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Individual;
 import project.genetic.vo.individual.Route;
 
-public class CrossoverTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class CrossoverTest {
 
     protected Crossover<Individual<Coordinate>> testCrossover;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         testCrossover = getCrossover();
     }
 
-    public void testCrossoverNearestNeighbourStrategy() {
+    @Test
+    public void crossoverNearestNeighbourStrategy() {
         testStrategy(testCrossover.getNearestNeighbourStrategy());
     }
 
-    public void testCrossoverInitialRandomFromFirstRestFromSecondStrategy() {
+    @Test
+    public void crossoverInitialRandomFromFirstRestFromSecondStrategy() {
         testStrategy(testCrossover.getInitialRandomFromFirstRestFromSecondStrategy());
     }
 
-    public void testCrossoverFirstComeFirstServeStrategy() {
+    @Test
+    public void crossoverFirstComeFirstServeStrategy() {
         testStrategy(testCrossover.getFirstComeFirstServeStrategy());
     }
 
