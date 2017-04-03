@@ -7,6 +7,8 @@ import project.genetic.vo.list.ImmutableList;
 import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.Cloneable;
 
+import static java.lang.String.format;
+
 public abstract class Individual<E extends Cloneable> extends ImmutableList<E>
         implements ICloneableList<E>, Comparable<Individual<E>> {
 
@@ -65,7 +67,7 @@ public abstract class Individual<E extends Cloneable> extends ImmutableList<E>
 
     @Override
     public String toString() {
-        if (toString == null) toString = String.format("[Individual: %s]", getFitness());
+        if (toString == null) toString = format("[Individual: %s]", getFitness());
         return toString;
     }
 

@@ -20,8 +20,8 @@ public class FitnessTest extends TestCase {
 
         fitness = Fitness.getInstance();
         generation = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            addToGeneration(generation, Double.parseDouble("" + (i + 1)));
+        for (int i = 0; i < 1000; i++) {
+            addToGeneration(generation, Double.parseDouble(i + 1 + ""));
         }
     }
 
@@ -40,7 +40,7 @@ public class FitnessTest extends TestCase {
 
             assertEquals(size, generation.size());
             for (int j = 0; j < generation.size(); j++) {
-                assertEquals(10 - j + ".0", Double.toString(generation.get(j).getFitness()));
+                assertEquals(1000 - j + ".0", Double.toString(generation.get(j).getFitness()));
             }
         }
     }

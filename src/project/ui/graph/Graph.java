@@ -11,8 +11,8 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
+import static java.lang.String.format;
 import static project.common.Constants.Generations;
-
 import static project.common.Constants.padding;
 import static project.common.Constants.labelPadding;
 import static project.common.Constants.Graphs;
@@ -33,7 +33,7 @@ public class Graph extends JComponent {
     private Grid grid;
 
     public Graph() {
-        this.scores = new AArrayList<Double>();
+        this.scores = new AArrayList<>();
         for (int i = 0; i < Graphs; i++) {
             scores.addEmpty();
         }
@@ -64,7 +64,7 @@ public class Graph extends JComponent {
         double xScale = ((double) width - 2 * padding - labelPadding) / Generations;
         double yScale = ((double) height - 2 * padding - labelPadding) / maxScore;
 
-        graphPoints = new AArrayList<Coordinate>();
+        graphPoints = new AArrayList<>();
         for (int i = 0; i < scores.size(); i++) {
             graphPoints.addEmpty();
             for (int j = 0; j < scores.getSize(i); j++) {
@@ -83,7 +83,7 @@ public class Graph extends JComponent {
 
     @Override
     public String toString() {
-        return "Graph:" + scores.toString();
+        return format("Graph: %s", scores.toString());
     }
 
 }

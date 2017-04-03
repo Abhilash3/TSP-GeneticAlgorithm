@@ -4,6 +4,8 @@ import project.genetic.vo.Cloneable;
 
 import java.io.Serializable;
 
+import static java.lang.String.format;
+
 /**
  * java class definition for a coordinate
  *
@@ -67,9 +69,7 @@ public final class Coordinate implements Cloneable, Serializable {
 
     @Override
     public String toString() {
-        if (toString == null) {
-            toString = "(" + x + ", " + y + ")";
-        }
+        if (toString == null) toString = format("(%d, %d)", x, y);
         return toString;
     }
 

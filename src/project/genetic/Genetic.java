@@ -1,9 +1,5 @@
 package project.genetic;
 
-import static project.common.Constants.Elitism;
-import static project.common.Constants.Generations;
-import static project.common.Constants.Graphs;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +13,10 @@ import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Individual;
 import project.genetic.vo.individual.Route;
 import project.ui.UI;
+
+import static project.common.Constants.Elitism;
+import static project.common.Constants.Generations;
+import static project.common.Constants.Graphs;
 
 /**
  * java class definition providing genetic capabilities
@@ -55,8 +55,8 @@ public class Genetic {
      */
     public Individual<Coordinate> simulate() {
 
-        List<Individual<Coordinate>> generation = new ArrayList<Individual<Coordinate>>(populationSize);
-        List<Individual<Coordinate>> newGeneration = new ArrayList<Individual<Coordinate>>(populationSize);
+        List<Individual<Coordinate>> generation = new ArrayList<>(populationSize);
+        List<Individual<Coordinate>> newGeneration = new ArrayList<>(populationSize);
 
         populateFirstGeneration(generation);
         bestPath = Fitness.<Individual<Coordinate>>getInstance().getFittest(generation);
@@ -82,8 +82,8 @@ public class Genetic {
 
             }
 
-            generation = new ArrayList<Individual<Coordinate>>(newGeneration);
-            newGeneration = new ArrayList<Individual<Coordinate>>(populationSize);
+            generation = new ArrayList<>(newGeneration);
+            newGeneration = new ArrayList<>(populationSize);
             bestPath = Fitness.<Individual<Coordinate>>getInstance().getFittest(generation);
 
             if (ui != null)

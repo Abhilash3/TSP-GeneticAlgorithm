@@ -1,6 +1,8 @@
 package project.genetic.fitness;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import project.genetic.vo.Cloneable;
@@ -51,6 +53,45 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
          * @param order order in which to sort
          */
         void sort(List<T> list, Order order);
+    }
+
+    protected Strategy<T> getQuickSortStrategy() {
+
+        return new Strategy<T>() {
+            private Order order;
+
+            @Override
+            public void sort(List<T> list, Order order) {
+                this.order = order;
+                quickSort(list, 0, list.size() - 1);
+            }
+
+            private void quickSort(List<T> list, int min, int max) {
+                T pivot = list.get((max + min) / 2);
+
+                int i = min, j = max;
+                while (i <= j) {
+                    while(order.compare(pivot, list.get(i)) < 0) {
+                        i++;
+                    }
+                    while(order.compare(pivot, list.get(j)) > 0) {
+                        j--;
+                    }
+
+                    if (i <= j) {
+                        T temp = list.get(i);
+                        list.set(i++, list.get(j));
+                        list.set(j--, temp);
+                    }
+                }
+                if (min < j) {
+                    quickSort(list, min, j);
+                }
+                if (i < max) {
+                    quickSort(list, i, max);
+                }
+            }
+        };
     }
 
     protected Strategy<T> getMergeSortStrategy() {
@@ -107,8 +148,15 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
         return sort(generation).get(0);
     }
 
+    protected Strategy<T> getStrategy() {
+        List<Strategy<T>> strategies = Arrays.asList(getMergeSortStrategy(), getQuickSortStrategy());
+
+        Collections.shuffle(strategies);
+        return strategies.get(0);
+    }
+
     public List<T> sort(List<T> generation) {
-        return sort(generation, getMergeSortStrategy());
+        return sort(generation, getStrategy());
     }
 
     public List<T> sort(List<T> generation, Strategy<T> strategy) {
