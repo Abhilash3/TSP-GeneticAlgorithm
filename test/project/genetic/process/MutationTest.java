@@ -8,8 +8,8 @@ import org.jmock.lib.legacy.ClassImposteriser;
 
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Route;
+import project.genetic.vo.individual.Individual;
+import project.genetic.vo.individual.Route;
 
 import java.util.Random;
 

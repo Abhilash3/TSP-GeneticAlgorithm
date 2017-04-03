@@ -14,8 +14,8 @@ import project.genetic.process.Crossover;
 import project.genetic.process.Mutation;
 import project.genetic.process.Selection;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Route;
+import project.genetic.vo.individual.Individual;
+import project.genetic.vo.individual.Route;
 import project.ui.UI;
 
 /**
@@ -122,12 +122,12 @@ public class Genetic {
     }
 
     private void populateFirstGeneration(List<Individual<Coordinate>> generation) {
-        for (int i = 0; i < populationSize; i++) {
-            generation.add(randomPath());
+        while (generation.size() < populationSize) {
+            generation.add(random());
         }
     }
 
-    protected Individual<Coordinate> randomPath() {
+    protected Individual<Coordinate> random() {
         Collections.shuffle(coordinates);
         return new Route(coordinates);
     }

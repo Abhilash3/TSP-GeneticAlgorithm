@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.individual.Chromosome;
 
 public final class NoDuplicateList<E extends Cloneable> extends CloneableList<E> {
 
@@ -19,8 +18,10 @@ public final class NoDuplicateList<E extends Cloneable> extends CloneableList<E>
     }
 
     public NoDuplicateList(List<E> list) {
-        this(list.size());
-        addAll(list);
+        this (list == null ? 0 : list.size());
+        if (list != null) {
+            addAll(list);
+        }
     }
 
     @Override
@@ -57,6 +58,11 @@ public final class NoDuplicateList<E extends Cloneable> extends CloneableList<E>
             }
         }
         return count != 0;
+    }
+
+    @Override
+    public E set(int index, E element) {
+        return !contains(element) ? list.set(index, element) : null;
     }
 
     @SuppressWarnings("unchecked")

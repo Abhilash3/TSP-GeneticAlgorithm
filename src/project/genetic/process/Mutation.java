@@ -8,7 +8,7 @@ import java.util.Random;
 
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.NoDuplicateList;
-import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.individual.Individual;
 
 /**
  * java class definition providing mutation capabilities
@@ -24,7 +24,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
     }
 
     public static <E extends Individual<? extends Cloneable>> Mutation<E> getInstance(Class<? extends E> clazz) {
-        return new Mutation<E>(clazz);
+        return new Mutation<>(clazz);
     }
 
     public interface Strategy<T> {
@@ -51,7 +51,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new NoDuplicateList<Cloneable>();
+                list = new NoDuplicateList<>();
                 int random1, random2;
 
                 do {
@@ -99,7 +99,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new NoDuplicateList<Cloneable>();
+                list = new NoDuplicateList<>();
                 for (int i = 1; i < path.size(); i += 2) {
                     list.add(path.get(i));
                     list.add(path.get(i - 1));
@@ -132,7 +132,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new NoDuplicateList<Cloneable>();
+                list = new NoDuplicateList<>();
                 int random1 = getRandom().nextInt(path.size() - 1);
                 int random2 = getRandom().nextInt(path.size() - 1);
 

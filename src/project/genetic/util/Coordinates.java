@@ -1,4 +1,6 @@
-package project.genetic.vo.coordinate;
+package project.genetic.util;
+
+import project.genetic.vo.coordinate.Coordinate;
 
 public class Coordinates {
 

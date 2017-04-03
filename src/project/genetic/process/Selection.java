@@ -8,7 +8,7 @@ import java.util.Random;
 
 import project.genetic.fitness.Fitness;
 import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.individual.Individual;
 
 /**
  * java class definition providing selection capabilities
@@ -21,7 +21,7 @@ public class Selection<T extends Individual<? extends Cloneable>> {
     }
 
     public static <E extends Individual<? extends Cloneable>> Selection<E> getInstance() {
-        return new Selection<E>();
+        return new Selection<>();
     }
 
     public interface Strategy<T> {
@@ -48,23 +48,19 @@ public class Selection<T extends Individual<? extends Cloneable>> {
             @Override
             public T select(List<T> generation) {
 
-                double max = 0, indFitness;
+                double max = 0;
                 for (int i = 0; i < generation.size(); i++) {
                     ind = generation.get(i);
-                    indFitness = ind.getFitness();
-                    if (max < indFitness) {
-                        max = indFitness;
+                    if (max < ind.getFitness()) {
+                        max = ind.getFitness();
                     }
                 }
 
                 double random = getRandom().nextDouble() * max;
                 double sum = 0;
-                for (int i = 0; i < generation.size(); i++) {
+                for (int i = 0; sum <= random; i++) {
                     ind = generation.get(i);
                     sum += ind.getFitness();
-                    if (sum > random) {
-                        break;
-                    }
                 }
                 return ind;
 
@@ -88,7 +84,7 @@ public class Selection<T extends Individual<? extends Cloneable>> {
                 int size = generation.size();
                 int random = getRandom().nextInt(size - 2) + 2;
 
-                pool = new ArrayList<T>();
+                pool = new ArrayList<>();
                 while (pool.size() != random) {
                     pool.add(generation.get(getRandom().nextInt(size)));
                 }
@@ -115,17 +111,14 @@ public class Selection<T extends Individual<? extends Cloneable>> {
                     sum += i++;
                 }
 
-                int random = getRandom().nextInt(sum - 1) + 1;
+                int random = getRandom().nextInt(sum - 2) + 2;
                 sum = 0;
-                i = 0;
-                while (i < generation.size()) {
+                i = 1;
+                while (sum <= random) {
                     sum += i++;
-                    if (sum > random) {
-                        break;
-                    }
                 }
 
-                return generation.get(i - 1);
+                return generation.get(i - 2);
             }
         };
     }

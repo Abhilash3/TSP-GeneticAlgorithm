@@ -11,7 +11,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.individual.Individual;
 
 public class SelectionTest extends TestCase {
 
@@ -114,7 +114,7 @@ public class SelectionTest extends TestCase {
                 will(returnValue(30));
 
                 oneOf(_mockGeneration).get(with(8));
-                will(onConsecutiveCalls(returnValue(Mother.getIndividualWithFitness(6))));
+                will(returnValue(Mother.getIndividualWithFitness(1)));
             }
         });
 
@@ -122,7 +122,7 @@ public class SelectionTest extends TestCase {
         @SuppressWarnings({"rawtypes", "unchecked"})
         Individual child = strategy.select(_mockGeneration);
 
-        assertEquals(Mother.getIndividualWithFitness(6), child);
+        assertEquals(Mother.getIndividualWithFitness(1), child);
     }
 
     private Selection<Individual<Coordinate>> getSelection() {

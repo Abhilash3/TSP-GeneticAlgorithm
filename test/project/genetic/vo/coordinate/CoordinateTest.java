@@ -4,6 +4,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import project.Mother;
+import project.genetic.util.Coordinates;
 
 public class CoordinateTest extends TestCase {
 

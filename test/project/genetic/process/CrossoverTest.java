@@ -3,8 +3,8 @@ package project.genetic.process;
 import junit.framework.TestCase;
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Route;
+import project.genetic.vo.individual.Individual;
+import project.genetic.vo.individual.Route;
 
 public class CrossoverTest extends TestCase {
 

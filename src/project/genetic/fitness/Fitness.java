@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.individual.Individual;
 
 /**
  * java class definition for sorting path
@@ -17,7 +17,7 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
     }
 
     public static <E extends Individual<? extends Cloneable>> Fitness<E> getInstance() {
-        return new Fitness<E>();
+        return new Fitness<>();
     }
 
     /**
@@ -83,8 +83,8 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
             private void merge(List<T> list, int low, int high) {
                 int mid = (high + low) / 2;
 
-                first = new ArrayList<T>(list.subList(low, mid + 1));
-                second = new ArrayList<T>(list.subList(mid + 1, high + 1));
+                first = new ArrayList<>(list.subList(low, mid + 1));
+                second = new ArrayList<>(list.subList(mid + 1, high + 1));
 
                 for (int i = 0, j = 0, k = low; k < high + 1; k++) {
                     if (i < first.size() && j < second.size()) {

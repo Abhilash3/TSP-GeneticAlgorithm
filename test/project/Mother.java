@@ -10,8 +10,8 @@ import java.util.Random;
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.NoDuplicateList;
-import project.genetic.vo.list.individual.Individual;
-import project.genetic.vo.list.individual.Route;
+import project.genetic.vo.individual.Individual;
+import project.genetic.vo.individual.Route;
 
 public class Mother {
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.individual.Individual;
+import project.genetic.vo.individual.Individual;
 import junit.framework.TestCase;
 
 public class FitnessTest extends TestCase {
@@ -18,9 +18,9 @@ public class FitnessTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        fitness = Fitness.<Individual<Coordinate>>getInstance();
-        generation = new ArrayList<Individual<Coordinate>>();
-        for (int i = 0; i < 1000; i++) {
+        fitness = Fitness.getInstance();
+        generation = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
             addToGeneration(generation, Double.parseDouble("" + (i + 1)));
         }
     }
@@ -35,13 +35,13 @@ public class FitnessTest extends TestCase {
         int size = generation.size();
         for (int i = 0; i < 100; i++) {
 
+            Collections.shuffle(generation);
             fitness.sort(generation);
 
             assertEquals(size, generation.size());
             for (int j = 0; j < generation.size(); j++) {
-                assertEquals(1000 - j + ".0", Double.toString(generation.get(j).getFitness()));
+                assertEquals(10 - j + ".0", Double.toString(generation.get(j).getFitness()));
             }
-            Collections.shuffle(generation);
         }
     }
 

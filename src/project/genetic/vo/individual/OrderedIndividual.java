@@ -1,4 +1,4 @@
-package project.genetic.vo.list.individual;
+package project.genetic.vo.individual;
 
 import project.genetic.vo.Cloneable;
 
