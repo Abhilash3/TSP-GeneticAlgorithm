@@ -16,10 +16,7 @@ public class NoDuplicateList<E extends Cloneable> extends CloneableList<E> {
     }
 
     public NoDuplicateList(List<E> list) {
-        this (list == null ? 0 : list.size());
-        if (list != null) {
-            addAll(list);
-        }
+        super(list);
     }
 
     @Override

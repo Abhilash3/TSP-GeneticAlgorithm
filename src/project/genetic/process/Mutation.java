@@ -17,13 +17,13 @@ import project.genetic.vo.individual.Individual;
  */
 public class Mutation<T extends Individual<? extends Cloneable>> {
 
-    protected Class<? extends T> clazz;
+    protected Class<T> clazz;
 
-    protected Mutation(Class<? extends T> clazz) {
+    protected Mutation(Class<T> clazz) {
         this.clazz = clazz;
     }
 
-    public static <E extends Individual<? extends Cloneable>> Mutation<E> getInstance(Class<? extends E> clazz) {
+    public static <E extends Individual<? extends Cloneable>> Mutation<E> getInstance(Class<E> clazz) {
         return new Mutation<>(clazz);
     }
 

@@ -2,7 +2,11 @@ package project.genetic.vo.list;
 
 import project.genetic.vo.Cloneable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class CloneableList<E extends Cloneable> implements ICloneableList<E> {
 
@@ -17,7 +21,7 @@ public class CloneableList<E extends Cloneable> implements ICloneableList<E> {
     }
 
     public CloneableList(List<E> list) {
-        this.list = new ArrayList<>(list);
+        this.list = list;
     }
 
     @Override

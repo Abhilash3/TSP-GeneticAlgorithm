@@ -18,10 +18,25 @@ public class ImmutableList<E extends Cloneable> extends CloneableList<E> {
     }
 
     public ImmutableList(List<E> list) {
-        this (list == null ? 0 : list.size());
-        if (list != null) {
-            addAll(list);
+        super(list);
+    }
+
+    @Override
+    public final Object[] toArray() {
+        return cloneContents(super.toArray());
+    }
+
+    @Override
+    public final <T> T[] toArray(T[] a) {
+        return cloneContents(super.toArray(a));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected final <T> T[] cloneContents(T[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = ((Cloneable) arr[i]).doClone();
         }
+        return arr;
     }
 
     @Override
