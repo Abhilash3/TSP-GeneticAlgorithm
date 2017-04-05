@@ -18,7 +18,7 @@ import project.genetic.vo.individual.Individual;
  */
 public class Crossover<T extends Individual<? extends Cloneable>> {
 
-    private Class<T> clazz;
+    private Class<? extends T> clazz;
 
     public interface Strategy<T> {
 
@@ -32,11 +32,11 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
         T cross(T path1, T path2);
     }
 
-    protected Crossover(Class<T> clazz) {
+    protected Crossover(Class<? extends T> clazz) {
         this.clazz = clazz;
     }
 
-    public static <E extends Individual<? extends Cloneable>> Crossover<E> getInstance(Class<E> clazz) {
+    public static <E extends Individual<? extends Cloneable>> Crossover<E> getInstance(Class<? extends E> clazz) {
         return new Crossover<>(clazz);
     }
 

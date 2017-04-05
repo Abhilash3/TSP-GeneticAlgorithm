@@ -21,7 +21,7 @@ public class CloneableList<E extends Cloneable> implements ICloneableList<E> {
     }
 
     public CloneableList(List<E> list) {
-        this.list = list;
+        this.list = new ArrayList<>(list);
     }
 
     @Override

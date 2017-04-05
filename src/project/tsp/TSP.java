@@ -10,7 +10,6 @@ import java.util.Random;
 
 import project.genetic.Genetic;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.individual.Route;
 import project.genetic.vo.list.NoDuplicateList;
 import project.ui.UI;
 
@@ -37,7 +36,7 @@ public class TSP {
             }
         }
 
-        new Genetic<>(Route.class, coordinates, new UI(coordinates)).simulate();
+        new Genetic(coordinates, new UI(coordinates)).simulate();
 
     }
 }

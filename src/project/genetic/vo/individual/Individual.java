@@ -2,31 +2,20 @@ package project.genetic.vo.individual;
 
 import java.util.List;
 
-import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ImmutableList;
 import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.Cloneable;
 
 import static java.lang.String.format;
 
-public abstract class Individual<E extends Cloneable> extends CloneableList<E> implements Comparable<Individual<E>> {
+public abstract class Individual<E extends Cloneable> extends ImmutableList<E> implements Comparable<Individual<E>> {
 
     double fitness = -1;
     private Integer hashcode;
     private String toString;
 
     public Individual(List<E> list) {
-        super(new NoDuplicateList<>(new ImmutableList<>(list)));
-    }
-
-    @Override
-    public Object[] toArray() {
-        throw new UnsupportedOperationException("toArray not supported");
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException("toArray not supported");
+        this.list = new NoDuplicateList<>(list);
     }
 
     @Override

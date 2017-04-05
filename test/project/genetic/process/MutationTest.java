@@ -7,6 +7,8 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
 import project.Mother;
+import project.genetic.vo.coordinate.Coordinate;
+import project.genetic.vo.individual.Individual;
 import project.genetic.vo.individual.Route;
 
 import java.util.Random;
@@ -16,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class MutationTest {
 
     private Mockery mockery;
-    protected Mutation<Route> testMutation;
+    protected Mutation<Individual<Coordinate>> testMutation;
     private static Random _mockRandom;
 
     @Before
@@ -32,8 +34,8 @@ public class MutationTest {
 
     @Test
     public void mutationFirstStrategy() {
-        final Route ind = Mother.getPath();
-        Mutation.Strategy<Route> strategy = testMutation.getSwapTwoCitiesStrategy();
+        final Individual<Coordinate> ind = Mother.getPath();
+        Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getSwapTwoCitiesStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -42,7 +44,7 @@ public class MutationTest {
             }
         });
 
-        Route child = strategy.mutate(ind);
+        Individual<Coordinate> child = strategy.mutate(ind);
 
         assertEquals(ind.size(), child.size());
         assertEquals(ind.get(6), child.get(9));
@@ -56,10 +58,10 @@ public class MutationTest {
 
     @Test
     public void mutationSecondStrategy() {
-        final Route ind = Mother.getPath();
-        Mutation.Strategy<Route> strategy = testMutation.getSwapAdjacentCitiesStrategy();
+        final Individual<Coordinate> ind = Mother.getPath();
+        Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getSwapAdjacentCitiesStrategy();
 
-        Route child = strategy.mutate(ind);
+        Individual<Coordinate> child = strategy.mutate(ind);
 
         assertEquals(ind.size(), child.size());
         for (int i = 0; i < ind.size(); i += 2) {
@@ -70,8 +72,8 @@ public class MutationTest {
 
     @Test
     public void mutationThirdStrategy() {
-        final Route ind = Mother.getPath();
-        Mutation.Strategy<Route> strategy = testMutation.getReverseCityOrderStrategy();
+        final Individual<Coordinate> ind = Mother.getPath();
+        Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getReverseCityOrderStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -80,7 +82,7 @@ public class MutationTest {
             }
         });
 
-        Route child = strategy.mutate(ind);
+        Individual<Coordinate> child = strategy.mutate(ind);
 
         assertEquals(ind.size(), child.size());
         assertEquals(ind.get(5), child.get(8));
@@ -94,8 +96,8 @@ public class MutationTest {
         }
     }
 
-    private Mutation<Route> getMutation() {
-        return new Mutation<Route>(Route.class) {
+    private Mutation<Individual<Coordinate>> getMutation() {
+        return new Mutation<Individual<Coordinate>>(Route.class) {
             @Override
             protected Random getRandom() {
                 return _mockRandom;
