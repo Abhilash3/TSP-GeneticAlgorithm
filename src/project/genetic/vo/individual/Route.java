@@ -1,13 +1,12 @@
 package project.genetic.vo.individual;
 
-import java.util.List;
-
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.util.Coordinates;
+import project.genetic.vo.list.ICloneableList;
 
 public final class Route extends OrderedIndividual<Coordinate> {
 
-    public Route(List<Coordinate> list) {
+    public Route(ICloneableList<Coordinate> list) {
         super(list);
     }
 
@@ -19,7 +18,6 @@ public final class Route extends OrderedIndividual<Coordinate> {
     @SuppressWarnings("unchecked")
     @Override
     public Route doClone() {
-        return new Route(super.doClone());
+        return new Route((ICloneableList<Coordinate>) list.doClone());
     }
-
 }

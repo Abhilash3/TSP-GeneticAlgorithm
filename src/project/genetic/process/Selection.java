@@ -15,12 +15,12 @@ import project.genetic.vo.individual.Individual;
  *
  * @author ABHILASHKUMARV
  */
-public class Selection<T extends Individual<? extends Cloneable>> {
+public class Selection<T extends Individual<K>, K extends Cloneable> {
 
     protected Selection() {
     }
 
-    public static <E extends Individual<? extends Cloneable>> Selection<E> getInstance() {
+    public static <E extends Individual<F>, F extends Cloneable> Selection<E, F> getInstance() {
         return new Selection<>();
     }
 

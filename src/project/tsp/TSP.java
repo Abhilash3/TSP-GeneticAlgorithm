@@ -5,12 +5,14 @@ import static project.common.Constants.TSP_FILE;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.util.List;
 import java.util.Random;
 
 import project.genetic.Genetic;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.NoDuplicateList;
+import project.genetic.vo.individual.Route;
+import project.genetic.vo.list.CloneableList;
+import project.genetic.vo.list.ICloneableList;
+import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
 import project.ui.UI;
 
 public class TSP {
@@ -19,7 +21,7 @@ public class TSP {
 
     public static void main(String[] args) {
 
-        List<Coordinate> coordinates = new NoDuplicateList<>();
+        ICloneableList<Coordinate> coordinates = new NoDuplicateListDecorator<>(new CloneableList<Coordinate>());
         try {
             FileInputStream fileIn = new FileInputStream(TSP_FILE);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -30,13 +32,13 @@ public class TSP {
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
-            coordinates = new NoDuplicateList<>();
+            coordinates = new NoDuplicateListDecorator<>(new CloneableList<Coordinate>());
             while (coordinates.size() < CityNumber) {
                 coordinates.add(Coordinate.getCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10));
             }
         }
 
-        new Genetic(coordinates, new UI(coordinates)).simulate();
+        new Genetic<>(Route.class, coordinates, new UI(coordinates)).simulate();
 
     }
 }

@@ -1,21 +1,13 @@
-package project.genetic.vo.list;
-
-import java.util.Collection;
-import java.util.List;
+package project.genetic.vo.list.decorator;
 
 import project.genetic.vo.Cloneable;
+import project.genetic.vo.list.ICloneableList;
 
-public class NoDuplicateList<E extends Cloneable> extends CloneableList<E> {
+import java.util.Collection;
 
-    public NoDuplicateList() {
-        super();
-    }
+public class NoDuplicateListDecorator<E extends Cloneable> extends ListDecorator<E> {
 
-    public NoDuplicateList(int i) {
-        super(i);
-    }
-
-    public NoDuplicateList(List<E> list) {
+    public NoDuplicateListDecorator(ICloneableList<E> list) {
         super(list);
     }
 
@@ -62,8 +54,7 @@ public class NoDuplicateList<E extends Cloneable> extends CloneableList<E> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public NoDuplicateList<E> doClone() {
-        return new NoDuplicateList<>(super.doClone());
+    public NoDuplicateListDecorator<E> doClone() {
+        return new NoDuplicateListDecorator<>((ICloneableList<E>) list.doClone());
     }
-
 }

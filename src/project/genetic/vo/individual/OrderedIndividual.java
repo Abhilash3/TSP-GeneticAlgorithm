@@ -1,12 +1,11 @@
 package project.genetic.vo.individual;
 
 import project.genetic.vo.Cloneable;
-
-import java.util.List;
+import project.genetic.vo.list.ICloneableList;
 
 public abstract class OrderedIndividual<E extends Cloneable> extends Individual<E> {
 
-    public OrderedIndividual(List<E> list) {
+    public OrderedIndividual(ICloneableList<E> list) {
         super(list);
     }
 
@@ -14,10 +13,10 @@ public abstract class OrderedIndividual<E extends Cloneable> extends Individual<
     public double getFitness() {
         if (fitness == -1) {
             fitness = 0;
-            for (int i = 1; i < list.size(); i++) {
-                fitness += fitness(list.get(i - 1), list.get(i));
+            for (int i = 1; i < size(); i++) {
+                fitness += fitness(get(i - 1), get(i));
             }
-            fitness += fitness(list.get(list.size() - 1), list.get(0));
+            fitness += fitness(get(size() - 1), get(0));
             fitness = 1 / fitness;
         }
         return fitness;

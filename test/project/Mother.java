@@ -3,15 +3,16 @@ package project;
 import static project.common.Constants.CityNumber;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.NoDuplicateList;
 import project.genetic.vo.individual.Individual;
 import project.genetic.vo.individual.Route;
+import project.genetic.vo.list.CloneableList;
+import project.genetic.vo.list.ICloneableList;
+import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
 
 public class Mother {
 
@@ -38,7 +39,7 @@ public class Mother {
 
     @SuppressWarnings("unchecked")
     public static Individual getIndividualWithFitness(final double fitness) {
-        return new Individual(Collections.EMPTY_LIST) {
+        return new Individual(new CloneableList()) {
             @Override
             public Individual<Cloneable> doClone() {
                 return this;
@@ -51,8 +52,8 @@ public class Mother {
         };
     }
 
-    public static List<Coordinate> getCoordinates() {
-        List<Coordinate> list = new NoDuplicateList<>();
+    public static ICloneableList<Coordinate> getCoordinates() {
+        ICloneableList<Coordinate> list = new NoDuplicateListDecorator<>(new CloneableList<Coordinate>());
         while (list.size() != Cities) {
             list.add(getCoordinate());
         }

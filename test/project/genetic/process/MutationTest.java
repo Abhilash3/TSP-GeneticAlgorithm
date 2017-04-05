@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class MutationTest {
 
     private Mockery mockery;
-    protected Mutation<Individual<Coordinate>> testMutation;
+    protected Mutation<Route, Coordinate> testMutation;
     private static Random _mockRandom;
 
     @Before
@@ -34,8 +34,8 @@ public class MutationTest {
 
     @Test
     public void mutationFirstStrategy() {
-        final Individual<Coordinate> ind = Mother.getPath();
-        Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getSwapTwoCitiesStrategy();
+        final Route ind = Mother.getPath();
+        Mutation.Strategy<Route> strategy = testMutation.getSwapTwoCitiesStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -58,8 +58,8 @@ public class MutationTest {
 
     @Test
     public void mutationSecondStrategy() {
-        final Individual<Coordinate> ind = Mother.getPath();
-        Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getSwapAdjacentCitiesStrategy();
+        final Route ind = Mother.getPath();
+        Mutation.Strategy<Route> strategy = testMutation.getSwapAdjacentCitiesStrategy();
 
         Individual<Coordinate> child = strategy.mutate(ind);
 
@@ -72,8 +72,8 @@ public class MutationTest {
 
     @Test
     public void mutationThirdStrategy() {
-        final Individual<Coordinate> ind = Mother.getPath();
-        Mutation.Strategy<Individual<Coordinate>> strategy = testMutation.getReverseCityOrderStrategy();
+        final Route ind = Mother.getPath();
+        Mutation.Strategy<Route> strategy = testMutation.getReverseCityOrderStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -96,8 +96,8 @@ public class MutationTest {
         }
     }
 
-    private Mutation<Individual<Coordinate>> getMutation() {
-        return new Mutation<Individual<Coordinate>>(Route.class) {
+    private Mutation<Route, Coordinate> getMutation() {
+        return new Mutation<Route, Coordinate>(Route.class) {
             @Override
             protected Random getRandom() {
                 return _mockRandom;

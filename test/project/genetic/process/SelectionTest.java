@@ -14,6 +14,7 @@ import org.junit.Test;
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Individual;
+import project.genetic.vo.individual.Route;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,7 +26,7 @@ public class SelectionTest {
     private List _mockGeneration;
     private static Random _mockRandom;
 
-    protected Selection<Individual<Coordinate>> testSelection;
+    protected Selection<Route, Coordinate> testSelection;
 
     @Before
     public void setUp() throws Exception {
@@ -46,7 +47,7 @@ public class SelectionTest {
 
     @Test
     public void selectionTournamentSelectionStrategy() {
-        Selection.Strategy<Individual<Coordinate>> strategy = testSelection.getTournamentSelectionStrategy();
+        Selection.Strategy<Route> strategy = testSelection.getTournamentSelectionStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -69,7 +70,7 @@ public class SelectionTest {
 
     @Test
     public void selectionRouletteWheelSelectionStrategy() {
-        Selection.Strategy<Individual<Coordinate>> strategy = testSelection.getRouletteWheelSelectionStrategy();
+        Selection.Strategy<Route> strategy = testSelection.getRouletteWheelSelectionStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -87,7 +88,7 @@ public class SelectionTest {
 
     @Test
     public void selectionRankSelectionStrategy() {
-        Selection.Strategy<Individual<Coordinate>> strategy = testSelection.getRankSelectionStrategy();
+        Selection.Strategy<Route> strategy = testSelection.getRankSelectionStrategy();
 
         mockery.checking(new Expectations() {
             {
@@ -103,8 +104,8 @@ public class SelectionTest {
         assertEquals(Mother.getIndividualWithFitness(6), child);
     }
 
-    private Selection<Individual<Coordinate>> getSelection() {
-        return new Selection<Individual<Coordinate>>() {
+    private Selection<Route, Coordinate> getSelection() {
+        return new Selection<Route, Coordinate>() {
             @Override
             protected Random getRandom() {
                 return _mockRandom;

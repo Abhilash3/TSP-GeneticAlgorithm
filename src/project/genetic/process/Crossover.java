@@ -8,17 +8,19 @@ import java.util.List;
 import java.util.Random;
 
 import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.NoDuplicateList;
+import project.genetic.vo.list.CloneableList;
+import project.genetic.vo.list.ICloneableList;
 import project.genetic.vo.individual.Individual;
+import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
 
 /**
  * java class definition providing crossover capabilities
  *
  * @author ABHILASHKUMARV
  */
-public class Crossover<T extends Individual<? extends Cloneable>> {
+public class Crossover<T extends Individual<K>, K extends Cloneable> {
 
-    private Class<? extends T> clazz;
+    private Class<T> clazz;
 
     public interface Strategy<T> {
 
@@ -32,18 +34,18 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
         T cross(T path1, T path2);
     }
 
-    protected Crossover(Class<? extends T> clazz) {
+    protected Crossover(Class<T> clazz) {
         this.clazz = clazz;
     }
 
-    public static <E extends Individual<? extends Cloneable>> Crossover<E> getInstance(Class<? extends E> clazz) {
+    public static <E extends Individual<F>, F extends Cloneable> Crossover<E, F> getInstance(Class<E> clazz) {
         return new Crossover<>(clazz);
     }
 
     protected Strategy<T> getNearestNeighbourStrategy() {
         return new Strategy<T>() {
-            private List<Cloneable> list;
-            private Cloneable city, city1, city2;
+            private ICloneableList<K> list;
+            private K city, city1, city2;
 
             /**
              * first city from path1, get nth city from both paths and select
@@ -56,7 +58,7 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new NoDuplicateList<>();
+                list = getNoDuplicateList();
                 list.add(path1.get(0));
 
                 for (int i = 1; i < path1.size(); i++) {
@@ -79,22 +81,15 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
                     }
                 }
 
-                try {
-                    return clazz.getConstructor(List.class).newInstance(list);
-                } catch (InstantiationException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException
-                        | NoSuchMethodException | SecurityException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+                return initialize(list);
             }
 
-            private double factor(Cloneable city1, Cloneable city2) {
+            private double factor(K city1, K city2) {
                 try {
                     Method factorMethod = clazz.getDeclaredMethod("fitness", city1.getClass(), city2.getClass());
                     factorMethod.setAccessible(true);
 
-                    T obj = clazz.getConstructor(List.class).newInstance(Collections.emptyList());
+                    T obj = clazz.getConstructor(ICloneableList.class).newInstance(new CloneableList<>());
                     return (Double) factorMethod.invoke(obj, city1, city2);
                 } catch (InstantiationException | IllegalAccessException
                         | IllegalArgumentException | InvocationTargetException
@@ -108,7 +103,7 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
 
     protected Strategy<T> getInitialRandomFromFirstRestFromSecondStrategy() {
         return new Strategy<T>() {
-            private List<Cloneable> list;
+            private ICloneableList<K> list;
 
             /**
              * selects first random no of cities from path1, rest from path2
@@ -120,7 +115,7 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new NoDuplicateList<>();
+                list = getNoDuplicateList();
 
                 int random = getRandom().nextInt(path1.size() - 1) + 1;
                 for (int i = 0; i < random; i++) {
@@ -136,21 +131,14 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
                     }
                 }
 
-                try {
-                    return clazz.getConstructor(List.class).newInstance(list);
-                } catch (InstantiationException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException
-                        | NoSuchMethodException | SecurityException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+                return initialize(list);
             }
         };
     }
 
     protected Strategy<T> getFirstComeFirstServeStrategy() {
         return new Strategy<T>() {
-            private List<Cloneable> list;
+            private ICloneableList<K> list;
 
             /**
              * selects cities from both paths in whichever order they come with
@@ -163,7 +151,7 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
             @Override
             public T cross(T path1, T path2) {
 
-                list = new NoDuplicateList<>();
+                list = getNoDuplicateList();
 
                 for (int i = 0; list.size() != path1.size(); i++) {
                     list.add(path1.get(i));
@@ -173,20 +161,28 @@ public class Crossover<T extends Individual<? extends Cloneable>> {
                     list.add(path2.get(i));
                 }
 
-                try {
-                    return clazz.getConstructor(List.class).newInstance(list);
-                } catch (InstantiationException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException
-                        | NoSuchMethodException | SecurityException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+                return initialize(list);
             }
         };
     }
 
     protected Random getRandom() {
         return new Random();
+    }
+
+    private ICloneableList<K> getNoDuplicateList() {
+        return new NoDuplicateListDecorator<>(new CloneableList<K>());
+    }
+
+    private T initialize(ICloneableList<K> list) {
+        try {
+            return clazz.getConstructor(ICloneableList.class).newInstance(list);
+        } catch (InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     protected Strategy<T> getStrategy() {

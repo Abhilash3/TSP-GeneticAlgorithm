@@ -4,14 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import project.Mother;
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.individual.Individual;
 import project.genetic.vo.individual.Route;
 
 import static org.junit.Assert.assertEquals;
 
 public class CrossoverTest {
 
-    protected Crossover<Individual<Coordinate>> testCrossover;
+    protected Crossover<Route, Coordinate> testCrossover;
 
     @Before
     public void setUp() throws Exception {
@@ -33,10 +32,8 @@ public class CrossoverTest {
         testStrategy(testCrossover.getFirstComeFirstServeStrategy());
     }
 
-    private void testStrategy(final Crossover.Strategy<Individual<Coordinate>> strategy) {
-        Individual<Coordinate> parent1;
-        Individual<Coordinate> parent2;
-        Individual<Coordinate> child;
+    private void testStrategy(final Crossover.Strategy<Route> strategy) {
+        Route parent1, parent2, child;
 
         for (int i = 0; i < 1000; i++) {
             parent1 = Mother.getPath();
@@ -49,7 +46,7 @@ public class CrossoverTest {
         }
     }
 
-    private Crossover<Individual<Coordinate>> getCrossover() {
-        return new Crossover<Individual<Coordinate>>(Route.class);
+    private Crossover<Route, Coordinate> getCrossover() {
+        return new Crossover<>(Route.class);
     }
 }

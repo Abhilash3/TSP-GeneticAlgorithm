@@ -7,23 +7,25 @@ import java.util.List;
 import java.util.Random;
 
 import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.NoDuplicateList;
+import project.genetic.vo.list.CloneableList;
+import project.genetic.vo.list.ICloneableList;
 import project.genetic.vo.individual.Individual;
+import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
 
 /**
  * java class definition providing mutation capabilities
  *
  * @author ABHILASHKUMARV
  */
-public class Mutation<T extends Individual<? extends Cloneable>> {
+public class Mutation<T extends Individual<K>, K extends Cloneable> {
 
-    protected Class<? extends T> clazz;
+    protected Class<T> clazz;
 
-    protected Mutation(Class<? extends T> clazz) {
+    protected Mutation(Class<T> clazz) {
         this.clazz = clazz;
     }
 
-    public static <E extends Individual<? extends Cloneable>> Mutation<E> getInstance(Class<? extends E> clazz) {
+    public static <E extends Individual<F>, F extends Cloneable> Mutation<E, F> getInstance(Class<E> clazz) {
         return new Mutation<>(clazz);
     }
 
@@ -40,7 +42,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
 
     protected Strategy<T> getSwapTwoCitiesStrategy() {
         return new Strategy<T>() {
-            private List<Cloneable> list;
+            private ICloneableList<K> list;
 
             /**
              * [0,1,2,3,4,5,6,7,8,9] --> 2, 8 --> [0,8,2,3,4,5,6,7,1,9]
@@ -51,7 +53,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new NoDuplicateList<>();
+                list = getNoDublicateList();
                 int random1, random2;
 
                 do {
@@ -74,21 +76,14 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
                     list.add(path.get(i));
                 }
 
-                try {
-                    return clazz.getConstructor(List.class).newInstance(list);
-                } catch (InstantiationException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException
-                        | NoSuchMethodException | SecurityException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+                return initialize(list);
             }
         };
     }
 
     protected Strategy<T> getSwapAdjacentCitiesStrategy() {
         return new Strategy<T>() {
-            private List<Cloneable> list;
+            private ICloneableList<K> list;
 
             /**
              * [0,1,2,3,4,5,6,7,8,9] --> [1,0,3,2,5,4,7,6,9,8]
@@ -99,29 +94,23 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new NoDuplicateList<>();
+                list = getNoDublicateList();
                 for (int i = 1; i < path.size(); i += 2) {
                     list.add(path.get(i));
                     list.add(path.get(i - 1));
                 }
-                if (path.size() % 2 == 1)
+                if (path.size() % 2 == 1) {
                     list.add(path.get(path.size() - 1));
-
-                try {
-                    return clazz.getConstructor(List.class).newInstance(list);
-                } catch (InstantiationException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException
-                        | NoSuchMethodException | SecurityException e) {
-                    e.printStackTrace();
-                    return null;
                 }
+
+                return initialize(list);
             }
         };
     }
 
     protected Strategy<T> getReverseCityOrderStrategy() {
         return new Strategy<T>() {
-            private List<Cloneable> list;
+            private ICloneableList<K> list;
 
             /**
              * [0,1,2,3,4,5,6,7,8,9] --> 2, 8 --> [0,1,7,6,5,4,3,2,8,9]
@@ -132,7 +121,7 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
             @Override
             public T mutate(T path) {
 
-                list = new NoDuplicateList<>();
+                list = getNoDublicateList();
                 int random1, random2;
 
                 do {
@@ -155,20 +144,28 @@ public class Mutation<T extends Individual<? extends Cloneable>> {
                     list.add(path.get(i));
                 }
 
-                try {
-                    return clazz.getConstructor(List.class).newInstance(list);
-                } catch (InstantiationException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException
-                        | NoSuchMethodException | SecurityException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+                return initialize(list);
             }
         };
     }
 
     protected Random getRandom() {
         return new Random();
+    }
+
+    private ICloneableList<K> getNoDublicateList() {
+        return new NoDuplicateListDecorator<>(new CloneableList<K>());
+    }
+
+    private T initialize(ICloneableList<K> list) {
+        try {
+            return clazz.getConstructor(ICloneableList.class).newInstance(list);
+        } catch (InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     protected Strategy<T> getStrategy() {

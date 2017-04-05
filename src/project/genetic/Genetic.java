@@ -1,5 +1,6 @@
 package project.genetic;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,9 +10,10 @@ import project.genetic.fitness.Fitness;
 import project.genetic.process.Crossover;
 import project.genetic.process.Mutation;
 import project.genetic.process.Selection;
+import project.genetic.vo.Cloneable;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Individual;
-import project.genetic.vo.individual.Route;
+import project.genetic.vo.list.ICloneableList;
 import project.ui.UI;
 
 import static project.common.Constants.Elitism;
@@ -23,7 +25,7 @@ import static project.common.Constants.Graphs;
  *
  * @author ABHILASHKUMARV
  */
-public class Genetic {
+public class Genetic<E extends Individual<F>, F extends Cloneable> {
 
     protected static Random rand = new Random();
 
@@ -31,37 +33,39 @@ public class Genetic {
 
     protected final List<Double> scores = new ArrayList<>(Graphs);
 
-    protected List<Coordinate> coordinates;
-    protected Individual<Coordinate> bestPath;
+    protected Class<E> clazz;
+    protected ICloneableList<Coordinate> coordinates;
+    protected E bestPath;
 
     private UI ui;
 
     private static final String Format = "%s: %6s      %s: %.6f";
 
-    public Genetic(List<Coordinate> coordinates) {
+    public Genetic(Class<E> clazz, ICloneableList<Coordinate> coordinates) {
+        this.clazz = clazz;
         this.coordinates = coordinates;
         populationSize = coordinates.size() * 5;
     }
 
-    public Genetic(List<Coordinate> coordinates, UI ui) {
-        this(coordinates);
+    public Genetic(Class<E> clazz, ICloneableList<Coordinate> coordinates, UI ui) {
+        this(clazz, coordinates);
         this.ui = ui;
     }
 
     /**
      * simulate the genetic process
      *
-     * @return
+     * @return the best path simulated by the process
      */
-    public Individual<Coordinate> simulate() {
+    public E simulate() {
 
-        List<Individual<Coordinate>> generation = new ArrayList<>(populationSize);
-        List<Individual<Coordinate>> newGeneration = new ArrayList<>(populationSize);
+        List<E> generation = new ArrayList<>(populationSize);
+        List<E> newGeneration = new ArrayList<>(populationSize);
 
         populateFirstGeneration(generation);
-        bestPath = Fitness.<Individual<Coordinate>>getInstance().getFittest(generation);
+        bestPath = Fitness.<E>getInstance().getFittest(generation);
 
-        Individual<Coordinate> parent1, parent2, child;
+        E parent1, parent2, child;
         for (int i = 1; i <= Generations; i++) {
 
             if (Elitism)
@@ -84,7 +88,7 @@ public class Genetic {
 
             generation = new ArrayList<>(newGeneration);
             newGeneration = new ArrayList<>(populationSize);
-            bestPath = Fitness.<Individual<Coordinate>>getInstance().getFittest(generation);
+            bestPath = Fitness.<E>getInstance().getFittest(generation);
 
             if (ui != null)
                 updateUI(generation, i);
@@ -95,47 +99,53 @@ public class Genetic {
         return bestPath;
     }
 
-    private Individual<Coordinate> mutate(Individual<Coordinate> child) {
-        Individual<Coordinate> mutate;
+    private E mutate(E child) {
+        E mutate;
         do {
-            mutate = Mutation.<Individual<Coordinate>>getInstance(Route.class).mutate(child);
+            mutate = Mutation.getInstance(clazz).mutate(child);
         } while (child.equals(mutate));
         return mutate;
     }
 
-    private Individual<Coordinate> crossover(Individual<Coordinate> parent1,
-                                              Individual<Coordinate> parent2) {
-        return Crossover.<Individual<Coordinate>>getInstance(Route.class).cross(parent1, parent2);
+    private E crossover(E parent1, E parent2) {
+        return Crossover.getInstance(clazz).cross(parent1, parent2);
     }
 
-    private Individual<Coordinate> select(List<Individual<Coordinate>> generation,
-                                           Individual<Coordinate> parent1) {
-        Individual<Coordinate> parent2;
+    private E select(List<E> generation, E parent1) {
+        E parent2;
         do {
             parent2 = select(generation);
         } while (parent2.equals(parent1));
         return parent2;
     }
 
-    private Individual<Coordinate> select(List<Individual<Coordinate>> generation) {
-        return Selection.<Individual<Coordinate>>getInstance().select(generation);
+    private E select(List<E> generation) {
+        return Selection.<E, F>getInstance().select(generation);
     }
 
-    private void populateFirstGeneration(List<Individual<Coordinate>> generation) {
+    private void populateFirstGeneration(List<E> generation) {
         while (generation.size() < populationSize) {
             generation.add(random());
         }
     }
 
-    protected Individual<Coordinate> random() {
+    protected E random() {
         Collections.shuffle(coordinates);
-        return new Route(coordinates);
+        try {
+            return clazz.getConstructor(ICloneableList.class).newInstance(coordinates);
+        } catch (InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    private void updateUI(List<Individual<Coordinate>> generation, int n) {
+    private void updateUI(List<E> generation, int n) {
 
         ui.clearMapLines();
-        ui.drawMap(bestPath);
+        // this is a problem
+        ui.drawMap((List<Coordinate>) bestPath.toList());
 
         scores.clear();
         scores.add(1 / bestPath.getFitness());

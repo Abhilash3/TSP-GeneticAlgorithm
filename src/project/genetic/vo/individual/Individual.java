@@ -1,26 +1,60 @@
 package project.genetic.vo.individual;
 
-import java.util.List;
-
-import project.genetic.vo.list.ImmutableList;
-import project.genetic.vo.list.NoDuplicateList;
+import project.genetic.vo.list.CloneableList;
+import project.genetic.vo.list.ICloneableList;
 import project.genetic.vo.Cloneable;
+import project.genetic.vo.list.decorator.ImmutableListDecorator;
+import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static java.lang.String.format;
 
-public abstract class Individual<E extends Cloneable> extends ImmutableList<E> implements Comparable<Individual<E>> {
+public abstract class Individual<E extends Cloneable> implements Iterable<E>, Cloneable, Comparable<Individual<E>> {
 
     double fitness = -1;
     private Integer hashcode;
     private String toString;
 
-    public Individual(List<E> list) {
-        this.list = new NoDuplicateList<>(list);
+    protected ICloneableList<E> list;
+
+    public Individual(ICloneableList<E> list) {
+        this.list = new ImmutableListDecorator<>(new NoDuplicateListDecorator<>(new CloneableList<>(list)));
+    }
+
+    public int size() {
+        return list.size();
+    }
+
+    public E get(int index) {
+        return list.get(index);
+    }
+
+    public List<E> toList() {
+        return new ArrayList<>(list);
     }
 
     @Override
-    public List<E> subList(int fromIndex, int toIndex) {
-        throw new UnsupportedOperationException("subList not supported");
+    public Iterator<E> iterator() {
+        final Iterator<E> iter = list.iterator();
+        return new Iterator<E>() {
+            @Override
+            public boolean hasNext() {
+                return iter.hasNext();
+            }
+
+            @Override
+            public E next() {
+                return iter.next();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Remove not supported");
+            }
+        };
     }
 
     @Override
@@ -34,7 +68,7 @@ public abstract class Individual<E extends Cloneable> extends ImmutableList<E> i
 
         @SuppressWarnings("unchecked")
         Individual o = (Individual) object;
-        return compareTo(o) == 0 && super.equals(o);
+        return compareTo(o) == 0 && list.equals(o.list);
     }
 
     @Override

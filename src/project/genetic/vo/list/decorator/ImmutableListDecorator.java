@@ -1,23 +1,15 @@
-package project.genetic.vo.list;
+package project.genetic.vo.list.decorator;
 
 import project.genetic.vo.Cloneable;
+import project.genetic.vo.list.ICloneableList;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ListIterator;
 
-public class ImmutableList<E extends Cloneable> extends CloneableList<E> {
+public class ImmutableListDecorator<E extends Cloneable> extends ListDecorator<E> {
 
-    public ImmutableList() {
-        super();
-    }
-
-    public ImmutableList(int i) {
-        super(i);
-    }
-
-    public ImmutableList(List<E> list) {
+    public ImmutableListDecorator(ICloneableList<E> list) {
         super(list);
     }
 
@@ -162,5 +154,11 @@ public class ImmutableList<E extends Cloneable> extends CloneableList<E> {
                 throw new UnsupportedOperationException("Add not supported");
             }
         };
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ImmutableListDecorator<E> doClone() {
+        return new ImmutableListDecorator<>((ICloneableList<E>) list.doClone());
     }
 }

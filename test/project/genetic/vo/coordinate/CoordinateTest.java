@@ -6,12 +6,13 @@ import org.junit.Before;
 import org.junit.Test;
 import project.Mother;
 import project.genetic.util.Coordinates;
+import project.genetic.vo.individual.Individual;
 
 import static org.junit.Assert.*;
 
 public class CoordinateTest {
 
-    private List<Coordinate> coordinates;
+    private Individual<Coordinate> coordinates;
 
     @Before
     public void setUp() throws Exception {
