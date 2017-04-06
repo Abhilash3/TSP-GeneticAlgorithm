@@ -39,32 +39,22 @@ public class ListDecorator<E extends Cloneable> implements ICloneableList<E> {
     }
 
     protected Iterator<E> iterator(final Iterator<E> iterator) {
-        return new Iterator<E>() {
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public E next() {
-                return iterator.next();
-            }
-
-            @Override
-            public void remove() {
-                iterator.remove();
-            }
-        };
+        return iterator;
     }
 
     @Override
     public Object[] toArray() {
-        return list.toArray();
+        return processArray(list.toArray());
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return list.toArray(a);
+        return processArray(list.toArray(a));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T[] processArray(T[] arr) {
+        return arr;
     }
 
     @Override
@@ -148,52 +138,7 @@ public class ListDecorator<E extends Cloneable> implements ICloneableList<E> {
     }
 
     protected ListIterator<E> listIterator(final ListIterator<E> iterator) {
-        return new ListIterator<E>() {
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public E next() {
-                return iterator.next();
-            }
-
-            @Override
-            public boolean hasPrevious() {
-                return iterator.hasPrevious();
-            }
-
-            @Override
-            public E previous() {
-                return iterator.previous();
-            }
-
-            @Override
-            public int nextIndex() {
-                return iterator.nextIndex();
-            }
-
-            @Override
-            public int previousIndex() {
-                return iterator.previousIndex();
-            }
-
-            @Override
-            public void remove() {
-                iterator.remove();
-            }
-
-            @Override
-            public void set(E e) {
-                iterator.set(e);
-            }
-
-            @Override
-            public void add(E e) {
-                iterator.add(e);
-            }
-        };
+        return iterator;
     }
 
     @Override

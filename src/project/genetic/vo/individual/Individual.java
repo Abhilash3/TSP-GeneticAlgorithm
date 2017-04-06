@@ -4,7 +4,6 @@ import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ICloneableList;
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.decorator.ImmutableListDecorator;
-import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,7 +20,7 @@ public abstract class Individual<E extends Cloneable> implements Iterable<E>, Cl
     protected ICloneableList<E> list;
 
     public Individual(ICloneableList<E> list) {
-        this.list = new ImmutableListDecorator<>(new NoDuplicateListDecorator<>(new CloneableList<>(list)));
+        this.list = new ImmutableListDecorator<>(new CloneableList<>(list));
     }
 
     public int size() {
@@ -38,23 +37,7 @@ public abstract class Individual<E extends Cloneable> implements Iterable<E>, Cl
 
     @Override
     public Iterator<E> iterator() {
-        final Iterator<E> iter = list.iterator();
-        return new Iterator<E>() {
-            @Override
-            public boolean hasNext() {
-                return iter.hasNext();
-            }
-
-            @Override
-            public E next() {
-                return iter.next();
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("Remove not supported");
-            }
-        };
+        return list.iterator();
     }
 
     @Override

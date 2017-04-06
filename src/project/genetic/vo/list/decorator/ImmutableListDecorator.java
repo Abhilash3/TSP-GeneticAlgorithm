@@ -7,24 +7,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class ImmutableListDecorator<E extends Cloneable> extends ListDecorator<E> {
+public final class ImmutableListDecorator<E extends Cloneable> extends ListDecorator<E> {
 
     public ImmutableListDecorator(ICloneableList<E> list) {
         super(list);
     }
 
-    @Override
-    public final Object[] toArray() {
-        return cloneContents(super.toArray());
-    }
-
-    @Override
-    public final <T> T[] toArray(T[] a) {
-        return cloneContents(super.toArray(a));
-    }
-
     @SuppressWarnings("unchecked")
-    protected final <T> T[] cloneContents(T[] arr) {
+    @Override
+    protected <T> T[] processArray(T[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = ((Cloneable) arr[i]).doClone();
         }
@@ -32,62 +23,62 @@ public class ImmutableListDecorator<E extends Cloneable> extends ListDecorator<E
     }
 
     @Override
-    public final boolean addAll(Collection<? extends E> c) {
+    public boolean addAll(Collection<? extends E> c) {
         throw new UnsupportedOperationException("AddAll not supported");
     }
 
     @Override
-    public final boolean addAll(int index, Collection<? extends E> c) {
+    public boolean addAll(int index, Collection<? extends E> c) {
         throw new UnsupportedOperationException("AddAll not supported");
     }
 
     @Override
-    public final E get(int index) {
+    public E get(int index) {
         return list.get(index).doClone();
     }
 
     @Override
-    public final boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException("RemoveAll not supported");
     }
 
     @Override
-    public final boolean retainAll(Collection<?> c) {
+    public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException("RetainAll not supported");
     }
 
     @Override
-    public final void clear() {
+    public void clear() {
         throw new UnsupportedOperationException("Clear not supported");
     }
 
     @Override
-    public final E set(int index, E element) {
+    public E set(int index, E element) {
         throw new UnsupportedOperationException("Set not supported");
     }
 
     @Override
-    public final void add(int index, E element) {
+    public void add(int index, E element) {
         throw new UnsupportedOperationException("Add not supported");
     }
 
     @Override
-    public final E remove(int index) {
+    public E remove(int index) {
         throw new UnsupportedOperationException("Remove not supported");
     }
 
     @Override
-    public final boolean add(E e) {
+    public boolean add(E e) {
         throw new UnsupportedOperationException("Add not supported");
     }
 
     @Override
-    public final boolean remove(Object o) {
+    public boolean remove(Object o) {
         throw new UnsupportedOperationException("Remove not supported");
     }
 
     @Override
-    protected final Iterator<E> iterator(final Iterator<E> iterator) {
+    protected Iterator<E> iterator(final Iterator<E> iterator) {
         return new Iterator<E>() {
             @Override
             public boolean hasNext() {
@@ -107,7 +98,7 @@ public class ImmutableListDecorator<E extends Cloneable> extends ListDecorator<E
     }
 
     @Override
-    protected final ListIterator<E> listIterator(final ListIterator<E> iterator) {
+    protected ListIterator<E> listIterator(final ListIterator<E> iterator) {
         return new ListIterator<E>() {
             @Override
             public boolean hasNext() {
