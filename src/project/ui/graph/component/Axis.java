@@ -6,10 +6,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import static project.common.Constants.padding;
-import static project.common.Constants.labelPadding;
-import static project.common.Constants.pointWidth;
 import static project.common.Constants.GraphDivisions;
+import static project.common.Constants.labelPadding;
+import static project.common.Constants.padding;
+import static project.common.Constants.pointWidth;
 
 public class Axis {
 

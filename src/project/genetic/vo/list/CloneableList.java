@@ -4,7 +4,6 @@ import project.genetic.vo.Cloneable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class CloneableList<E extends Cloneable> extends ArrayList<E> implements ICloneableList<E> {
 

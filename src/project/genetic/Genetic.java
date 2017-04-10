@@ -1,11 +1,5 @@
 package project.genetic;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import project.genetic.fitness.Fitness;
 import project.genetic.process.Crossover;
 import project.genetic.process.Mutation;
@@ -15,6 +9,12 @@ import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Individual;
 import project.genetic.vo.list.ICloneableList;
 import project.ui.UI;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import static project.common.Constants.Elitism;
 import static project.common.Constants.Generations;

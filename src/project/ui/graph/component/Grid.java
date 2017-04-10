@@ -1,5 +1,8 @@
 package project.ui.graph.component;
 
+import project.genetic.vo.coordinate.Coordinate;
+import project.genetic.vo.list.LList;
+
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -7,18 +10,13 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.List;
 
-import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.LList;
-
-import static project.common.Constants.padding;
-import static project.common.Constants.labelPadding;
-import static project.common.Constants.pointWidth;
-
+import static project.common.Constants.GraphDivisions;
 import static project.common.Constants.GridColor;
 import static project.common.Constants.LineColor;
 import static project.common.Constants.PointColor;
-
-import static project.common.Constants.GraphDivisions;
+import static project.common.Constants.labelPadding;
+import static project.common.Constants.padding;
+import static project.common.Constants.pointWidth;
 
 public class Grid {
 

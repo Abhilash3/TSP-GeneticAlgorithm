@@ -1,8 +1,8 @@
 package project.ui.map.component;
 
-import java.awt.Graphics;
-
 import project.genetic.vo.coordinate.Coordinate;
+
+import java.awt.Graphics;
 
 import static java.lang.String.format;
 

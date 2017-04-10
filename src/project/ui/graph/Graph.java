@@ -1,21 +1,20 @@
 package project.ui.graph;
 
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.LList;
 import project.genetic.vo.list.AArrayList;
+import project.genetic.vo.list.LList;
 import project.ui.graph.component.Axis;
 import project.ui.graph.component.Grid;
 
+import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.util.List;
 
-import javax.swing.JComponent;
-
 import static java.lang.String.format;
 import static project.common.Constants.Generations;
-import static project.common.Constants.padding;
-import static project.common.Constants.labelPadding;
 import static project.common.Constants.Graphs;
+import static project.common.Constants.labelPadding;
+import static project.common.Constants.padding;
 
 public class Graph extends JComponent {
 

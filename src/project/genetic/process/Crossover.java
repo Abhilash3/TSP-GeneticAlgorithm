@@ -1,17 +1,16 @@
 package project.genetic.process;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
+import project.genetic.metadata.StrategyHelper;
+import project.genetic.metadata.StrategyProvider;
 import project.genetic.vo.Cloneable;
+import project.genetic.vo.individual.Individual;
 import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ICloneableList;
-import project.genetic.vo.individual.Individual;
 import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Random;
 
 /**
  * java class definition providing crossover capabilities
@@ -42,6 +41,7 @@ public class Crossover<T extends Individual<K>, K extends Cloneable> {
         return new Crossover<>(clazz);
     }
 
+    @StrategyProvider
     protected Strategy<T> getNearestNeighbourStrategy() {
         return new Strategy<T>() {
             private ICloneableList<K> list;
@@ -101,6 +101,7 @@ public class Crossover<T extends Individual<K>, K extends Cloneable> {
         };
     }
 
+    @StrategyProvider
     protected Strategy<T> getInitialRandomFromFirstRestFromSecondStrategy() {
         return new Strategy<T>() {
             private ICloneableList<K> list;
@@ -136,6 +137,7 @@ public class Crossover<T extends Individual<K>, K extends Cloneable> {
         };
     }
 
+    @StrategyProvider
     protected Strategy<T> getFirstComeFirstServeStrategy() {
         return new Strategy<T>() {
             private ICloneableList<K> list;
@@ -186,11 +188,7 @@ public class Crossover<T extends Individual<K>, K extends Cloneable> {
     }
 
     protected Strategy<T> getStrategy() {
-        List<Strategy<T>> strategies = Arrays.asList(getNearestNeighbourStrategy(),
-                getInitialRandomFromFirstRestFromSecondStrategy(), getFirstComeFirstServeStrategy());
-
-        Collections.shuffle(strategies);
-        return strategies.get(0);
+        return StrategyHelper.retrieveStrategy(this);
     }
 
     public T cross(T parent1, T parent2) {

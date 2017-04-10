@@ -1,12 +1,14 @@
 package project.genetic.fitness;
 
+import project.genetic.metadata.StrategyHelper;
+import project.genetic.metadata.StrategyProvider;
+import project.genetic.vo.Cloneable;
+import project.genetic.vo.individual.Individual;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import project.genetic.vo.Cloneable;
-import project.genetic.vo.individual.Individual;
 
 /**
  * java class definition for sorting path
@@ -26,14 +28,10 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
      * order to sort list
      */
     private enum Order {
-        ASC,
+        ASC(1),
         DESC(-1);
 
         private int order;
-
-        Order() {
-            this(1);
-        }
 
         Order(int order) {
             this.order = order;
@@ -55,6 +53,7 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
         void sort(List<T> list, Order order);
     }
 
+    @StrategyProvider
     protected Strategy<T> getQuickSortStrategy() {
 
         return new Strategy<T>() {
@@ -94,6 +93,7 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
         };
     }
 
+    @StrategyProvider
     protected Strategy<T> getMergeSortStrategy() {
 
         return new Strategy<T>() {
@@ -129,11 +129,7 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
 
                 for (int i = 0, j = 0, k = low; k < high + 1; k++) {
                     if (i < first.size() && j < second.size()) {
-                        if (order.compare(first.get(i), second.get(j)) == -1) {
-                            list.set(k, second.get(j++));
-                        } else {
-                            list.set(k, first.get(i++));
-                        }
+                        list.set(k, order.compare(first.get(i), second.get(j)) < 0 ? second.get(j++) : first.get(i++));
                     } else if (i < first.size()) {
                         list.set(k, first.get(i++));
                     } else {
@@ -149,10 +145,7 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
     }
 
     protected Strategy<T> getStrategy() {
-        List<Strategy<T>> strategies = Arrays.asList(getMergeSortStrategy(), getQuickSortStrategy());
-
-        Collections.shuffle(strategies);
-        return strategies.get(0);
+        return StrategyHelper.retrieveStrategy(this);
     }
 
     public List<T> sort(List<T> generation) {

@@ -1,8 +1,8 @@
 package project.genetic.vo.individual;
 
+import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ICloneableList;
-import project.genetic.vo.Cloneable;
 import project.genetic.vo.list.decorator.ImmutableListDecorator;
 
 import java.util.ArrayList;
@@ -17,27 +17,27 @@ public abstract class Individual<E extends Cloneable> implements Iterable<E>, Cl
     private Integer hashcode;
     private String toString;
 
-    protected ICloneableList<E> list;
+    protected ICloneableList<E> chromosome;
 
-    public Individual(ICloneableList<E> list) {
-        this.list = new ImmutableListDecorator<>(new CloneableList<>(list));
+    public Individual(ICloneableList<E> chromosome) {
+        this.chromosome = new ImmutableListDecorator<>(new CloneableList<>(chromosome));
     }
 
     public int size() {
-        return list.size();
+        return chromosome.size();
     }
 
     public E get(int index) {
-        return list.get(index);
+        return chromosome.get(index);
     }
 
     public List<E> toList() {
-        return new ArrayList<>(list);
+        return new ArrayList<>(chromosome);
     }
 
     @Override
     public Iterator<E> iterator() {
-        return list.iterator();
+        return chromosome.iterator();
     }
 
     @Override
@@ -51,14 +51,14 @@ public abstract class Individual<E extends Cloneable> implements Iterable<E>, Cl
 
         @SuppressWarnings("unchecked")
         Individual o = (Individual) object;
-        return compareTo(o) == 0 && list.equals(o.list);
+        return compareTo(o) == 0 && chromosome.equals(o.chromosome);
     }
 
     @Override
     public int hashCode() {
         if (hashcode == null) {
             int result = 17;
-            result = 31 * result + list.hashCode();
+            result = 31 * result + chromosome.hashCode();
             result = (int) (31 * result + fitness);
             hashcode = result;
         }

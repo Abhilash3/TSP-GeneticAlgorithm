@@ -1,18 +1,17 @@
 package project.ui;
 
+import project.genetic.vo.coordinate.Coordinate;
+import project.ui.graph.Graph;
+import project.ui.map.Map;
+
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-
-import project.genetic.vo.coordinate.Coordinate;
-import project.ui.graph.Graph;
-import project.ui.map.Map;
 
 @SuppressWarnings("serial")
 public class UI extends JFrame {

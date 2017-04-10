@@ -1,16 +1,15 @@
 package project.genetic.process;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
+import project.genetic.metadata.StrategyHelper;
+import project.genetic.metadata.StrategyProvider;
 import project.genetic.vo.Cloneable;
+import project.genetic.vo.individual.Individual;
 import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ICloneableList;
-import project.genetic.vo.individual.Individual;
 import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Random;
 
 /**
  * java class definition providing mutation capabilities
@@ -40,6 +39,7 @@ public class Mutation<T extends Individual<K>, K extends Cloneable> {
         T mutate(T path);
     }
 
+    @StrategyProvider
     protected Strategy<T> getSwapTwoCitiesStrategy() {
         return new Strategy<T>() {
             private ICloneableList<K> list;
@@ -81,6 +81,7 @@ public class Mutation<T extends Individual<K>, K extends Cloneable> {
         };
     }
 
+    @StrategyProvider
     protected Strategy<T> getSwapAdjacentCitiesStrategy() {
         return new Strategy<T>() {
             private ICloneableList<K> list;
@@ -108,6 +109,7 @@ public class Mutation<T extends Individual<K>, K extends Cloneable> {
         };
     }
 
+    @StrategyProvider
     protected Strategy<T> getReverseCityOrderStrategy() {
         return new Strategy<T>() {
             private ICloneableList<K> list;
@@ -169,11 +171,7 @@ public class Mutation<T extends Individual<K>, K extends Cloneable> {
     }
 
     protected Strategy<T> getStrategy() {
-        List<Strategy<T>> strategies = Arrays.asList(getSwapTwoCitiesStrategy(),
-                getSwapAdjacentCitiesStrategy(), getReverseCityOrderStrategy());
-
-        Collections.shuffle(strategies);
-        return strategies.get(0);
+        return StrategyHelper.retrieveStrategy(this);
     }
 
     public T mutate(T path) {

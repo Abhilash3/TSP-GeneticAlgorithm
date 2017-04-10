@@ -1,14 +1,15 @@
 package project.genetic.process;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import project.genetic.fitness.Fitness;
+import project.genetic.metadata.StrategyHelper;
+import project.genetic.metadata.StrategyProvider;
 import project.genetic.vo.Cloneable;
 import project.genetic.vo.individual.Individual;
+import project.genetic.vo.list.CloneableList;
+import project.genetic.vo.list.ICloneableList;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * java class definition providing selection capabilities
@@ -35,6 +36,7 @@ public class Selection<T extends Individual<K>, K extends Cloneable> {
         T select(List<T> generation);
     }
 
+    @StrategyProvider
     protected Strategy<T> getRouletteWheelSelectionStrategy() {
         return new Strategy<T>() {
             private T ind;
@@ -49,10 +51,9 @@ public class Selection<T extends Individual<K>, K extends Cloneable> {
             public T select(List<T> generation) {
 
                 double max = 0;
-                for (int i = 0; i < generation.size(); i++) {
-                    ind = generation.get(i);
-                    if (max < ind.getFitness()) {
-                        max = ind.getFitness();
+                for (T individual : generation) {
+                    if (max < individual.getFitness()) {
+                        max = individual.getFitness();
                     }
                 }
 
@@ -68,9 +69,10 @@ public class Selection<T extends Individual<K>, K extends Cloneable> {
         };
     }
 
+    @StrategyProvider
     protected Strategy<T> getTournamentSelectionStrategy() {
         return new Strategy<T>() {
-            private List<T> pool;
+            private ICloneableList<T> pool;
 
             /**
              * Tournament Selection
@@ -84,7 +86,7 @@ public class Selection<T extends Individual<K>, K extends Cloneable> {
                 int size = generation.size();
                 int random = getRandom().nextInt(size - 2) + 2;
 
-                pool = new ArrayList<>();
+                pool = new CloneableList<>();
                 while (pool.size() != random) {
                     pool.add(generation.get(getRandom().nextInt(size)));
                 }
@@ -94,6 +96,7 @@ public class Selection<T extends Individual<K>, K extends Cloneable> {
         };
     }
 
+    @StrategyProvider
     protected Strategy<T> getRankSelectionStrategy() {
         return new Strategy<T>() {
 
@@ -128,11 +131,7 @@ public class Selection<T extends Individual<K>, K extends Cloneable> {
     }
 
     protected Strategy<T> getStrategy() {
-        List<Strategy<T>> strategies = Arrays.asList(getRankSelectionStrategy(),
-                getRouletteWheelSelectionStrategy(), getTournamentSelectionStrategy());
-
-        Collections.shuffle(strategies);
-        return strategies.get(0);
+        return StrategyHelper.retrieveStrategy(this);
     }
 
     public T select(List<T> generation) {

@@ -1,7 +1,7 @@
 package project.genetic.vo.individual;
 
-import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.util.Coordinates;
+import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.list.ICloneableList;
 
 public final class Route extends OrderedIndividual<Coordinate> {
@@ -18,6 +18,6 @@ public final class Route extends OrderedIndividual<Coordinate> {
     @SuppressWarnings("unchecked")
     @Override
     public Route doClone() {
-        return new Route((ICloneableList<Coordinate>) list.doClone());
+        return new Route((ICloneableList<Coordinate>) chromosome.doClone());
     }
 }

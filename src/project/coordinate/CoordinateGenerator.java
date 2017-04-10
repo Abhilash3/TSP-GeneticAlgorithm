@@ -1,13 +1,13 @@
 package project.coordinate;
 
-import static project.common.Constants.TSP_FILE;
+import project.genetic.vo.coordinate.Coordinate;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Random;
 
-import project.genetic.vo.coordinate.Coordinate;
+import static project.common.Constants.TSP_FILE;
 
 public class CoordinateGenerator {
 

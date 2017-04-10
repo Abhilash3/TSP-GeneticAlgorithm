@@ -4,14 +4,13 @@ import project.genetic.vo.coordinate.Coordinate;
 import project.ui.map.component.Line;
 import project.ui.map.component.Point;
 
+import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.JComponent;
 
 @SuppressWarnings("serial")
 public class Map extends JComponent {

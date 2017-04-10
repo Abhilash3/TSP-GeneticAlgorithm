@@ -1,12 +1,5 @@
 package project.tsp;
 
-import static project.common.Constants.CityNumber;
-import static project.common.Constants.TSP_FILE;
-
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.util.Random;
-
 import project.genetic.Genetic;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Route;
@@ -14,6 +7,13 @@ import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ICloneableList;
 import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
 import project.ui.UI;
+
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.Random;
+
+import static project.common.Constants.CityNumber;
+import static project.common.Constants.TSP_FILE;
 
 public class TSP {
 
