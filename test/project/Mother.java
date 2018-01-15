@@ -50,11 +50,6 @@ public class Mother {
             public double getFitness() {
                 return fitness;
             }
-
-            @Override
-            public double fitness(IGene a, IGene b) {
-                return 0;
-            }
         };
     }
 
