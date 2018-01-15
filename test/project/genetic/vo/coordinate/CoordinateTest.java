@@ -1,7 +1,5 @@
 package project.genetic.vo.coordinate;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import project.Mother;
@@ -60,8 +58,8 @@ public class CoordinateTest {
 
     @Test
     public void equals() {
-        Coordinate coordinate1 = Coordinate.getCoordinate(10, 10);
-        Coordinate coordinate2 = Coordinate.getCoordinate(20, 20);
+        Coordinate coordinate1 = Coordinate.newCoordinate(10, 10);
+        Coordinate coordinate2 = Coordinate.newCoordinate(20, 20);
 
         assertFalse(coordinate1.equals(null));
         assertFalse(coordinate2.equals(null));

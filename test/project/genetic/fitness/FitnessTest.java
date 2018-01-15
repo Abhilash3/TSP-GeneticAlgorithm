@@ -20,7 +20,7 @@ public class FitnessTest {
     @Before
     public void setUp() throws Exception {
 
-        fitness = Fitness.getInstance();
+        fitness = Fitness.newInstance();
         generation = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
             addToGeneration(generation, Double.parseDouble(i + 1 + ""));

@@ -1,15 +1,16 @@
 package project.genetic.vo.list.decorator;
 
-import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.ICloneableList;
+import project.genetic.vo.ICloneable;
+import project.genetic.vo.individual.gene.IGene;
+import project.genetic.vo.list.CloneableList;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public final class NoDuplicateListDecorator<E extends Cloneable> extends ListDecorator<E> {
+public final class NoDuplicateListDecorator<E extends IGene> extends ListDecorator<E> {
 
-    public NoDuplicateListDecorator(ICloneableList<E> list) {
+    public NoDuplicateListDecorator(CloneableList<E> list) {
         super(list);
     }
 
@@ -17,7 +18,7 @@ public final class NoDuplicateListDecorator<E extends Cloneable> extends ListDec
     @Override
     protected <T> T[] processArray(T[] arr) {
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = ((Cloneable) arr[i]).doClone();
+            arr[i] = ((ICloneable) arr[i]).doClone();
         }
         return arr;
     }
@@ -96,14 +97,14 @@ public final class NoDuplicateListDecorator<E extends Cloneable> extends ListDec
     @Override
     public void add(int n, E e) {
         if (!contains(e)) {
-            super.add(n, (E) e.doClone());
+            super.add(n, e.doClone());
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean add(E e) {
-        return !contains(e) && super.add((E) e.doClone());
+        return !contains(e) && super.add(e.doClone());
     }
 
     @Override
@@ -133,12 +134,12 @@ public final class NoDuplicateListDecorator<E extends Cloneable> extends ListDec
     @SuppressWarnings("unchecked")
     @Override
     public E set(int index, E element) {
-        return !contains(element) ? list.set(index, (E) element.doClone()) : null;
+        return !contains(element) ? list.set(index, element.doClone()) : null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public NoDuplicateListDecorator<E> doClone() {
-        return new NoDuplicateListDecorator<>((ICloneableList<E>) list.doClone());
+        return new NoDuplicateListDecorator<>(list.doClone());
     }
 }

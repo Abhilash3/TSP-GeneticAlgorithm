@@ -1,8 +1,8 @@
 package project.ui.graph;
 
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.AArrayList;
-import project.genetic.vo.list.LList;
+import project.ui.vo.AArrayList;
+import project.ui.vo.LList;
 import project.ui.graph.component.Axis;
 import project.ui.graph.component.Grid;
 
@@ -69,7 +69,7 @@ public class Graph extends JComponent {
             for (int j = 0; j < scores.getSize(i); j++) {
                 int x = (int) (j * xScale + padding + labelPadding);
                 int y = (int) ((maxScore - scores.get(i, j)) * yScale + padding);
-                graphPoints.getAdd(i, Coordinate.getCoordinate(x, y));
+                graphPoints.getAdd(i, Coordinate.newCoordinate(x, y));
             }
         }
 

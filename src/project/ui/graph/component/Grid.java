@@ -1,7 +1,7 @@
 package project.ui.graph.component;
 
 import project.genetic.vo.coordinate.Coordinate;
-import project.genetic.vo.list.LList;
+import project.ui.vo.LList;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
@@ -59,15 +59,15 @@ public class Grid {
             g2.setStroke(GRAPH_STROKE);
             if (graph.size() > 0) {
                 iCoordinate = graph.get(graph.size() - 1);
-                g.drawLine(padding + labelPadding, iCoordinate.getY(), width - padding, iCoordinate.getY());
-                g.drawLine(iCoordinate.getX(), height - padding - labelPadding, iCoordinate.getX(), padding);
+                g.drawLine(padding + labelPadding, iCoordinate.y(), width - padding, iCoordinate.y());
+                g.drawLine(iCoordinate.x(), height - padding - labelPadding, iCoordinate.x(), padding);
             }
 
             g2.setColor(PointColor);
             g2.setStroke(oldStroke);
             for (int j = 0; j < graph.size(); j++) {
                 iCoordinate = graph.get(j);
-                g2.fillRoundRect(iCoordinate.getX() - pointWidth / 2, iCoordinate.getY() - pointWidth / 2,
+                g2.fillRoundRect(iCoordinate.x() - pointWidth / 2, iCoordinate.y() - pointWidth / 2,
                         pointWidth, pointWidth, pointWidth / 4, pointWidth / 4);
             }
         }

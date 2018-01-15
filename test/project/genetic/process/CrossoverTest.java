@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class CrossoverTest {
 
-    protected Crossover<Route, Coordinate> testCrossover;
+    private Crossover<Route, Coordinate> testCrossover;
 
     @Before
     public void setUp() throws Exception {

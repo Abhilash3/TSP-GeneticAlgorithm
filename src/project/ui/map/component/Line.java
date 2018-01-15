@@ -26,10 +26,10 @@ public class Line {
     }
 
     public void draw(Graphics g, double xScale, double yScale) {
-        g.drawLine((int) (p1.getX() * xScale),
-                (int) (p1.getY() * yScale),
-                (int) (p2.getX() * xScale),
-                (int) (p2.getY() * yScale));
+        g.drawLine((int) (p1.x() * xScale),
+                (int) (p1.y() * yScale),
+                (int) (p2.x() * xScale),
+                (int) (p2.y() * yScale));
     }
 
     @Override

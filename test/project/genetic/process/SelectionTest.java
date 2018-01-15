@@ -26,7 +26,7 @@ public class SelectionTest {
     private List _mockGeneration;
     private static Random _mockRandom;
 
-    protected Selection<Route, Coordinate> testSelection;
+    private Selection<Route, Coordinate> testSelection;
 
     @Before
     public void setUp() throws Exception {

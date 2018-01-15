@@ -1,6 +1,7 @@
 package project.genetic.vo.list.decorator;
 
-import project.genetic.vo.Cloneable;
+import project.genetic.vo.ICloneable;
+import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ICloneableList;
 
 import java.util.Collection;
@@ -10,11 +11,11 @@ import java.util.ListIterator;
 
 import static java.lang.String.format;
 
-public class ListDecorator<E extends Cloneable> implements ICloneableList<E> {
+public class ListDecorator<E extends ICloneable> implements ICloneableList<E> {
 
-    protected ICloneableList<E> list;
+    protected CloneableList<E> list;
 
-    public ListDecorator(ICloneableList<E> list) {
+    ListDecorator(CloneableList<E> list) {
         this.list = list;
     }
 
@@ -155,12 +156,12 @@ public class ListDecorator<E extends Cloneable> implements ICloneableList<E> {
 
     @Override
     public String toString() {
-        return format("%s -> %s", getClass().getSimpleName(), list.toString());
+        return format("%s [ %s ]", getClass().getSimpleName(), list.toString());
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public ListDecorator<E> doClone() {
-        return new ListDecorator<>((ICloneableList<E>) list.doClone());
+        return new ListDecorator<>(list.doClone());
     }
 }

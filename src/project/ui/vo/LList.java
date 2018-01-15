@@ -1,4 +1,4 @@
-package project.genetic.vo.list;
+package project.ui.vo;
 
 import java.util.List;
 

@@ -34,7 +34,7 @@ public class TSP {
             e.printStackTrace();
             coordinates = new NoDuplicateListDecorator<>(new CloneableList<Coordinate>());
             while (coordinates.size() < CityNumber) {
-                coordinates.add(Coordinate.getCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10));
+                coordinates.add(Coordinate.newCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10));
             }
         }
 

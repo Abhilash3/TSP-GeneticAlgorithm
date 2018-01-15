@@ -1,15 +1,16 @@
 package project.genetic.vo.list.decorator;
 
-import project.genetic.vo.Cloneable;
-import project.genetic.vo.list.ICloneableList;
+import project.genetic.vo.ICloneable;
+import project.genetic.vo.individual.gene.IGene;
+import project.genetic.vo.list.CloneableList;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public final class ImmutableListDecorator<E extends Cloneable> extends ListDecorator<E> {
+public final class ImmutableListDecorator<E extends IGene> extends ListDecorator<E> {
 
-    public ImmutableListDecorator(ICloneableList<E> list) {
+    public ImmutableListDecorator(CloneableList<E> list) {
         super(list);
     }
 
@@ -17,7 +18,7 @@ public final class ImmutableListDecorator<E extends Cloneable> extends ListDecor
     @Override
     protected <T> T[] processArray(T[] arr) {
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = ((Cloneable) arr[i]).doClone();
+            arr[i] = ((ICloneable) arr[i]).doClone();
         }
         return arr;
     }
@@ -150,6 +151,6 @@ public final class ImmutableListDecorator<E extends Cloneable> extends ListDecor
     @SuppressWarnings("unchecked")
     @Override
     public ImmutableListDecorator<E> doClone() {
-        return new ImmutableListDecorator<>((ICloneableList<E>) list.doClone());
+        return new ImmutableListDecorator<>(list.doClone());
     }
 }

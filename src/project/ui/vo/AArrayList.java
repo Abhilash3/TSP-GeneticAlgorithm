@@ -1,19 +1,10 @@
-package project.genetic.vo.list;
+package project.ui.vo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * java class definition for ArrayList<ArrayList<E>
- *
- * @param <E>
- * @author ABHILASHKUMARV
- */
 public class AArrayList<E> extends ArrayList<List<E>> implements LList<E> {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -6899383745320325588L;
 
     @Override

@@ -17,7 +17,7 @@ public class CoordinateGenerator {
             FileOutputStream fileOut = new FileOutputStream(TSP_FILE);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             for (int i = 0; i < 5000; i++) {
-                out.writeObject(Coordinate.getCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10));
+                out.writeObject(Coordinate.newCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10));
             }
             out.close();
         } catch (IOException e) {

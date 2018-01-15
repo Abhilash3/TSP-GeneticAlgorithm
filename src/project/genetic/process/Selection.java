@@ -3,59 +3,37 @@ package project.genetic.process;
 import project.genetic.fitness.Fitness;
 import project.genetic.metadata.StrategyHelper;
 import project.genetic.metadata.StrategyProvider;
-import project.genetic.vo.Cloneable;
 import project.genetic.vo.individual.Individual;
+import project.genetic.vo.individual.gene.IGene;
 import project.genetic.vo.list.CloneableList;
-import project.genetic.vo.list.ICloneableList;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-/**
- * java class definition providing selection capabilities
- *
- * @author ABHILASHKUMARV
- */
-public class Selection<T extends Individual<K>, K extends Cloneable> {
+public class Selection<T extends Individual<K>, K extends IGene> {
 
-    protected Selection() {
+    Selection() {
     }
 
-    public static <E extends Individual<F>, F extends Cloneable> Selection<E, F> getInstance() {
+    public static <E extends Individual<F>, F extends IGene> Selection<E, F> newInstance() {
         return new Selection<>();
     }
 
     public interface Strategy<T> {
-
-        /**
-         * method generating selection options and selecting path
-         *
-         * @param generation generation pool
-         * @return selection
-         */
         T select(List<T> generation);
     }
 
     @StrategyProvider
-    protected Strategy<T> getRouletteWheelSelectionStrategy() {
+    Strategy<T> getRouletteWheelSelectionStrategy() {
         return new Strategy<T>() {
             private T ind;
 
-            /**
-             * Roulette Wheel Selection
-             *
-             * @param generation generation pool
-             * @return selection
-             */
             @Override
             public T select(List<T> generation) {
 
-                double max = 0;
-                for (T individual : generation) {
-                    if (max < individual.getFitness()) {
-                        max = individual.getFitness();
-                    }
-                }
+                double max = Collections.max(generation, Comparator.comparingDouble(T::getFitness)).getFitness();
 
                 double random = getRandom().nextDouble() * max;
                 double sum = 0;
@@ -70,59 +48,36 @@ public class Selection<T extends Individual<K>, K extends Cloneable> {
     }
 
     @StrategyProvider
-    protected Strategy<T> getTournamentSelectionStrategy() {
-        return new Strategy<T>() {
-            private ICloneableList<T> pool;
+    Strategy<T> getTournamentSelectionStrategy() {
+        return generation -> {
+            int size = generation.size();
+            int random = getRandom().nextInt(size - 2) + 2;
 
-            /**
-             * Tournament Selection
-             *
-             * @param generation generation pool
-             * @return selection
-             */
-            @Override
-            public T select(List<T> generation) {
-
-                int size = generation.size();
-                int random = getRandom().nextInt(size - 2) + 2;
-
-                pool = new CloneableList<>();
-                while (pool.size() != random) {
-                    pool.add(generation.get(getRandom().nextInt(size)));
-                }
-
-                return Fitness.<T>getInstance().getFittest(pool);
+            CloneableList<T> pool = new CloneableList<>();
+            while (pool.size() != random) {
+                pool.add(generation.get(getRandom().nextInt(size)));
             }
+
+            return Fitness.<T>newInstance().getFittest(pool);
         };
     }
 
     @StrategyProvider
-    protected Strategy<T> getRankSelectionStrategy() {
-        return new Strategy<T>() {
-
-            /**
-             * Rank Selection
-             *
-             * @param generation generation pool
-             * @return selection
-             */
-            @Override
-            public T select(List<T> generation) {
-
-                int sum = 0, i = 1;
-                while (i <= generation.size()) {
-                    sum += i++;
-                }
-
-                int random = getRandom().nextInt(sum - 2) + 2;
-                sum = 0;
-                i = 1;
-                while (sum <= random) {
-                    sum += i++;
-                }
-
-                return generation.get(i - 2);
+    Strategy<T> getRankSelectionStrategy() {
+        return (generation) -> {
+            int sum = 0, i = 1;
+            while (i <= generation.size()) {
+                sum += i++;
             }
+
+            int random = getRandom().nextInt(sum - 2) + 2;
+            sum = 0;
+            i = 1;
+            while (sum <= random) {
+                sum += i++;
+            }
+
+            return generation.get(i - 2);
         };
     }
 
@@ -130,7 +85,7 @@ public class Selection<T extends Individual<K>, K extends Cloneable> {
         return new Random();
     }
 
-    protected Strategy<T> getStrategy() {
+    private Strategy<T> getStrategy() {
         return StrategyHelper.retrieveStrategy(this);
     }
 

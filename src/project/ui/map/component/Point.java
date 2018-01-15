@@ -17,8 +17,8 @@ public class Point {
     }
 
     public void draw(Graphics g, double xScale, double yScale) {
-        g.fillRoundRect((int) (p.getX() * xScale) - 2, (int) (p.getY() * yScale) - 2, 4, 4, 1, 1);
-        //g.drawString(p.toString(), p.getX(), p.getY());
+        g.fillRoundRect((int) (p.x() * xScale) - 2, (int) (p.y() * yScale) - 2, 4, 4, 1, 1);
+        //g.drawString(p.toString(), p.x(), p.y());
     }
 
     @Override

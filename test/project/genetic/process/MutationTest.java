@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class MutationTest {
 
     private Mockery mockery;
-    protected Mutation<Route, Coordinate> testMutation;
+    private Mutation<Route, Coordinate> testMutation;
     private static Random _mockRandom;
 
     @Before

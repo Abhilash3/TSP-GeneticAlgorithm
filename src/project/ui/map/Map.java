@@ -145,8 +145,8 @@ public class Map extends JComponent {
 
     private void getMaxValues(List<Coordinate> list) {
         for (Coordinate coordinate : list) {
-            int x = coordinate.getX();
-            int y = coordinate.getY();
+            int x = coordinate.x();
+            int y = coordinate.y();
             if (max[0] < x)
                 max[0] = x;
             if (max[1] < y)

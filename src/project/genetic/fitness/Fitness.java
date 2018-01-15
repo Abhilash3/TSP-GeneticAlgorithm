@@ -2,31 +2,21 @@ package project.genetic.fitness;
 
 import project.genetic.metadata.StrategyHelper;
 import project.genetic.metadata.StrategyProvider;
-import project.genetic.vo.Cloneable;
+import project.genetic.vo.ICloneable;
 import project.genetic.vo.individual.Individual;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-/**
- * java class definition for sorting path
- *
- * @author ABHILASHKUMARV
- */
-public class Fitness<T extends Individual<? extends Cloneable>> {
+public class Fitness<T extends Individual<? extends ICloneable>> {
 
     private Fitness() {
     }
 
-    public static <E extends Individual<? extends Cloneable>> Fitness<E> getInstance() {
+    public static <E extends Individual<? extends ICloneable>> Fitness<E> newInstance() {
         return new Fitness<>();
     }
 
-    /**
-     * order to sort list
-     */
     private enum Order {
         ASC(1),
         DESC(-1);
@@ -44,12 +34,6 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
     }
 
     public interface Strategy<T> {
-        /**
-         * method generating sorting options and sorted path
-         *
-         * @param list  list of objects
-         * @param order order in which to sort
-         */
         void sort(List<T> list, Order order);
     }
 
@@ -100,12 +84,6 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
             private Order order;
             private List<T> first, second;
 
-            /**
-             * MergeSort
-             *
-             * @param list list of objects
-             * @param order order in which to sort
-             */
             @Override
             public void sort(List<T> list, Order order) {
                 this.order = order;
@@ -144,15 +122,15 @@ public class Fitness<T extends Individual<? extends Cloneable>> {
         return sort(generation).get(0);
     }
 
-    protected Strategy<T> getStrategy() {
+    private Strategy<T> getStrategy() {
         return StrategyHelper.retrieveStrategy(this);
     }
 
-    public List<T> sort(List<T> generation) {
+    List<T> sort(List<T> generation) {
         return sort(generation, getStrategy());
     }
 
-    public List<T> sort(List<T> generation, Strategy<T> strategy) {
+    private List<T> sort(List<T> generation, Strategy<T> strategy) {
         strategy.sort(generation, Order.ASC);
         return generation;
     }

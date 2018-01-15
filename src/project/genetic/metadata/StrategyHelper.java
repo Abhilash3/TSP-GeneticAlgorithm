@@ -13,7 +13,7 @@ public class StrategyHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static <E, F> List<F> retrieveStrategies(E e) {
+    private static <E, F> List<F> retrieveStrategies(E e) {
         List<F> strategies = new ArrayList<>();
         for(Method method : e.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(StrategyProvider.class)) {

@@ -1,6 +1,7 @@
 package project.genetic.vo.individual;
 
-import project.genetic.vo.Cloneable;
+import project.genetic.vo.ICloneable;
+import project.genetic.vo.individual.gene.IGene;
 import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ICloneableList;
 import project.genetic.vo.list.decorator.ImmutableListDecorator;
@@ -11,16 +12,16 @@ import java.util.List;
 
 import static java.lang.String.format;
 
-public abstract class Individual<E extends Cloneable> implements Iterable<E>, Cloneable, Comparable<Individual<E>> {
+public abstract class Individual<E extends IGene> implements Iterable<E>, ICloneable, Comparable<Individual<E>> {
 
-    double fitness = -1;
+    protected double fitness = -1;
     private Integer hashcode;
     private String toString;
 
-    protected ICloneableList<E> chromosome;
+    ICloneableList<E> chromosome;
 
     public Individual(ICloneableList<E> chromosome) {
-        this.chromosome = new ImmutableListDecorator<>(new CloneableList<>(chromosome));
+        this.chromosome = new ImmutableListDecorator<E>(new CloneableList<E>(chromosome));
     }
 
     public int size() {

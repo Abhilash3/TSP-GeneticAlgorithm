@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import project.genetic.vo.Cloneable;
+import project.genetic.vo.ICloneable;
 import project.genetic.vo.coordinate.Coordinate;
 import project.genetic.vo.individual.Individual;
 import project.genetic.vo.individual.Route;
+import project.genetic.vo.individual.gene.IGene;
 import project.genetic.vo.list.CloneableList;
 import project.genetic.vo.list.ICloneableList;
 import project.genetic.vo.list.decorator.NoDuplicateListDecorator;
@@ -41,13 +42,18 @@ public class Mother {
     public static Individual getIndividualWithFitness(final double fitness) {
         return new Individual(new CloneableList()) {
             @Override
-            public Individual<Cloneable> doClone() {
+            public Individual<IGene> doClone() {
                 return this;
             }
 
             @Override
             public double getFitness() {
                 return fitness;
+            }
+
+            @Override
+            public double fitness(IGene a, IGene b) {
+                return 0;
             }
         };
     }
@@ -61,7 +67,7 @@ public class Mother {
     }
 
     public static Coordinate getCoordinate() {
-        return Coordinate.getCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10);
+        return Coordinate.newCoordinate((rand.nextInt(55) + 5) * 10, (rand.nextInt(55) + 5) * 10);
     }
 
 }
